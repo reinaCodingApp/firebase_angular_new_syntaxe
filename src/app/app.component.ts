@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, AfterViewInit  {
   post: Post = {title: '', content: ''} as Post;
   file: File = null;
   posts: Post[];
-  contentEditable = 'true';
+  dateParam =  null;
   @ViewChild('ref', {static: false})
   tref: ElementRef;
 
@@ -28,8 +28,8 @@ export class AppComponent implements OnInit, AfterViewInit  {
     console.log(this.tref);
   }
   ngOnInit(): void {
-    this.currentCategorie = {id: '88', name: 'Informations AVS'};
-    this.mainservice.get().subscribe(data => {
+    this.currentCategorie = {id: 132, name: 'L\'association AVS'};
+    this.mainservice.getPosts().subscribe(data => {
       console.log(data);
       this.posts = data.map(c => {
         return {
@@ -46,7 +46,16 @@ export class AppComponent implements OnInit, AfterViewInit  {
     }
   }
 
-  add() {
+  addPost() {
+      if (this.dateParam == null) {
+        console.log('date is null');
+        this.post.timestamp = new Date().getTime();
+      } else {
+        const date = new Date(this.dateParam);
+        this.post.timestamp = date.getTime();
+        console.log('date not null', this.dateParam);
+        console.log('date not null timestamp', this.post.timestamp);
+      }
       $('#ref').removeAttr('contenteditable');
       this.post.categoryId = this.currentCategorie.id;
       this.post.content  = this.tref.nativeElement.outerHTML;

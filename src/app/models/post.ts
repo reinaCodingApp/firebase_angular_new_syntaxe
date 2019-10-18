@@ -6,10 +6,11 @@ export class Post {
   title: any;
   content: any;
   date: string;
+  timestamp: number;
   excerpt: any;
   src: any;
   category: Category;
-  categoryId: string;
+  categoryId: number;
   fileName: string;
 
 }

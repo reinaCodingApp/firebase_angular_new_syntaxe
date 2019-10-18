@@ -4,11 +4,10 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import {AngularFireStorageModule} from '@angular/fire/storage';
 import { AngularFireModule } from '@angular/fire';
 import { firebaseConfig } from 'src/environments/environment.prod';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import { FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +18,6 @@ import {ReactiveFormsModule, FormsModule} from '@angular/forms';
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
-    AngularFireDatabaseModule,
     AngularFireStorageModule,
     FormsModule
   ],

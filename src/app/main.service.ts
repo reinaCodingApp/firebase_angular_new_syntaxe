@@ -11,11 +11,9 @@ export class MainService {
 
   constructor(private angularFirestore: AngularFirestore, private angualrFireStorage: AngularFireStorage) { }
   private basePath = '';
-  add() {
-    this.angularFirestore.collection('categories').add({name: 'FAQ'});
-  }
-  get(): Observable<any> {
-    return this.angularFirestore.collection('/posts').snapshotChanges();
+  getPosts(): Observable<any> {
+    const postsRef = this.angularFirestore.collection('/posts', ref => ref.where('categoryId', '==', 132));
+    return postsRef.snapshotChanges();
   }
   getFiles(): Observable<any> {
     return this.angualrFireStorage.ref('Welcome Scan.jpg').getDownloadURL();

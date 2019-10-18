@@ -5,7 +5,10 @@
   </div>
     <div class=title>
         <input type="text" [(ngModel)]="post.title"  placeholder="Titre de l'article"/>
-      </div>
+    </div>
+    <div class=title>
+      <input type="date" [(ngModel)]="dateParam"/>
+  </div>
 
       <div id="ref" class="content" #ref contenteditable="true" style="" >
       </div>
@@ -17,13 +20,18 @@
       </div>
 
       <div>
-          <button (click)="add()" >Insérer</button>
+          <button (click)="addPost()" >Insérer</button>
+      </div>
+      <div class="posts">
+        <ul *ngIf="posts">
+          <li *ngFor="let p of posts" >{{p.title + ' ' + p.timestamp}}</li>
+        </ul>
       </div>
 
 
       <div class="test" *ngIf="posts" style="background-color:azure; display: none;">
-        <img src="{{posts[1].src}}" alt="">
-        <div   [innerHTML]="posts[1].content" >
+        <img *ngIf="posts[0] && posts[0].src" src="{{posts[0].src}}" alt="">
+        <div   [innerHTML]="posts[0].content" >
 
         </div>
       </div>
