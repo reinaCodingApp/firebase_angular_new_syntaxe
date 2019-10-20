@@ -2,7 +2,7 @@ import { Category } from './category';
 
 export class Post {
 
-  id: number;
+  id: string;
   title: any;
   content: any;
   date: string;
@@ -10,7 +10,7 @@ export class Post {
   excerpt: any;
   src: any;
   category: Category;
-  categoryId: number;
+  categoryId: string;
   fileName: string;
 
 }

@@ -1,0 +1,39 @@
+<div class=container>
+  <div class=categories>
+    <ul>
+      <li *ngFor="let c of categories" [innerHTML]="c.title" (click)="currentCategorie.id = c.id" [ngClass]="{'selected' : c.id === currentCategorie.id}"></li>
+    </ul>
+  </div>
+    <div class=title>
+        <input type="text" [(ngModel)]="post.title"  placeholder="Titre de l'article"/>
+    </div>
+    <div class=title>
+      <input type="date" [(ngModel)]="dateParam"/>
+  </div>
+
+      <div id="ref" class="content" #ref contenteditable="true" style="" >
+      </div>
+
+
+      <div style="padding:25px;">
+        <h6>Pièce jointe</h6>
+          <input type="file" (change)="filePicked($event)" >
+      </div>
+
+      <div>
+          <button (click)="addPost()" >Insérer</button>
+      </div>
+      <div class="posts">
+        <ul *ngIf="posts">
+          <li *ngFor="let p of posts" >{{p.title + ' ' + p.timestamp}}</li>
+        </ul>
+      </div>
+
+
+      <div class="test" *ngIf="posts" style="background-color:azure; display: none;">
+        <img *ngIf="posts[0] && posts[0].src" src="{{posts[0].src}}" alt="">
+        <div   [innerHTML]="posts[0].content" >
+
+        </div>
+      </div>
+</div>

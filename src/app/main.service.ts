@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable, of, observable } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
 import {finalize } from 'rxjs/operators';
 import { Post } from './models/post';
@@ -12,8 +12,16 @@ export class MainService {
   constructor(private angularFirestore: AngularFirestore, private angualrFireStorage: AngularFireStorage) { }
   private basePath = '';
   getPosts(): Observable<any> {
-    const postsRef = this.angularFirestore.collection('/posts', ref => ref.where('categoryId', '==', 132));
+    const postsRef = this.angularFirestore.collection('/posts', ref => ref.where('categoryId', '==', 'references-juridiques' ));
     return postsRef.snapshotChanges();
+  }
+  getPost(title: string): Observable<any> {
+    const postsRef = this.angularFirestore.collection('/posts', ref => ref.where('title', '==', title));
+    return postsRef.snapshotChanges();
+  }
+  getCategories(): Observable<any> {
+    const catRef = this.angularFirestore.collection('/categories');
+    return catRef.snapshotChanges();
   }
   getFiles(): Observable<any> {
     return this.angualrFireStorage.ref('Welcome Scan.jpg').getDownloadURL();
