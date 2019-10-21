@@ -12,7 +12,7 @@ export class MainService {
   constructor(private angularFirestore: AngularFirestore, private angualrFireStorage: AngularFireStorage) { }
   private basePath = '';
   getPosts(): Observable<any> {
-    const postsRef = this.angularFirestore.collection('/posts', ref => ref.where('categoryId', '==', 'references-juridiques' ));
+    const postsRef = this.angularFirestore.collection('/posts');
     return postsRef.snapshotChanges();
   }
   getPost(title: string): Observable<any> {

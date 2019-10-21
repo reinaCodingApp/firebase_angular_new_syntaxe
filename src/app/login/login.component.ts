@@ -1,5 +1,6 @@
 import { LoginService } from './login.service';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,17 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginService: LoginService) { }
+  password = '';
+  constructor(private loginService: LoginService, private router: Router) { }
 
   connect() {
-    this.loginService.connect('malick@avs.fr', 'Azerty123').then(result => {
+    this.loginService.connect('malick@avs.fr', this.password).then(result => {
       console.log('signin result ', result);
-    })
+      this.router.navigateByUrl('/home');
+    });
   }
   sendReset() {
     this.loginService.SendPasswordReset().then(result => {
       console.log('result reset : ', result);
-    })
+    });
   }
   ngOnInit() {
   }

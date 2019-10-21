@@ -1,8 +1,7 @@
 import { User } from './../models/user';
 import { LoginService } from './../login/login.service';
 import { Component, OnInit } from '@angular/core';
-import { firebaseConfig } from 'src/environments/environment.prod';
-import * as admin from 'firebase-admin';
+
 
 @Component({
   selector: 'app-admin',

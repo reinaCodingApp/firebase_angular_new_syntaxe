@@ -1,7 +1,5 @@
-<p>login works!</p>
+<p>Insérer le mot de passe</p>
 <div>
-  <button (click)="connect()">connect</button>
-</div>
-<div>
-  <button (click)="sendReset()">reset</button>
+  <input type="password" [(ngModel)]="password">
+  <button (click)="connect()">Connexion</button>
 </div>
