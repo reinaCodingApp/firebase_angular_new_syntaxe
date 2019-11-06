@@ -1,18 +1,18 @@
 <mat-table #table [dataSource]="dataSource"
            [@animateStagger]="{value:'50'}">
-           <ng-container matColumnDef="id">
-              <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
-              <mat-cell *matCellDef="let contact">
+           <ng-container matColumnDef="date">
+              <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+              <mat-cell *matCellDef="let post">
                   <p class="job-title text-truncate">
-                      {{contact.id}}
+                      {{post.timestamp | date : 'dd/MM/yyyy'}}
                   </p>
               </mat-cell>
           </ng-container>
            <!-- Job Title Column -->
            <ng-container matColumnDef="title">
               <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-              <mat-cell *matCellDef="let contact">
-                  <p class="text-truncate font-weight-600">{{contact.title}}</p>
+              <mat-cell *matCellDef="let post">
+                  <p class="text-truncate font-weight-600">{{post.title}}</p>
               </mat-cell>
           </ng-container>
     <!-- Buttons Column -->
@@ -20,9 +20,9 @@
 
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let contact; columns: displayedColumns;"
-             class="contact"
-             (click)="editContact(contact)"
+    <mat-row *matRowDef="let post; columns: displayedColumns;"
+             class="post"
+             (click)="popupSelectPost(post)"
              matRipple
              [@animate]="{value:'*',params:{y:'100%'}}">
     </mat-row>

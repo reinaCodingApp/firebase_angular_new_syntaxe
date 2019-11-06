@@ -9,7 +9,7 @@
     <input type="text" [(ngModel)]="post.title" placeholder="Titre de l'article" />
   </div>
   <div class=title>
-    <input type="date" [(ngModel)]="dateParam" />
+    <input type="date" [ngModel]="dateParam | date:'yyyy-MM-dd'" (ngModelChange)="dateParam = $event" />
   </div>
   <div style="padding-bottom:25px;">
     <h3>Pièce jointe</h3>

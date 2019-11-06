@@ -28,7 +28,7 @@ export class PostsComponent implements OnInit, OnDestroy
 
     private _unsubscribeAll: Subject<any>;
     constructor(
-        private _contactsService: PostsService,
+        private postsService: PostsService,
         private _fuseSidebarService: FuseSidebarService,
         private _matDialog: MatDialog
     )
@@ -41,7 +41,7 @@ export class PostsComponent implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
-        this._contactsService.onSelectedContactsChanged
+        this.postsService.onSelectedContactsChanged
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(selectedContacts => {
                 this.hasSelectedContacts = selectedContacts.length > 0;
@@ -54,10 +54,9 @@ export class PostsComponent implements OnInit, OnDestroy
                 distinctUntilChanged()
             )
             .subscribe(searchText => {
-                this._contactsService.onSearchTextChanged.next(searchText);
+                this.postsService.onSearchTextChanged.next(searchText);
             });
-        this._contactsService.onPostsChanged.subscribe(posts => {
-              console.log('articles ', posts);
+        this.postsService.onPostsChanged.subscribe(posts => {
               this.posts = posts;
             });
     }
@@ -82,8 +81,6 @@ export class PostsComponent implements OnInit, OnDestroy
                 {
                     return;
                 }
-
-                this._contactsService.updateContact(response.getRawValue());
             });
     }
     toggleSidebar(name): void

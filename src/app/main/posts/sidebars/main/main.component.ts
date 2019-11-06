@@ -22,12 +22,6 @@ export class ContactsMainSidebarComponent implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
-
-        this.postsService.onUserDataChanged
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(user => {
-                this.user = user;
-            });
         this.postsService.getCategories().subscribe(result => {
               this.categories = result;
             });
@@ -39,6 +33,7 @@ export class ContactsMainSidebarComponent implements OnInit, OnDestroy
     }
     changeFilter(filter): void
     {
+        console.log('filter categorie ', filter);
         this.filterBy = filter;
         this.postsService.onFilterChanged.next(this.filterBy);
     }

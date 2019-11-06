@@ -1,7 +1,8 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Inject, ViewEncapsulation, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Contact } from '../contact.model';
+import { Post } from 'app/models/post';
+import $ from 'jquery';
+import { PostsService } from '../posts.service';
 
 
 
@@ -12,47 +13,52 @@ import { Contact } from '../contact.model';
     encapsulation: ViewEncapsulation.None
 })
 
-export class ContactsContactFormDialogComponent
+export class ContactsContactFormDialogComponent implements OnInit, AfterViewInit
 {
-    action: string;
-    contact: Contact;
-    contactForm: FormGroup;
-    dialogTitle: string;
-    constructor(
-        public matDialogRef: MatDialogRef<ContactsContactFormDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) private _data: any,
-        private _formBuilder: FormBuilder
-    )
-    {
-        this.action = _data.action;
-        if ( this.action === 'edit' )
-        {
-            this.dialogTitle = 'Modifier un article';
-            this.contact = _data.contact;
-        }
-        else
-        {
-            this.dialogTitle = 'Nouvel article';
-            this.contact = new Contact({});
-        }
 
-        this.contactForm = this.createContactForm();
-    }
-    createContactForm(): FormGroup
+    post: Post;
+    dateParam = new Date();
+    @ViewChild('ref', {static: false})
+    ref: ElementRef;
+    constructor(private postsService: PostsService,
+                public matDialogRef: MatDialogRef<ContactsContactFormDialogComponent>,
+                @Inject(MAT_DIALOG_DATA) private _data: any)
     {
-        return this._formBuilder.group({
-            id      : [this.contact.id],
-            name    : [this.contact.name],
-            lastName: [this.contact.lastName],
-            avatar  : [this.contact.avatar],
-            nickname: [this.contact.nickname],
-            company : [this.contact.company],
-            jobTitle: [this.contact.jobTitle],
-            email   : [this.contact.email],
-            phone   : [this.contact.phone],
-            address : [this.contact.address],
-            birthday: [this.contact.birthday],
-            notes   : [this.contact.notes]
+        this.post = _data.post;
+        this.dateParam = new Date(this.post.timestamp);
+
+    }
+
+
+    save() {
+      $('.content').removeAttr('contenteditable');
+      this.post.content = $('#parent').children()[0].outerHTML;
+      this.post.editionDate = new Date().getTime();
+      if (this.dateParam == null) {
+        this.post.timestamp = new Date().getTime();
+      } else {
+        const date = new Date(this.dateParam);
+        this.post.timestamp = date.getTime();
+      }
+      this.matDialogRef.close(['save', this.post]);
+    }
+    filePicked(fileInput){
+      if (fileInput.target.files && fileInput.target.files[0]) {
+        console.log();
+        this.postsService.uploadFile(this.post, fileInput.target.files[0]).subscribe(percent => {
+          console.log(percent);
         });
+      }
+    }
+    removePostUrl() {
+      this.post.src = null;
+      this.post.fileName = null;
+    }
+
+    ngOnInit(): void {
+
+    }
+    ngAfterViewInit() {
+      $('.content').attr('contenteditable', 'true');
     }
 }

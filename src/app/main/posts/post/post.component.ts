@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { PostService } from './post.service';
 import { PostsService } from '../posts.service';
 import { Post } from 'app/models/post';
 import { Category } from 'app/models/category';
@@ -13,7 +12,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class PostComponent implements OnInit, AfterViewInit{
 
-  constructor(private postService: PostService, private postsService: PostsService) { }
+  constructor(private postsService: PostsService) { }
 
   contactForm: FormGroup;
 
@@ -23,7 +22,7 @@ export class PostComponent implements OnInit, AfterViewInit{
   posts: Post[];
   categories: Category[];
   currentCategorie: Category = new Category();
-  dateParam =  null;
+  dateParam =  new Date();
   confirmationText = '';
   @ViewChild('ref', {static: false})
   tref: ElementRef;
@@ -34,7 +33,7 @@ export class PostComponent implements OnInit, AfterViewInit{
     console.log(this.tref);
   }
   ngOnInit(): void {
-    this.postService.onPostChanged.subscribe(data => {
+    this.postsService.onPostChanged.subscribe(data => {
       console.log('postService.onPostChanged', data);
     });
     this.postsService.getCategories().subscribe(result => {
@@ -43,13 +42,6 @@ export class PostComponent implements OnInit, AfterViewInit{
         this.currentCategorie.id = this.categories[0].id;
       }
     });
-    /*
-    this.postsService.getPosts().subscribe(data => {
-      console.log(data);
-      this.posts = data;
-    });
-    */
-    // this.getFiles();
     this.postsService.getPost('Mentions Légales').subscribe(result => {
       console.log(result);
       if (result && result.length > 0) {
@@ -64,31 +56,7 @@ export class PostComponent implements OnInit, AfterViewInit{
       this.file = fileInput.target.files[0];
     }
   }
-  private getPostId(title: string) {
-    const id = title.trim().toLowerCase().replace('?', '').
-    replace(/'/g, '').replace(/"/g, '').replace(/!/g, '').replace(/:/g, '').trim().replace(/ /g, '-')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    console.log('id ', id);
-    return id;
-  }
-  private getExcerpt(outerHTML: any) {
-    let excerpt = null;
-    if (outerHTML == null) {
-    return excerpt;
-    }
-    const stripedHtml: string = outerHTML.replace(/<[^>]+>/g, '');
-    if (stripedHtml.length >= 500) {
-      excerpt = stripedHtml.slice(0, 255);
 
-    } else {
-      excerpt = stripedHtml.slice(0, stripedHtml.length / 2);
-    }
-
-    const lastIndexOf = excerpt.lastIndexOf(' ');
-    excerpt = excerpt.slice(0, lastIndexOf);
-    excerpt += '...';
-    return excerpt;
-  }
 
   addPost() {
     if (!this.post.title || this.post.title.length < 10) {
@@ -108,8 +76,6 @@ export class PostComponent implements OnInit, AfterViewInit{
       this.confirmationText = 'Le corp de l\'article doit dépasser les 255 carctères';
       return;
     }
-    this.post.id = this.getPostId(this.post.title);
-    this.post.excerpt = this.getExcerpt(this.post.content);
     console.log(this.post.content);
     $('#ref').attr('contenteditable', 'true');
     this.postsService.insertPost(this.post, this.file).subscribe(result => {
@@ -131,13 +97,4 @@ export class PostComponent implements OnInit, AfterViewInit{
     }, 6000);
     });
   }
-  upload() {
-    console.log('upload()');
-  }
-  getFiles() {
-    this.postsService.getFiles().subscribe(response => {
-      console.log('getfiles', response);
-    });
-  }
-
 }

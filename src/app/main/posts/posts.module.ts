@@ -12,13 +12,11 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTableModule } from '@angular/material/table';
 import { PostComponent } from './post/post.component';
-import { PostService } from './post/post.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRippleModule } from '@angular/material/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FuseConfirmDialogModule, FuseSidebarModule } from '@fuse/components';
 import { ContactsContactListComponent } from './contact-list/contact-list.component';
-import { ContactsSelectedBarComponent } from './selected-bar/selected-bar.component';
 import { ContactsMainSidebarComponent } from './sidebars/main/main.component';
 import { ContactsContactFormDialogComponent } from './contact-form/contact-form.component';
 import { PostsService } from './posts.service';
@@ -27,7 +25,7 @@ import { PostsService } from './posts.service';
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   { path: 'posts', component: PostsComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: {resolve: PostsService} },
-  {path: 'posts/:uid', component: PostComponent, resolve: {resolve: PostService}}
+  {path: 'posts/:uid', component: PostComponent}
 
 ];
 
@@ -35,7 +33,6 @@ const routes: Routes = [
   declarations: [PostsComponent,
     PostComponent,
     ContactsContactListComponent,
-    ContactsSelectedBarComponent,
     ContactsMainSidebarComponent,
     ContactsContactFormDialogComponent],
   imports: [

@@ -42,9 +42,6 @@
   </div>
   <!-- / HEADER -->
 
-  <!-- SELECTED BAR -->
-  <selected-bar class="accent-600" *ngIf="hasSelectedContacts" [@slideInTop]></selected-bar>
-  <!-- / SELECTED BAR -->
 
   <!-- CONTENT -->
   <div class="content">
@@ -79,8 +76,8 @@
 </div>
 
 
-<button mat-fab class="accent" id="add-contact-button" routerLink="new" aria-label="add contact"
+<button mat-fab class="accent" id="add-contact-button" routerLink="new" title="Ajouter un nouvel article" aria-label="add contact"
       [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
-  <mat-icon>person_add</mat-icon>
+  <mat-icon>library_add</mat-icon>
 </button>
 
