@@ -1,0 +1,289 @@
+<div
+  class="p-sm-16 pb-0"
+  fxLayout="row"
+  style="background-color: rgb(244, 244, 244) !important;
+  min-height: 100vh !important;"
+>
+  <div fxLayout="row" fxLayoutAlign="space-around" fxFlex>
+    <!-- Weeks & Sectors -->
+    <fuse-sidebar
+      class="sidebar"
+      name="tasks-sidebar"
+      position="left"
+      lockedOpen="gt-sm"
+    >
+      <!-- SIDEBAR CONTENT -->
+      <div class="content" fusePerfectScrollbar>
+        <div class="sidebar-content">
+          <div class="card">
+            <mat-tab-group mat-stretch-tabs dynamicHeight>
+              <mat-tab label="Semaines">
+                <div class="content p-16" fusePerfectScrollbar>
+                  <div class="nav material2">
+                    <div class="nav-item" *ngFor="let week of latestWeeks">
+                      <a
+                        class="nav-link"
+                        matRipple
+                        [ngClass]="{
+                          'active accent': currentWeek?.id == week?.id
+                        }"
+                        (click)="
+                          currentWeek = week;
+                          currentSector = null;
+                          findGeneratedTasks()
+                        "
+                      >
+                        <span>{{ "Semaine " + week.weekNumber }}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab label="Secteurs">
+                <div class="content p-16" fusePerfectScrollbar>
+                  <div class="nav material2">
+                    <div class="nav-item" *ngFor="let sector of sectors">
+                      <a
+                        class="nav-link"
+                        matRipple
+                        [ngClass]="{
+                          'active accent': currentSector?.id == sector?.id
+                        }"
+                        (click)="
+                          currentSector = sector;
+                          currentWeek = null;
+                          findGeneratedTasks()
+                        "
+                      >
+                        <span>{{ sector.name }}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+      <!-- / SIDEBAR CONTENT -->
+    </fuse-sidebar>
+
+    <!-- TASKS -->
+    <div fxLayout="column" fxFlex>
+      <div
+        class="header p-8"
+        fxLayout.gt-md="row"
+        fxLayout.lt-md="column"
+        fxLayoutAlign="space-between center"
+      >
+        <div fxLayoutAlign="space-between center" class="pl-4">
+          <button
+            mat-icon-button
+            class="sidebar-toggle mr-12"
+            fxHide.gt-sm
+            (click)="commonService.toggleSidebar('tasks-sidebar')"
+          >
+            <mat-icon>menu</mat-icon>
+          </button>
+          <!-- <h3 class="m-0">
+            <span [matBadge]="tasks.length" matBadgeOverlap="false">Total</span>
+          </h3> -->
+          <button class="m-8" mat-raised-button>
+            {{ "Total: " + tasks.length }}
+          </button>
+        </div>
+        <mat-checkbox
+          [checked]="includeClosedTasks"
+          (change)="includeClosedTasks = $event.checked"
+          >Afficher également les tâches clôturées ?
+        </mat-checkbox>
+        <div
+          fxLayoutAlign="space-between center"
+          class="search-wrapper mt-16 mt-md-0 pl-4"
+        >
+          <div class="search" fxFlex fxLayout="row" fxLayoutAlign="end center">
+            <button mat-icon-button class="secondary-text">
+              <mat-icon>search</mat-icon>
+            </button>
+            <input
+              placeholder="Recherche par mot clé"
+              name="search"
+              [(ngModel)]="filterInput"
+              (keyup.enter)="findGeneratedTasks()"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="header p-8"
+        fxLayout="row wrap"
+        fxLayoutAlign="space-around center"
+      >
+        <button
+          class="m-8"
+          mat-raised-button
+          color="primary"
+          (click)="getRecentlyOutdatedTasks()"
+        >
+          Échéances de la semaine
+        </button>
+        <button
+          class="m-8"
+          mat-raised-button
+          class="deadline-checked-red"
+          (click)="getOutdatedTasks()"
+        >
+          Deadlines dépassées
+        </button>
+        <button
+          class="m-8"
+          mat-raised-button
+          class="deadline-checked-green"
+          (click)="displayClosedGeneratedTasks()"
+        >
+          Clôturées
+        </button>
+        <button
+          class="m-8"
+          mat-raised-button
+          class="deadline-checked-yellow"
+          (click)="displayNotClosedGeneratedTasks()"
+        >
+          Non clôturées
+        </button>
+      </div>
+      <div class="ml-16 mr-16">
+        <div class="fuse-card mb-8" *ngFor="let task of tasks; index as i">
+          <div fxLayout="row" fxLayoutAlign="space-between">
+            <!-- INFO -->
+            <div fxLayout="column" fxFlex="85">
+              <div class="p-16" fxLayout="row" fxLayoutAlign="space-between">
+                <div fxLayout="column" fxLayoutAlign="start">
+                  <div class="h2 pr-8">
+                    {{ task.folderName }}
+                  </div>
+                  <div class="h4 m-0 p-0 sector-text">
+                    {{ task.employeeName }}
+                  </div>
+                </div>
+                <button
+                  *ngIf="habilitation.canEdit()"
+                  fxLayout="row"
+                  fxLayoutAlign="end"
+                  mat-icon-button
+                  (click)="reaffectGeneratedTask(task, i)"
+                >
+                  <mat-icon color="primary">settings</mat-icon>
+                </button>
+              </div>
+              <div class="card-divider full-width"></div>
+              <div class="p-16" fxLayout="row">
+                <div
+                  fxLayout="row wrap"
+                  fxLayoutAlign="start"
+                  class="content-text"
+                >
+                  <div
+                    class="h4"
+                    [outerHTML]="task.parentContent | replaceLineBreaks"
+                  ></div>
+                </div>
+              </div>
+              <div class="card-divider full-width"></div>
+              <div class="decision-text" fxLayout="row">
+                {{ task.content }}
+              </div>
+              <div class="card-divider full-width"></div>
+              <div class="decision-text" fxLayout="row">
+                {{ "Deadline : " + task.endDate }}
+              </div>
+            </div>
+            <!-- ISCLOSED -->
+            <div
+              fxLayout="row"
+              fxLayoutAlign="center center"
+              fxFlex="15"
+              [ngClass]="{
+                'deadline-checked-yellow': !task.isLate && !task.isClosed,
+                'deadline-checked-green': task.isClosed,
+                'deadline-checked-red': task.isLate
+              }"
+              (click)="closeGeneratedTask(task, i)"
+            >
+              <mat-icon style="color: white;">check_circle_outline</mat-icon>
+            </div>
+          </div>
+          <!-- COMMENTS -->
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header
+                style="background-color: #f4f4f4 !important"
+              >
+                <mat-panel-title>
+                  <button mat-icon-button>
+                    <mat-icon
+                      [matBadge]="task.comments.length"
+                      matBadgeOverlap="false"
+                      matRipple
+                      >comment</mat-icon
+                    >
+                  </button>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div
+                fxLayout="row"
+                fxLayout.lt-md="column"
+                *ngFor="let comment of task.comments"
+                class="px-4 py-16"
+              >
+                <div fxLayout="column" fxFlex="20%">
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <span>{{ comment.ownerName }}</span>
+                  </div>
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div class="time">
+                      {{ comment.date }}
+                    </div>
+                  </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="start" fxFlex="80%">
+                  <div
+                    class="comment-panel"
+                    fxLayout="row"
+                    fxLayoutAlign="start"
+                  >
+                    <span>{{ comment.content }}</span>
+                  </div>
+                </div>
+              </div>
+              <!-- COMMENT FORM -->
+              <div fxLayout="column" fxLayoutAlign="space-between" *ngIf="habilitation.canCreate()">
+                <div fxLayout="row">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Commentaire</mat-label>
+                    <textarea
+                      [(ngModel)]="commentContent"
+                      placeholder="Commentaire"
+                      matInput
+                      name="comment"
+                    >
+                    </textarea>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="end center">
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="addGeneratedTaskComment(task, i)"
+                  >
+                    Envoyer
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

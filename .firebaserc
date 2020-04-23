@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "dev-p00001",
+    "staging": "staging-p00001",
+    "prod": "p00001-7b66f"
+  }
+}

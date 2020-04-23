@@ -1,0 +1,247 @@
+<div *ngIf="!ticket" fxLayout="column" fxLayoutAlign="center center" fxFlex>
+  <mat-icon
+    class="s-128 mb-16 select-message-icon hint-text"
+    [@animate]="{ value: '*', params: { delay: '300ms', scale: '0.2' } }"
+  >
+    email
+  </mat-icon>
+  <span
+    class="select-message-text hint-text"
+    fxLayoutAlign="center center"
+    [@animate]="{ value: '*', params: { delay: '400ms' } }"
+  >
+    <span>Veuillez sélectionner un ticket dans la liste</span>
+  </span>
+</div>
+
+<div *ngIf="ticket" class="p-12">
+  <div class="mail-header" fxLayout="column" fxLayoutAlign="space-between">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <div class="subject">{{ ticket.title }}</div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button
+            [disabled]="ticket.isResolved"
+            mat-icon-button
+            (click)="updateTicketUrgent()"
+            [matTooltip]="
+              ticket.urgent && !ticket.isResolved ? 'Classer non urgent' : 'Classer urgent'
+            "
+          >
+            <mat-icon [color]="ticket.urgent ? 'warn' : true">
+              label_outline
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="labels mt-8" fxLayout="row wrap">
+        <div class="label" fxLayout="row" fxLayoutAlign="start center">
+          <div class="label-color" style="background-color: #039be5;"></div>
+          <div class="label-title">
+            {{ ticket.serviceName | uppercase }}
+          </div>
+        </div>
+        <div class="label" fxLayout="row" fxLayoutAlign="start center">
+          <div
+            class="label-color"
+            [ngStyle]="{
+              'background-color': ticket.isResolved ? '#91dc5b' : '#ffd31a'
+            }"
+          ></div>
+          <div class="label-title">
+            {{ ticket.isResolved ? "Clôturée" : "En cours" }}
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="mail-content">
+    <div class="info" fxLayout="row" fxLayoutAlign="space-between start">
+      <div fxFlex fxLayout="column" fxLayoutAlign="start start">
+        <div fxLayout="row" fxLayoutAlign="start start">
+          <div>
+            <div class="avatar accent">{{ ticket.ownerLastName[0] }}</div>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <div class="name">
+              {{ ticket.ownerLastName }} {{ ticket.ownerFirstName }}
+            </div>
+
+            <div class="to" fxLayout="row" fxLayoutAlign="start center">
+              <div class="to-text">{{ ticket.date }}</div>
+            </div>
+          </div>
+        </div>
+
+        <a class="toggle-details" (click)="showDetails = !showDetails">
+          <span *ngIf="!showDetails">Afficher les détails</span>
+          <span *ngIf="showDetails">Cacher les détails</span>
+        </a>
+
+        <div
+          *ngIf="showDetails"
+          class="details"
+          fxLayout="row"
+          fxLayoutAlign="start start"
+        >
+          <div fxLayout="column">
+            <span class="title">Émis par :</span>
+            <span class="title">Date d'émission :</span>
+            <span class="title">Deadline :</span>
+          </div>
+
+          <div fxLayout="column">
+            <span class="detail"
+              >{{ ticket.ownerLastName }} {{ ticket.ownerFirstName }}</span
+            >
+            <span class="detail">{{ ticket.date }} à {{ ticket.time }}</span>
+            <span class="detail">{{ ticket.deadline }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="moreMenu"
+        aria-label="More"
+        (click)="$event.stopPropagation()"
+        *ngIf="habilitation && habilitation.isAdmin()"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #moreMenu="matMenu">
+        <button
+          mat-menu-item
+          aria-label="close ticket"
+          *ngIf="!ticket.isResolved"
+          (click)="closeTicket()"
+        >
+          <mat-icon>check</mat-icon>
+          <span>Clôturer</span>
+        </button>
+        <button
+          mat-menu-item
+          aria-label="close ticket"
+          *ngIf="ticket.isResolved"
+          (click)="reOpenTicket()"
+        >
+          <mat-icon>check</mat-icon>
+          <span>Ouvrir</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <div [innerHTML]="ticket.details | replaceLineBreaks"></div>
+    <div *ngIf="ticket.hasAttachments" class="mail-attachments">
+      <div class="title">
+        <span>Document joint</span>
+      </div>
+      <div class="attachment-list" fxLayout="row wrap">
+        <div
+          *ngFor="let attachment of ticket.attachments"
+          class="attachment"
+          fxLayout="column"
+        >
+          <a style="cursor: pointer;" (click)="downloadAttachment(attachment)">
+            {{ attachment.fileName }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="column">
+    <div *ngIf="ticket.comments.length !== 0">
+      <div *ngFor="let item of ticket.comments">
+        <div fxLayout="column">
+          <div
+            class="comment-panel p-16"
+            fxLayout="row"
+            [innerHTML]="item.content | replaceLineBreaks"
+          ></div>
+          <div fxLayoutAlign="end" class="pt-4">
+            <span class="font-weight-700 mb-8 px-4">{{ item.owner }}</span
+            ><span class="px-4">{{ item.date }} {{ item.time }}</span>
+          </div>
+          <div
+            *ngIf="item.attachments.length !== 0"
+            class="mail-attachments"
+            fxLayout="column"
+          >
+            <div class="title">Documents joints</div>
+            <div class="attachment-list" fxLayout="row wrap">
+              <div *ngFor="let attachment of item.attachments" fxLayout="row">
+                <a
+                  style="cursor: pointer;"
+                  (click)="downloadAttachment(attachment)"
+                  class="pr-8"
+                >
+                  {{ attachment.fileName }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPLY FORM -->
+    <div
+      *ngIf="ticket.isResolved; else notClosed"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    >
+      <button mat-raised-button color="primary">
+        Ce ticket est clôturée
+      </button>
+    </div>
+    <ng-template #notClosed>
+      <div *ngIf="habilitation && habilitation.canEdit()" class="p-16">
+        <div fxLayout="row" class="mt-8">
+          <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>Votre message ici</mat-label>
+            <textarea
+              class="m-8"
+              [(ngModel)]="newComment"
+              matInput
+              rows="6"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div
+          fxLayout="row wrap"
+          class="m-8"
+          fxLayoutAlign="space-between center"
+        >
+          <input
+            hidden
+            #file
+            type="file"
+            name="file"
+            id="file"
+            class="inputfile"
+            multiple="multiple"
+            (change)="preview(file.files)"
+          />
+          <button mat-fab color="warn" type="button" (click)="file.click()">
+            <mat-icon>attachment</mat-icon>
+          </button>
+          <div
+            *ngFor="let file of filesToUpload"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+          >
+            <span>{{ file.name }}</span>
+            <button mat-icon-button (click)="removeFile(file)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <button mat-raised-button color="accent" (click)="addComment()">
+            Répondre
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

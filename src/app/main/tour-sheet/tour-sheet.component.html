@@ -1,0 +1,46 @@
+<div class="page-layout simple left-sidebar inner-scroll">
+  <!-- SIDEBAR -->
+  <fuse-sidebar
+    class="sidebar"
+    name="tour-sheet-sidebar"
+    position="left"
+    lockedOpen="gt-sm"
+  >
+    <!-- SIDEBAR CONTENT -->
+    <div class="content p-8" fusePerfectScrollbar>
+      <tour-sheet-sidebar></tour-sheet-sidebar>
+    </div>
+    <!-- / SIDEBAR CONTENT -->
+  </fuse-sidebar>
+  <!-- / SIDEBAR -->
+
+  <!-- CENTER -->
+  <div class="center" fusePerfectScrollbar>
+    <!-- HEADER -->
+    <div
+      id="non-printable"
+      class="header accent p-24"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+    >
+      <button
+        mat-icon-button
+        class="sidebar-toggle mr-8"
+        fxHide.gt-sm
+        (click)="toggleSidebar('tour-sheet-sidebar')"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <h2 class="m-0">Feuilles de tournées</h2>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="p-sm-24 full-content">
+      <tour-sheet-content></tour-sheet-content>
+    </div>
+    <!-- / CONTENT -->
+  </div>
+  <!-- / CENTER -->
+</div>

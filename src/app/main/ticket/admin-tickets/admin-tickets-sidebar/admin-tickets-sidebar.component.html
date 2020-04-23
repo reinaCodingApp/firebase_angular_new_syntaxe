@@ -1,0 +1,94 @@
+<!-- SIDEBAR HEADER -->
+<div
+  fxLayout="column"
+  fxLayoutAlign="space-between start"
+  class="header accent p-24 pb-4"
+>
+  <div class="logo" fxFlex fxLayout="row" fxLayoutAlign="start center">
+    <span
+      class="logo-text"
+      [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }"
+      >Tickets techniques</span
+    >
+  </div>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div
+  class="content"
+  fusePerfectScrollbar
+  [@animate]="{ value: '*', params: { y: '50px' } }"
+>
+  <div class="px-24 pt-32 pb-12">
+    <button
+      mat-raised-button
+      class="mat-accent compose-dialog-button w-100-p"
+      aria-label="Compose"
+      (click)="addTicket()"
+    >
+      Nouvelle demande
+    </button>
+  </div>
+  <div class="nav material2">
+    <!-- <div class="mt-24 nav-subheader"></div> -->
+    <div class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active accent': currentUrl == 'admin-tickets/pending' }"
+        matRipple
+        [routerLink]="'/admin-tickets/pending'"
+      >
+        <mat-icon class="nav-link-icon primary-600-fg">email</mat-icon>
+        <span>
+          En cours
+        </span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active accent': currentUrl == 'admin-tickets/urgent' }"
+        matRipple
+        [routerLink]="'/admin-tickets/urgent'"
+        ><mat-icon class="nav-link-icon red-600-fg"
+          >label_outline</mat-icon
+        >
+        <span>Urgent</span>
+      </a>
+    </div>
+    <div class="nav-subheader">SERVICES</div>
+    <div class="nav-item" *ngFor="let service of services">
+      <a
+        class="nav-link"
+        [ngClass]="{
+          'active accent': currentUrl == 'admin-tickets/filter/' + service.id
+        }"
+        [routerLink]="'/admin-tickets/filter/' + service.id"
+        matRipple
+        ><mat-icon class="nav-link-icon">folder</mat-icon>
+        <span class="text-capitalized">{{ service.title }}</span>
+      </a>
+    </div>
+    <div class="nav-subheader">HISTORIQUE</div>
+    <div class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active accent': currentUrl == 'admin-tickets/closed' }"
+        matRipple
+        [routerLink]="'/admin-tickets/closed'"
+        ><mat-icon class="nav-link-icon green-600-fg"
+          >playlist_add_check</mat-icon
+        >
+        <span>Clôturées</span>
+      </a>
+    </div>
+    <div class="nav-item" *ngIf="inSearchMode === true">
+      <a class="nav-link active accent" matRipple>
+        <mat-icon class="nav-link-icon green-600-fg">search</mat-icon>
+        <span>Rechercher</span>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- / SIDEBAR CONTENT -->

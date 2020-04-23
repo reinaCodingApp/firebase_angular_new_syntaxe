@@ -1,0 +1,141 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    /***************************************************************************
+    ************************** Custom functions ********************************
+    ****************************************************************************/
+  	function isTechAdmin() {
+   		return request.auth.token.isTechAdmin == true;
+  	}
+    function isRoot() {
+    	return request.auth.token.isRoot == true;
+    }
+    function isLoggedin() {
+     return request.auth != null;
+    }
+    function never() {
+    	return false;
+    }
+
+    /***************************************************************************
+    ************************** Modules and keys ********************************
+    ****************************************************************************/
+    match /modules/{document} {
+        allow get, list : if isLoggedin();
+        allow create : if isTechAdmin();
+        allow update : if isRoot() && request.resource.data.key == resource.data.key;
+        allow delete : if never();
+    }
+    match /moduleKeys/{document} {
+    	allow get, list : if isLoggedin();
+      allow create : if isRoot();
+      allow update : if never();
+      allow delete : if never();
+    }
+    /***************************************************************************
+    ************************** User shortcuts  *********************************
+    ****************************************************************************/
+    match /shortcuts/{document} {
+        allow get: if request.auth.uid == resource.id;
+        allow list: if never();
+        allow create, update : if true;
+        allow delete: if never();
+    }
+    /***************************************************************************
+    ************************** Notifications group *****************************
+    ****************************************************************************/
+    match /groupsNotifications/{document} {
+        allow get, list : if isTechAdmin();
+        allow create, update, delete : if isTechAdmin();
+    }
+    /***************************************************************************
+    ************************** Audits and templates ****************************
+    ****************************************************************************/
+    match /auditItems/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+    match /auditMenus/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+    match /auditSections/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+    match /auditTemplateDetails/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+    match /auditTemplates/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+    match /audits/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update : if isLoggedin();
+        allow delete: if never();
+    }
+    match /auditItemPossibleValues/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+
+    /***************************************************************************
+    ************************** Posts and categories ****************************
+    ****************************************************************************/
+    match /posts/{document} {
+        allow get, list : if true;
+        allow create, update : if isLoggedin();
+        allow delete: if isLoggedin();
+    }
+    match /categories/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update : if isLoggedin();
+        allow delete: if never();
+    }
+    match /deleted.posts/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update : if isLoggedin();
+        allow delete: if never();
+    }
+    /***************************************************************************
+    ************************** Timeline and news   *****************************
+    ****************************************************************************/
+    match /news/{document} {
+        allow get, list : if isLoggedin();
+        allow create: if isLoggedin();
+        allow update: if never();
+        allow delete: if never();
+    }
+
+    match /newsDetails/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update : if isLoggedin();
+        allow delete: if never();
+    }
+
+    match /publicMessages/{document} {
+        allow get, list : if isLoggedin();
+        allow create: if isLoggedin();
+        allow update: if isLoggedin();
+        allow delete: if never();
+    }
+
+    match /publicComments/{document} {
+        allow get, list : if isLoggedin();
+        allow create: if isLoggedin();
+        allow update: if never();
+        allow delete: if never();
+    }
+  /***************************************************************************
+    ************************** Modules and keys ********************************
+    ****************************************************************************/
+    match /appVersions/{document} {
+        allow get, list;
+        allow create : if isLoggedin();
+        allow update : if never();
+        allow delete : if never();
+    }
+  }
+}

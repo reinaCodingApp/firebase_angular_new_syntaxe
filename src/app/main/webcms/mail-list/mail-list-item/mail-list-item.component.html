@@ -1,0 +1,45 @@
+<div fxLayout="row" fxLayoutAlign="start center">
+  <mat-checkbox
+    style="display: none;"
+    [(ngModel)]="selected"
+    (click)="$event.stopPropagation()"
+  ></mat-checkbox>
+
+  <div class="info" fxFlex FlexLayout="column">
+    <div class="row-1" fxLayout="row" fxLayoutAlign="start center">
+      <div class="name" fxLayout="row" fxLayoutAlign="start center" fxFlex>
+        <div class="avatar accent">{{ mail.name[0] }}</div>
+        <span class="text-truncate">{{ mail.name | uppercase }}</span>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button class="s-16" mat-icon-button *ngIf="mail.unreadCommentsCount > 0">
+          <span
+            [matBadge]="mail.unreadCommentsCount"
+            matBadgeOverlap="false"
+            matRipple
+            matBadgeColor="warn"
+          >
+          </span>
+        </button>
+        <div class="time">{{ mail.date | date:'dd/MM/yyy' }}</div>
+      </div>
+    </div>
+    <div class="row-2" fxLayout="row" fxLayoutAlign="start center">
+      <div
+        fxLayout="column"
+        fxLayoutAlign="start start"
+        [ngClass]="{
+          'unread-comments': !mail.read
+        }"
+      >
+        <div class="subject text-truncate">
+          {{ mail.subject }}
+        </div>
+        <div class="message text-truncate" *ngIf="mail?.content">
+          {{ mail.content | htmlToPlaintext | slice: 0:180
+          }}{{ mail.content.length > 180 ? "..." : "" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

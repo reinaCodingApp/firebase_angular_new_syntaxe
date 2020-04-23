@@ -1,0 +1,93 @@
+<div class="mat-card mat-elevation-z4 p-8">
+  <div fxLayout="row" fxLayoutAlign="start center" *ngIf="habilitation.isAdmin()">
+    <button
+      type="submit"
+      mat-raised-button
+      color="accent"
+      (click)="addOrUpdateActivityHoliday('new')"
+    >
+      Ajouter un jour férié
+      <mat-icon class="s-20">add</mat-icon>
+    </button>
+  </div>
+  <mat-table [dataSource]="acitvityHolidays">
+    <ng-container matColumnDef="id">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >#</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
+        <span class="job-title">
+          {{ holiday.id }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="title">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Titre</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
+        <span class="job-title">
+          {{ holiday.title }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="date">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Date</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
+        <span class="job-title">
+          {{ holiday.date | date: 'dd/MM/yyyy' }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="static">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Statique</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
+        <span class="job-title">
+          <mat-checkbox [checked]="holiday.isStatic" disabled></mat-checkbox>
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell
+        fxLayoutAlign="center center"
+        *matHeaderCellDef
+      ></mat-header-cell>
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
+        <span class="job-title" *ngIf="habilitation.isAdmin()">
+          <div
+            class="buttons-row"
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+          >
+            <button
+              mat-icon-button
+              color="accent"
+              class="mat-elevation-z1"
+              (click)="addOrUpdateActivityHoliday('edit', holiday)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              class="mat-elevation-z1"
+              (click)="deleteActivityHoliday(holiday)"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </span>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      *matRowDef="let holiday; columns: displayedColumns"
+      class="activity"
+    >
+    </mat-row>
+  </mat-table>
+</div>

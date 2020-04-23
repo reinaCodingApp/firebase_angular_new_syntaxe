@@ -133,6 +133,9 @@ export class FuseNavigationService
         // Notify the subject
         this._onNavigationRegistered.next([key, navigation]);
     }
+    alreadyRegistred(key): boolean{
+      return this._registry[key];
+    }
 
     /**
      * Unregister the navigation from the registry

@@ -1,0 +1,133 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"
+        >Ajouter traçabilité
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="addSheetItem(f)"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Types</mat-label>
+        <mat-select
+          class="custom-select"
+          name="type"
+          [(ngModel)]="selectedMaterialType"
+          (selectionChange)="initForm()"
+          required
+        >
+          <mat-select-trigger>
+            <img
+              *ngIf="selectedMaterialType"
+              [src]="selectedMaterialType.imgSrc"
+              style="width: 45px;"
+            />
+          </mat-select-trigger>
+          <mat-option
+            *ngFor="let materialType of materialTypes"
+            [value]="materialType"
+          >
+            <img [src]="materialType.imgSrc" style="width: 45px;" />
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Couleur</mat-label>
+        <mat-select
+          class="custom-select"
+          name="color"
+          [(ngModel)]="sheetItem.colorId"
+          required
+        >
+          <mat-option *ngFor="let color of colors" [value]="color.id">
+            {{ color.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        fxFlex="100"
+        *ngIf="selectedMaterialType.id !== 2"
+      >
+        <mat-label> RÉFÉRENCE</mat-label>
+        <input
+          matInput
+          name="reference"
+          [(ngModel)]="sheetItem.reference"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field
+        appearance="outline"
+        fxFlex="100"
+        *ngIf="selectedMaterialType.id == 7 || selectedMaterialType.id == 5"
+      >
+        <mat-label>DÉBUT</mat-label>
+        <input
+          matInput
+          name="numberStart"
+          type="number"
+          [(ngModel)]="sheetItem.numberStart"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field
+        appearance="outline"
+        fxFlex="100"
+        *ngIf="selectedMaterialType.id == 7 || selectedMaterialType.id == 5"
+      >
+        <mat-label>FIN</mat-label>
+        <input
+          matInput
+          name="numberEnd"
+          type="number"
+          [(ngModel)]="sheetItem.numberEnd"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field
+        appearance="outline"
+        fxFlex="100"
+        *ngIf="selectedMaterialType.id != 7 && selectedMaterialType.id != 5"
+      >
+        <mat-label>QUANTITÉ</mat-label>
+        <input
+          matInput
+          name="quantity"
+          type="number"
+          [(ngModel)]="sheetItem.quantity"
+          required
+        />
+      </mat-form-field>
+
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          Créer
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

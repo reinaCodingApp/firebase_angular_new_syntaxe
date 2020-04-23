@@ -1,0 +1,41 @@
+<div fxLayout="column" fxLayoutAlign="space-between">
+  <div fxLayout="column" fxLayoutAlign="start start"
+  [matTooltip]="tonnage.client?.name">
+    <div>
+      {{ tonnage.site.name }}
+    </div>
+    <div>
+      {{ tonnage.date | date: "dd/MM/yyyy" }}
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end">
+    <div class="buttons-row">
+      <button
+        *ngIf="habilitation.canEdit()"
+        mat-icon-button
+        color="accent"
+        class="mat-elevation-z1"
+        (click)="
+          $event.preventDefault();
+          $event.stopPropagation();
+          updateTonnage(tonnage)
+        "
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        *ngIf="habilitation.canDelete()"
+        mat-icon-button
+        color="warn"
+        class="mat-elevation-z1"
+        (click)="
+          $event.preventDefault();
+          $event.stopPropagation();
+          deleteTonnage(tonnage)
+        "
+      >
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

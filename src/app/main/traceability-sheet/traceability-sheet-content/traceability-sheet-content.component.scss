@@ -1,0 +1,70 @@
+@import "src/@fuse/scss/fuse";
+
+traceability-sheet-content {
+  .week-number-column {
+    background-color: #52374a;
+    color: #91dc5b;
+    border: none;
+    border-top: 10px solid #6b5464;
+    border-bottom: 10px solid #6b5464;
+    text-align: center;
+  }
+
+  .week-number-label {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  .icon-width {
+    width: 45px;
+  }
+
+  mat-form-field.mat-form-field.mat-form-field-appearance-outline
+    > div.mat-form-field-wrapper
+    > div.mat-form-field-flex
+    > div.mat-form-field-infix {
+    padding: 0.4em 0px;
+  }
+  mat-form-field.mat-form-field.mat-form-field-appearance-outline
+    > div.mat-form-field-wrapper
+    > div.mat-form-field-flex
+    > div.mat-form-field-infix
+    > span.mat-form-field-label-wrapper {
+    top: -1.5em;
+    font-size: 13px;
+  }
+
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
+    .mat-form-field-label {
+    transform: translateY(-1.1em) scale(0.75);
+    width: 133.33333%;
+  }
+
+  // mat-form-field .mat-form-field-wrapper {
+  //   padding-bottom: 0px !important;
+  // }
+
+  mat-select.custom-select {
+    font-size: 13px !important;
+  }
+
+  .mat-select-trigger {
+    height: 100% !important;
+  }
+
+  .add-panel {
+    background-color: #f4f4f4 !important;
+  }
+
+  .enable-icon {
+    cursor: pointer;
+    border-radius: 5%;
+    margin: 0px 8px;
+  }
+
+  @include media-breakpoint("lt-md") {
+    .mat-expansion-panel-body {
+      padding: 0px 0px 16px !important;
+    }
+  }
+}

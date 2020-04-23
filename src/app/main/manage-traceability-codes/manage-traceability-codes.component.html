@@ -1,0 +1,123 @@
+<div class="page-layout carded fullwidth inner-scroll">
+  <div class="top-bg accent"></div>
+
+  <div class="center">
+    <!-- HEADER -->
+    <div
+      class="header"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayout.gt-sm="row"
+      fxLayoutAlign.gt-sm="space-between center"
+    >
+      <!-- APP TITLE -->
+      <div
+        class="logo mb-24 mb-md-0"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      >
+        <span
+          class="logo-text h1"
+          [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }"
+          style="color: white !important;"
+        >
+          GESTION DES CODES
+        </span>
+      </div>
+      <!-- / APP TITLE -->
+
+      <!-- SEARCH -->
+      <div class="search-wrapper mx-32 mx-md-0">
+        <div
+          class="search ml-12"
+          fxFlex
+          fxLayout="row"
+          fxLayoutAlign="start center"
+        >
+          <mat-icon>search</mat-icon>
+          <input
+            [(ngModel)]="requestParameter.filter"
+            (change)="getCodes()"
+            #filter
+            placeholder="Rechercher"
+          />
+        </div>
+      </div>
+      <!-- / SEARCH -->
+
+    </div>
+    <!-- / HEADER -->
+
+    <div class="content-card">
+      <ngx-datatable
+        #table
+        fusePerfectScrollbar
+        class="material"
+        [rows]="codes"
+        [loadingIndicator]="loadingIndicator"
+        [columnMode]="'force'"
+        [headerHeight]="48"
+        [footerHeight]="56"
+        [rowHeight]="'auto'"
+        [reorderable]="reorderable"
+        [externalPaging]="true"
+        [count]="totalElements"
+        [offset]="pageNumber"
+        [limit]="requestParameter.length"
+        (page)="setPage($event)"
+        [messages]="{
+          emptyMessage: 'Pas de resultats',
+          totalMessage: 'Totale'
+        }"
+      >
+        <ngx-datatable-column name="Date" prop="date"> </ngx-datatable-column>
+
+        <ngx-datatable-column name="Code" prop="code"> </ngx-datatable-column>
+
+        <ngx-datatable-column name="Code exceptionnel?">
+          <ng-template
+            let-row="row"
+            let-value="value"
+            ngx-datatable-cell-template
+          >
+            {{ row.isAnExceptionCode ? "Oui" : "Non" }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Site(s)" prop="site">
+        </ngx-datatable-column>
+        <ngx-datatable-footer>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div class="page-count" fxFlex.gt-sm="1 1 60%" fxFlex>
+              Affichage de l'élément {{ curPage * pageSize - pageSize + 1 }} à
+              {{ curPage * pageSize }} sur {{ totalElements }} éléments (filtré
+              de {{ total }} éléments au total)
+            </div>
+            <datatable-pager
+              fxFlex.gt-sm="1 1 40%"
+              fxFlex
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,147 @@
+<div id="timeline" class="p-24" fxLayout="row wrap">
+
+  <div class="timeline-content" fxLayout="column" fxFlex="100" fxFlex.gt-sm="55" fxFlex.gt-md="65">
+
+    <div class="profile-box add-post" *ngIf="habilitation.canEdit()" >
+      <div class="form" fxFlex>
+        <form>
+          <textarea rows="3" [(ngModel)]="messageParameter.content" name="message_parameter" placeholder="Je m'exprime à l'attention de mes collègues de travail"></textarea>
+          <mat-divider *ngIf="messageParameter.attachments && messageParameter.attachments.length > 0" class="mt-0"></mat-divider>
+          <div class="attachments p-4" fxLayout="row wrap" *ngIf="true || messageParameter.attachments && messageParameter.attachments.length > 0">
+              <div class="media" *ngFor="let attachment of messageParameter.attachments">
+                  <img class="preview" [src]="attachment.url" />
+                  <div class="title" [innerHTML]="attachment.fileName"></div>
+                  <button matTooltip="Retirer l'image" mat-button class="delete" (click)="removeAttachment(attachment)"><mat-icon color="warn">delete</mat-icon></button>
+              </div>
+          </div>
+
+          <footer fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="row" class="w-100-p" fxLayoutAlign="space-between center">
+              <button (click)="filepicker.click()" mat-icon-button aria-label="Add photo" matTooltip="Inclure une image">
+                <mat-icon>photo</mat-icon>
+              </button>
+              <button (click)="addMessage()" mat-raised-button
+              color="accent" class="post-button" matTooltip="Envoyer le message" aria-label="POST">Poster</button>
+              <input hidden type="file" #filepicker (change)="attachmentPicked($event)" accept="image/x-png,image/gif,image/jpeg" >
+            </div>
+          </footer>
+
+        </form>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="timeline-item" *ngFor="let message of publicMessages; let i = index">
+      <mat-icon style="position: absolute;" *ngIf="message.pinned" color="warn">bookmark_border</mat-icon>
+      <header fxLayout="row" fxLayoutAlign="space-between start">
+        <div class="user" fxLayout="row" fxLayoutAlign="start center">
+          <img src="assets/images/avatars/profile.jpg" class="avatar" />
+          <div fxLayout="column">
+            <div class="title">
+              <span class="username">{{ message.author.displayName}}</span>
+            </div>
+            <div class="time">{{message.date | date:'dd/MM/yyyy HH:mm'}}</div>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center" *ngIf="habilitation.isSuperAdmin()">
+          <button mat-button [matMenuTriggerFor]="actionsMenu" *ngIf="!message.archived">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #actionsMenu="matMenu">
+            <button *ngIf="!message.isClosed" mat-menu-item (click)="closeDiscussion(message)">
+              <mat-icon color="accent">check</mat-icon>
+              Clôturer
+            </button>
+            <button *ngIf="!message.isClosed" mat-menu-item (click)="pinDiscussion(message)">
+              <mat-icon color="accent">{{message.pinned ? 'gps_off' : 'gps_fixed'}}</mat-icon>
+              {{message.pinned ? 'Désépingler' : 'Épingler'}}
+            </button>
+            <button mat-menu-item (click)="archiveDiscussion(message)">
+              <mat-icon color="accent">save</mat-icon>
+              Archiver
+            </button>
+          </mat-menu>
+        </div>
+      </header>
+
+      <div class="content">
+        <div *ngIf="message.content" class="message" [innerHTML]="message.content">
+        </div>
+        <div class="attachments px-16" fxLayout="column" *ngIf="message.hasAttachments">
+            <div class="attachment" *ngFor="let a of message.attachments" fxLayout="row"
+              fxLayoutAlign="space-between center">
+              <img [src]="a.url" />
+            </div>
+        </div>
+      </div>
+
+      <footer class="p-24" fxLayout="column" fxLayoutAlign="start start">
+          <div fxLayout="row" fxLayoutAlign="start center">{{message.comments ? message.comments.length : 0}} commentaires
+              <mat-icon class="s-16">keyboard_arrow_down</mat-icon>
+          </div>
+          <div class="" *ngIf="message.comments && message.comments.length > 0">
+              <div class="comment" fxLayout="row" fxFlexFill *ngFor="let comment of message.comments">
+                <img src="assets/images/avatars/profile.jpg" class="avatar" />
+                <div fxLayout="column" fxFlex>
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <span class="username">{{comment.author.displayName}}</span>
+                    <span class="time">{{comment.date | date:'dd/MM/yyyy HH:mm'}}</span>
+                  </div>
+                  <div class="message">
+                    <div class="content" [innerHTML]="comment.content"></div>
+                  </div>
+                </div>
+              </div>
+           </div>
+            <div *ngIf="habilitation.canCreate() && message.isClosed === false" class="reply" fxLayout="row" fxFlexFill>
+              <img src="assets/images/avatars/profile.jpg" class="avatar" />
+              <form fxFlex>
+                <textarea [(ngModel)]="commentMessages[i]" name="commentMsg" placeholder="commentaire ..."></textarea>
+                <div>
+                  <button (click)="addComment(message, i)" mat-raised-button color="accent" class="post-comment-button"
+                    aria-label="Post Comment">
+                    Envoyer
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div *ngIf="message.isClosed === true" fxFlex="100" fxLayout="row" fxLayoutAlign="end" class="w-100-p">
+              <button *ngIf="!message.archived" mat-raised-button><mat-icon class="mr-4">done_outline</mat-icon>Clôturée</button>
+              <button *ngIf="message.archived === true" mat-raised-button><mat-icon class="mr-4">done_outline</mat-icon>Archivée</button>
+            </div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="timeline-sidebar" fxLayout="column" fxFlex="100" fxFlex.gt-sm="45" fxFlex.gt-md="35">
+
+    <div class="profile-box latest-activity" fxLayout="column">
+
+      <header class="accent" fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="title">Dernières actus</div>
+        <div class="more secondary-text" *ngIf="habilitation.isAdmin()">
+          <button (click)="openAddNewsPopup()" mat-button color="transparent" >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </header>
+
+      <div class="content" fxLayout="row wrap">
+        <div class="activities">
+          <div class="activity" fxLayout="row" fxLayoutAlign="start start" *ngFor="let n of news">
+            <div fxLayout="column">
+              <div (click)="openNewsDetailsPopup(n)">
+                <span class="username">{{n.title.indexOf(' ') !== -1 ? n.title.split(' ')[0] + ' ' : n.title }}</span>
+                <span
+                  class="message">{{n.title.indexOf(' ') !== -1 ? n.title.split(' ').slice(1).toString().split(',').join(' ') : '' }}
+                </span>
+              </div>
+              <span class="time secondary-text">{{n.date | date:'dd/MM/yyyy HH:mm'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

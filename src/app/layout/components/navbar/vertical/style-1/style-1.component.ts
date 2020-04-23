@@ -1,4 +1,5 @@
-import { User } from './../../../../../models/user';
+import { AppService } from 'app/app.service';
+import { User } from '../../../../../main/settings/models/user';
 import { LoginService } from './../../../../../main/login/login.service';
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
@@ -21,23 +22,42 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     fuseConfig: any;
     navigation: any;
     currentUser: User;
-
     // Private
     private _fusePerfectScrollbar: FusePerfectScrollbarDirective;
-    private _unsubscribeAll: Subject<any>;
+    private unsubscribeAll: Subject<any>;
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
         private _router: Router,
-        private loginService: LoginService
+        private loginService: LoginService,
+        private appService: AppService
     )
     {
         // Set the private defaults
-        this._unsubscribeAll = new Subject();
+        this.unsubscribeAll = new Subject();
     }
 
-    
+    profilePhotoPicked(fileInput) {
+      if (fileInput.target.files && fileInput.target.files[0]) {
+          const file = fileInput.target.files[0];
+          this.loginService.uploadProfilePicture(file)
+          .pipe(takeUntil(this.unsubscribeAll))
+          .subscribe(pourcentage => {
+              if (pourcentage === 100) {
+              }
+
+          });
+      }
+    }
+    removeProfilPicutre() {
+      const profilData = { photoURL: null };
+      this.loginService.updateProfile(profilData).then(() => {
+        this.currentUser.photoURL = null;
+      });
+    }
+
+
     // Directive
     @ViewChild(FusePerfectScrollbarDirective, {static: true})
     set directive(theDirective: FusePerfectScrollbarDirective)
@@ -53,7 +73,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
         this._fuseNavigationService.onItemCollapseToggled
             .pipe(
                 delay(500),
-                takeUntil(this._unsubscribeAll)
+                takeUntil(this.unsubscribeAll)
             )
             .subscribe(() => {
                 this._fusePerfectScrollbar.update();
@@ -74,18 +94,25 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
-        this.loginService.getState().subscribe( u => {
-            if (u) {            
-                this.currentUser = new User();
-                this.currentUser.displayName = u.displayName;
-                this.currentUser.email = u.email;
-                this.currentUser.photoURL = u.photoURL;            
+        this.appService.getCurrentUser().subscribe(data => {
+          if (data) {
+            this.currentUser = data;
+          }          
+        });        
+        this.loginService.onProfilePictureUploaded
+        .pipe(takeUntil(this.unsubscribeAll))
+        .subscribe( response => {
+            if (response) {                                
+                const profilData = { photoURL: response.url };
+                this.loginService.updateProfile(profilData).then(() => {
+                  this.currentUser.photoURL = response.url;
+                });
             }
         });
         this._router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                takeUntil(this._unsubscribeAll)
+                takeUntil(this.unsubscribeAll)
             )
             .subscribe(() => {
                     if ( this._fuseSidebarService.getSidebar('navbar') )
@@ -97,7 +124,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
 
         // Subscribe to the config changes
         this._fuseConfigService.config
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(takeUntil(this.unsubscribeAll))
             .subscribe((config) => {
                 this.fuseConfig = config;
             });
@@ -106,7 +133,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
         this._fuseNavigationService.onNavigationChanged
             .pipe(
                 filter(value => value !== null),
-                takeUntil(this._unsubscribeAll)
+                takeUntil(this.unsubscribeAll)
             )
             .subscribe(() => {
                 this.navigation = this._fuseNavigationService.getCurrentNavigation();
@@ -119,8 +146,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
+        this.unsubscribeAll.next();
+        this.unsubscribeAll.complete();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -133,6 +160,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     toggleSidebarOpened(): void
     {
         this._fuseSidebarService.getSidebar('navbar').toggleOpen();
+        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 250);
     }
 
     /**
@@ -141,5 +169,6 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     toggleSidebarFolded(): void
     {
         this._fuseSidebarService.getSidebar('navbar').toggleFold();
+        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 250);
     }
 }

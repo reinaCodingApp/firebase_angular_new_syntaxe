@@ -1,0 +1,133 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"
+        >{{
+          data.mode == "edit"
+            ? "Modifier un intérimaire"
+            : "Ajouter un intérimaire"
+        }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSubmit(f)"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Prénom</mat-label>
+        <input
+          #firstName="ngModel"
+          [(ngModel)]="temporaryWorker.firstName"
+          placeholder="Prénom"
+          matInput
+          name="firstName"
+          required
+          minlength="3"
+        />
+        <mat-error
+          *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+        >
+          Veuillez renseigner le prénom (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input
+          #lastName="ngModel"
+          [(ngModel)]="temporaryWorker.lastName"
+          placeholder="Nom"
+          matInput
+          name="lastName"
+          required
+          minlength="3"
+        />
+        <mat-error
+          *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+        >
+          Veuillez renseigner le nom (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Ville</mat-label>
+        <input
+          #city="ngModel"
+          [(ngModel)]="temporaryWorker.city"
+          placeholder="Ville de résidence"
+          matInput
+          name="city"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Date naissance</mat-label>
+        <input
+          #birthdate="ngModel"
+          matInput
+          [matDatepicker]="birthdatePicker"
+          placeholder="Date"
+          [(ngModel)]="temporaryWorker.birthdate"
+          name="birthdate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="birthdatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #birthdatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Liste agences</mat-label>
+        <mat-select
+          #provider="ngModel"
+          name="provider"
+          [(ngModel)]="temporaryWorker.provider.id"
+        >
+          <mat-option *ngFor="let provider of providers" [value]="provider.id">
+            {{ provider.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Secteurs</mat-label>
+        <mat-select
+          multiple
+          [compareWith]="compareFn"
+          #department="ngModel"
+          [(ngModel)]="temporaryWorker.departments"
+          name="department"
+          required
+        >
+          <mat-option
+            *ngFor="let department of departments"
+            [value]="department"
+          >
+            {{ department.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          {{ data.mode == "edit" ? "Modifier" : "Ajouter" }}
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

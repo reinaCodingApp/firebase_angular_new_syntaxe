@@ -1,0 +1,126 @@
+<div class="page-layout simple">
+  <!-- HEADER -->
+  <div class="header warn-bg p-16 p-sm-24" fxLayout="row" fxLayoutAlign="start center">
+    <button matTooltip="Retour à la liste des utilisateurs" mat-icon-button class="back mr-16" [routerLink]="'/settings'">
+      <mat-icon class="fuse-white-500-fg" >arrow_back</mat-icon>
+    </button>
+    <h1 class="fuse-white-500-fg" [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
+      Table des droits d'accès
+    </h1>
+
+  </div>
+  <!-- / HEADER -->
+  <div class="content p-24">
+    <div>
+      <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row" fxFlex="100">
+        <div class="fuse-widget-front">
+          <div class="p-24 mb-8 border-bottom" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="h2" *ngIf="currentUser && currentUser.displayName">{{currentUser.displayName}}</div>
+          <div>
+              <button mat-raised-button color="primary" (click)="clonePermissions()" class="mr-8">
+                Cloner
+                <mat-icon>supervisor_account</mat-icon>
+              </button>
+              <button mat-raised-button color="accent" (click)="updateUserClaims()">
+                Enregistrer
+                <mat-icon>save</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <mat-table #table [dataSource]="filteredModules">
+
+            <!-- Title Column -->
+            <ng-container matColumnDef="a">
+              <mat-header-cell *matHeaderCellDef>Modules</mat-header-cell>
+              <mat-cell *matCellDef="let m">
+                {{m.title}}
+              </mat-cell>
+            </ng-container>
+
+            <!-- Get  -->
+            <ng-container matColumnDef="get">
+              <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Get</mat-header-cell>
+              <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                <button mat-flat-button (click)="updategrantedAccess(m, 1)">
+                    <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 1" >check</mat-icon>
+                    <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 1" >close</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <!-- List -->
+            <ng-container matColumnDef="list">
+                <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>List</mat-header-cell>
+                <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                  <button mat-flat-button (click)="updategrantedAccess(m, 2)" >
+                      <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 2" >check</mat-icon>
+                      <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 2" >close</mat-icon>
+                  </button>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Create -->
+            <ng-container matColumnDef="create">
+                <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Create</mat-header-cell>
+                <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                    <button mat-flat-button (click)="updategrantedAccess(m, 3)" >
+                        <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 3" >check</mat-icon>
+                        <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 3" >close</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Edit -->
+            <ng-container matColumnDef="edit">
+                <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Edit</mat-header-cell>
+                <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                    <button mat-flat-button (click)="updategrantedAccess(m, 4)" >
+                        <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 4" >check</mat-icon>
+                        <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 4" >close</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Delete -->
+            <ng-container matColumnDef="delete">
+                <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Delete</mat-header-cell>
+                <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                    <button mat-flat-button (click)="updategrantedAccess(m, 5)" >
+                        <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 5" >check</mat-icon>
+                        <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 5" >close</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Admin -->
+            <ng-container matColumnDef="admin">
+                <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Admin</mat-header-cell>
+                <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                    <button mat-flat-button (click)="updategrantedAccess(m, 6)" >
+                        <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 6" >check</mat-icon>
+                        <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 6" >close</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <!-- SuperAdmin -->
+            <ng-container matColumnDef="superAdmin">
+                <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>SuperAdmin</mat-header-cell>
+                <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
+                    <button mat-flat-button (click)="updategrantedAccess(m, 7)" >
+                        <mat-icon class="green-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess >= 7" >check</mat-icon>
+                        <mat-icon class="warn-700-bg fuse-white-500-fg" *ngIf="m.grantedAccess < 7" >close</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+            <mat-row *matRowDef="let m; columns: displayColumns;">
+            </mat-row>
+          </mat-table>
+        </div>
+      </fuse-widget>
+    </div>
+  </div>
+</div>

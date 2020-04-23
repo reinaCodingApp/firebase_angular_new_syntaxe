@@ -1,0 +1,140 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Réaffecter </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
+      <mat-tab label="Réaffecter">
+        <form
+          #f="ngForm"
+          (ngSubmit)="generateTask(f)"
+          name="composeForm"
+          class="compose-form"
+          fxLayout="column"
+          fxFlex
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Intitulé de la tâche</mat-label>
+            <input
+              #content="ngModel"
+              [(ngModel)]="task.content"
+              placeholder="Intitulé de la tâche"
+              matInput
+              name="content"
+              required
+              minlength="3"
+            />
+            <mat-error
+              *ngIf="content.invalid && (content.dirty || content.touched)"
+            >
+              Veuillez renseigner le titre (3 caractères minimum) !
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Employyes</mat-label>
+            <mat-select
+              multiple
+              #employee="ngModel"
+              name="employee"
+              required
+              [(ngModel)]="selectedEmployees"
+            >
+              <mat-option *ngFor="let employee of employees" [value]="employee">
+                {{ employee.employee.fullName }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+            >
+              Veuillez choisir un employee !
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Deadline</mat-label>
+            <input
+              #endDate="ngModel"
+              matInput
+              [matDatepicker]="endDatePicker"
+              placeholder="Début de la mission"
+              [(ngModel)]="task.endDate"
+              name="endDatePicker"
+              required
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="endDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+            <mat-error
+              *ngIf="endDate.invalid && (endDate.dirty || endDate.touched)"
+            >
+              Veuillez renseigner deadline !
+            </mat-error>
+          </mat-form-field>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button color="accent" type="submit">
+              Affecter
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Changement d'instance">
+        <form
+          #f2="ngForm"
+          (ngSubmit)="changePointInstance(f2)"
+          name="composeForm"
+          class="compose-form"
+          fxLayout="column"
+          fxFlex
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Instance</mat-label>
+            <mat-select
+              #instance="ngModel"
+              name="instance"
+              required
+              [(ngModel)]="selectedInstance"
+            >
+              <mat-option *ngFor="let instance of instances" [value]="instance">
+                {{ instance.fullName + "( " + instance.name + " )" }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+            >
+              Veuillez choisir un employee !
+            </mat-error>
+          </mat-form-field>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button color="accent" type="submit">
+              Affecter
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

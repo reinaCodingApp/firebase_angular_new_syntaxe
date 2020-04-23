@@ -1,0 +1,143 @@
+@import "src/@fuse/scss/fuse";
+
+tonnage-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 72px;
+
+  .select-message-text {
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  .mail-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid;
+
+    .actions {
+      min-width: 88px;
+    }
+
+    .subject {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .label {
+      font-size: 11px;
+      border-radius: 4px;
+      margin: 4px 4px 4px 0;
+      padding: 3px 8px;
+
+      .label-color {
+        width: 8px;
+        height: 8px;
+        margin-right: 8px;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .mail-content {
+    padding: 24px 10px;
+    background-color: #f2f9ff;
+
+    .to {
+      .to-text {
+        margin-right: 4px;
+        text-transform: lowercase;
+      }
+    }
+
+    .info {
+      padding-bottom: 16px;
+
+      .avatar {
+        margin-right: 16px;
+      }
+
+      .name {
+        margin-right: 8px;
+        font-weight: 600;
+      }
+
+      .toggle-details {
+        user-select: none;
+        padding-top: 14px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .details {
+        padding-top: 8px;
+
+        .title {
+          font-weight: 600;
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+
+  .mail-attachments {
+    padding: 24px 0;
+    border-top: 1px solid;
+
+    .title {
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .attachment {
+      .preview {
+        width: 100px;
+        margin: 0 16px 8px 0;
+        border-radius: 4px;
+      }
+
+      .link {
+        margin-bottom: 2px;
+      }
+
+      .size {
+        font-size: 11px;
+      }
+    }
+  }
+
+  mat-form-field.mat-form-field.mat-form-field-appearance-outline
+    > div.mat-form-field-wrapper
+    > div.mat-form-field-flex
+    > div.mat-form-field-infix {
+    padding: 0.4em 0px;
+  }
+  mat-form-field.mat-form-field.mat-form-field-appearance-outline
+    > div.mat-form-field-wrapper
+    > div.mat-form-field-flex
+    > div.mat-form-field-infix
+    > span.mat-form-field-label-wrapper {
+    top: -1.5em;
+    font-size: 13px;
+  }
+
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
+    .mat-form-field-label {
+    transform: translateY(-1.1em) scale(0.75);
+    width: 133.33333%;
+  }
+
+  mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 0px !important;
+  }
+
+  mat-select.custom-select {
+    font-size: 13px !important;
+  }
+
+  .add-panel {
+    background-color: #f4f4f4;
+  }
+}

@@ -2,7 +2,7 @@
 
     <div class="logo">
         <img class="logo-icon" src="assets/images/logos/logo.png">
-        <span class="logo-text secondary-text">CMS AVS</span>
+        <span class="logo-text secondary-text">INTRANET AVS</span>
     </div>
 
     <div class="buttons">
@@ -29,9 +29,25 @@
 
         <div class="h3 username" *ngIf="currentUser && currentUser.displayName" [innerHTML]="currentUser.displayName" ></div>
         <div class="h5 email hint-text mt-8" *ngIf="currentUser && currentUser.email" [innerHTML]="currentUser.email" ></div>
+
         <div class="avatar-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground">
-            <img class="avatar" *ngIf="currentUser && currentUser.photoURL"
-            src="{{currentUser.photoURL}}">
+          <img *ngIf="currentUser && currentUser.photoURL" class="avatar" [src]="currentUser.photoURL">
+          <img *ngIf="!currentUser || !currentUser.photoURL" class=" avatar" src="assets/images/avatars/profile.jpg">
+          <div class="img-picker">
+              <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="more">
+                  <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #moreMenu="matMenu">
+                  <button (click)="photo.click()" mat-menu-item aria-label="Flip widget">
+                      <mat-icon >photo_camera</mat-icon>Changer
+                  </button>
+                  <button (click)="removeProfilPicutre()" mat-menu-item aria-label="Flip widget">
+                      <mat-icon>remove_circle_outline</mat-icon> Supprimer
+                  </button>
+              </mat-menu>
+
+          </div>
+          <input type="file" (change)="profilePhotoPicked($event)" #photo hidden />
         </div>
 
     </div>

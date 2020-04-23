@@ -1,0 +1,79 @@
+@import "src/@fuse/scss/fuse";
+
+#academy-course {
+
+    .center {
+        position: relative;
+        overflow: hidden;
+
+        .header {
+            height: 72px;
+            min-height: 72px;
+            max-height: 72px;
+        }
+
+        .content {
+            position: relative;
+            display: flex;
+
+            .course-step {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                padding: 48px;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+
+                &.ng-animating {
+                    overflow: hidden;
+                }
+
+                @media (max-width: 720px) {
+                    padding: 0 0 120px 0;
+                }
+
+                .course-step-content {
+                    padding: 24px;
+                    max-width: 720px;
+                    margin: 0 auto;
+                    width: 100%;
+                    border-radius: 8px;
+                    @include mat-elevation(1);
+                    .title{
+
+                    }
+                }
+
+            }
+        }
+
+        .step-navigation {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            bottom: 32px;
+            max-width: 944px;
+            padding: 0 24px;
+            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+
+            .previous {
+                margin-right: auto;
+            }
+
+            .next,
+            .done {
+                margin-left: auto;
+            }
+        }
+
+        .new-possbileValue{
+          position: absolute;
+          right: 0px;
+        }
+    }
+}

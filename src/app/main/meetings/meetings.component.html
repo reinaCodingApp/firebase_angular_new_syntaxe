@@ -1,0 +1,293 @@
+<div id="meetings" class="page-layout simple fullwidth">
+  <!-- HEADER -->
+  <div
+    class="header accent p-16 p-sm-24"
+    [ngClass]="{
+      accent: currentInstance.id === 1,
+      warn: currentInstance.id === 2,
+      primary: currentInstance.id === 3
+    }"
+    fxLayout="column"
+    fxLayoutAlign="start"
+    fxLayout.gt-xs="row"
+    fxLayoutAlign.gt-xs="space-between center"
+  >
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+        <span
+          class="logo-text h1"
+          [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }"
+        >
+          {{ currentInstance.fullName }}
+        </span>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <h1>
+        {{ "SEMAINE " + weekNumber + " - " + date }}
+      </h1>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <div class="content">
+    <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="Points">
+        <!-- POLES -->
+        <div
+          fxLayout="row wrap"
+          fxLayoutAlign="center"
+          *ngIf="!currentPole && !currentSector"
+        >
+          <mat-nav-list class="articles-list" *ngFor="let pole of poles">
+            <h2 mat-subheader>{{ pole.name }}</h2>
+            <mat-list-item
+              *ngFor="let sector of pole.sectors"
+              (click)="changeSelectedPole(pole, sector)"
+            >
+              <img [src]="sector.pictogram" style="width:15%;" class="mr-8" />
+              <span
+              [matBadge]="sector.taskItemsCount"
+              [matBadgeHidden]="sector.taskItemsCount == 0"
+              matBadgeOverlap="false"
+              >{{ sector.name }}
+            </span>
+            <span
+              [matBadge]="sector.lastWeeksTaskItemsCount"
+              [matBadgeHidden]="sector.lastWeeksTaskItemsCount == 0"
+              matBadgeOverlap="false"
+              matBadgeColor="warn"
+              style="bottom: 10px;
+              left: 20%;"
+            >
+            </span>
+            </mat-list-item>
+          </mat-nav-list>
+        </div>
+        <!-- SECTOR DETAILS -->
+        <div class="fuse-card mb-8" *ngIf="currentPole">
+          <div fxLayout="row">
+            <div class="h2">
+              <button mat-icon-button>
+                <mat-icon matRipple (click)="changeSelectedPole()"
+                  >arrow_back</mat-icon
+                >
+              </button>
+            </div>
+            <button
+              fxLayoutAlign="center center"
+              mat-icon-button
+              class="sidebar-toggle mr-12"
+              fxHide.gt-sm
+              (click)="commonService.toggleSidebar('points-sidebar')"
+            >
+              <mat-icon>menu</mat-icon>
+            </button>
+          </div>
+          <div class="card-divider full-width"></div>
+          <div
+            class="p-sm-16 pb-0"
+            style="background-color: rgb(244, 244, 244) !important;"
+          >
+            <div fxLayout="row" fxLayoutAlign="space-around" >
+              <!-- POLES -->
+              <fuse-sidebar
+                class="sidebar"
+                name="points-sidebar"
+                position="left"
+                lockedOpen="gt-sm"
+              >
+                <div class="content" fusePerfectScrollbar>
+                  <div class="sidebar-content">
+                    <div class="card">
+                      <div
+                        class="header p-16"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                      >
+                        <span class="h2">{{ currentPole.name }}</span>
+                      </div>
+                      <div class="content p-16" fusePerfectScrollbar>
+                        <div class="nav material2">
+                          <div
+                            class="nav-item"
+                            *ngFor="let sector of currentPole.sectors"
+                          >
+                            <a
+                              class="nav-link"
+                              matRipple
+                              [ngClass]="{
+                                'active accent': currentSector.id == sector.id
+                              }"
+                              (click)="currentSector = sector"
+                            >
+                              <img
+                                [src]="sector.pictogram"
+                                style="width:12%;"
+                                class="mr-8"
+                              />
+                              <span
+                                [matBadge]="sector.taskItemsCount"
+                                [matBadgeHidden]="sector.taskItemsCount == 0"
+                                matBadgeOverlap="false"
+                                >{{ sector.name }}
+                              </span>
+                              <span
+                                [matBadge]="sector.lastWeeksTaskItemsCount"
+                                [matBadgeHidden]="sector.lastWeeksTaskItemsCount == 0"
+                                matBadgeOverlap="false"
+                                matBadgeColor="warn"
+                                style="bottom: 10px;
+                                left: 20%;"
+                              >
+                              </span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fuse-sidebar>
+              <!-- POINTS -->
+              <div class="ml-16 mr-16" fxLayout="column" fxFlex>
+                <div
+                  class="fuse-card mb-8"
+                  *ngFor="
+                    let point of currentSector.codirComments;
+                    index as pointIndex
+                  "
+                >
+                  <div class="p-16" fxLayout="row">
+                    <div class="h2 pr-16">{{ point.folderName }}</div>
+                  </div>
+                  <div class="card-divider full-width"></div>
+                  <div class="p-16" fxLayout="row">
+                    <div fxLayout="row wrap" fxLayoutAlign="start">
+                      <div class="h4" [outerHTML]="point.content | replaceLineBreaks"></div>
+                    </div>
+                  </div>
+                  <div class="card-divider full-width"></div>
+                  <div class="pr-24 py-4" fxLayout="column">
+                    <div fxLayout="row wrap" fxLayoutAlign="end center">
+                      <button
+                        *ngIf="habilitation.isAdmin()"
+                        mat-icon-button
+                        (click)="closeItem(point, pointIndex)"
+                      >
+                        <mat-icon color="accent">check_circle</mat-icon>
+                      </button>
+                      <button
+                        *ngIf="habilitation.canEdit()"
+                        mat-icon-button
+                        (click)="generateTask(point, pointIndex)"
+                      >
+                        <mat-icon color="primary">reply</mat-icon>
+                      </button>
+                      <button
+                        *ngIf="habilitation.isAdmin()"
+                        mat-raised-button
+                        color="warn"
+                        (click)="addDecision(point.simpleTaskItemId)"
+                      >
+                        Décision
+                      </button>
+                    </div>
+                  </div>
+          <!-- COMMENTS -->
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header
+                style="background-color: #f4f4f4 !important"
+              >
+                <mat-panel-title>
+                  <button mat-icon-button>
+                    <mat-icon
+                      [matBadge]="point.comments.length"
+                      matBadgeOverlap="false"
+                      matRipple
+                      >comment</mat-icon
+                    >
+                  </button>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div
+                fxLayout="row"
+                fxLayout.lt-md="column"
+                *ngFor="let comment of point.comments"
+                class="px-4 py-16"
+              >
+                <div fxLayout="column" fxFlex="20%">
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <span>{{ comment.owner.employee.fullName }}</span>
+                  </div>
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div class="time">
+                      {{ comment.date | date: "dd/MM/yyyy:h:mm" }}
+                    </div>
+                  </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="start" fxFlex="80%">
+                  <div
+                    class="comment-panel"
+                    fxLayout="row"
+                    fxLayoutAlign="start"
+                  >
+                    <span>{{ comment.content }}</span>
+                  </div>
+                </div>
+              </div>
+              <!-- COMMENT FORM -->
+              <div fxLayout="column" fxLayoutAlign="space-between" *ngIf="habilitation.canCreate()">
+                <div fxLayout="row">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Commentaire</mat-label>
+                    <textarea
+                      [(ngModel)]="commentContent"
+                      placeholder="Commentaire"
+                      matInput
+                      name="comment"
+                    >
+                    </textarea>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="end center">
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="addComment(point, pointIndex)"
+                  >
+                    Envoyer
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+                </div>
+                <div
+                  *ngIf="currentSector.codirComments.length == 0"
+                  class="h2"
+                  fxLayoutAlign="center center"
+                >
+                  Il n'y a aucun point à traiter dans ce secteur
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-divider full-width"></div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Historique">
+        <meetings-history></meetings-history>
+      </mat-tab>
+      <mat-tab label="Tâches">
+        <meetings-tasks></meetings-tasks>
+      </mat-tab>
+      <mat-tab label="Décisions">
+        <meetings-decisions></meetings-decisions>
+      </mat-tab>
+      <mat-tab label="Connexions" *ngIf="habilitation.isAdmin()">
+        <meetings-logs *ngIf="selectedTab == 4"></meetings-logs>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

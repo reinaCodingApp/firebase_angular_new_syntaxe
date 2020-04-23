@@ -1,4 +1,5 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AppVersion } from './common/models/app-version';
+import { Component, Inject, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,123 +12,121 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
+import { AppService } from './app.service';
+import { FcmMessagingService } from './common/services/fcm-messaging.service';
+
 
 @Component({
-    selector   : 'app',
-    templateUrl: './app.component.html',
-    styleUrls  : ['./app.component.scss']
+  selector: 'app',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy
-{
-    fuseConfig: any;
-    navigation: any;
+export class AppComponent implements OnInit, OnDestroy {
+  fuseConfig: any;
+  navigation: any;
+  showConfigButton;
+  configurationUrl = '';
+  currentAppVersion: AppVersion = null;
 
-    private _unsubscribeAll: Subject<any>;  
-    constructor(
-        @Inject(DOCUMENT) private document: any,
-        private _fuseConfigService: FuseConfigService,
-        private _fuseNavigationService: FuseNavigationService,
-        private _fuseSidebarService: FuseSidebarService,
-        private _fuseSplashScreenService: FuseSplashScreenService,
-        private _fuseTranslationLoaderService: FuseTranslationLoaderService,
-        private _translateService: TranslateService,
-        private _platform: Platform
-    )
-    {
-        // Get default navigation
-        this.navigation = navigation;
-
-        // Register the navigation to the service
-        this._fuseNavigationService.register('main', this.navigation);
-
-        // Set the main navigation as our current navigation
-        this._fuseNavigationService.setCurrentNavigation('main');
-
-        // Add languages
-        this._translateService.addLangs(['en', 'tr']);
-
-        // Set the default language
-        this._translateService.setDefaultLang('en');
-
-        // Set the navigation translations
-        this._fuseTranslationLoaderService.loadTranslations(navigationEnglish, navigationTurkish);
-
-        // Use a language
-        this._translateService.use('en');
-
-        
-        if ( this._platform.ANDROID || this._platform.IOS )
-        {
-            this.document.body.classList.add('is-mobile');
+  private _unsubscribeAll: Subject<any>;
+  constructor(
+    @Inject(DOCUMENT) private document: any,
+    private _fuseConfigService: FuseConfigService,
+    private _fuseNavigationService: FuseNavigationService,
+    private _fuseSidebarService: FuseSidebarService,
+    private _fuseSplashScreenService: FuseSplashScreenService,
+    private _fuseTranslationLoaderService: FuseTranslationLoaderService,
+    private _translateService: TranslateService,
+    private _platform: Platform,
+    private appService: AppService,
+    private cdRef: ChangeDetectorRef,
+    private fcmMessagingService: FcmMessagingService
+  ) {
+    // Add languages
+    this._translateService.addLangs(['en', 'tr']);
+    // Set the default language
+    this._translateService.setDefaultLang('en');
+    // Set the navigation translations
+    this._fuseTranslationLoaderService.loadTranslations(navigationEnglish, navigationTurkish);
+    // Use a language
+    this._translateService.use('en');
+    if (this._platform.ANDROID || this._platform.IOS) {
+      this.document.body.classList.add('is-mobile');
+    }
+    this._unsubscribeAll = new Subject();
+    this.appService.getLastAppVersion().subscribe( result => {
+      if (result && result.length > 0) {
+        const lastVersion = result.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as AppVersion))[0];
+        if (!this.currentAppVersion) {
+          this.currentAppVersion = lastVersion;
+        } else {
+          if (lastVersion.versionCode > this.currentAppVersion.versionCode) {
+            window.location.reload();
+          }
         }
-        this._unsubscribeAll = new Subject();
-    }
+        this.appService.onAppVersionChanged.next(lastVersion);
+      }
+    });
+  }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+  ngOnInit(): void {
+    // this.fcmMessagingService.requestPermission();
+    this.appService.onNavigationMenuChanged.subscribe(response => {
+      console.log('menus', response);
+      if (response && response.length > 0) {
+        this.navigation = response;
+        if (this._fuseNavigationService.alreadyRegistred('main')) {
+          this._fuseNavigationService.unregister('main');
+        }
+        this._fuseNavigationService.register('main', this.navigation);
+        this._fuseNavigationService.setCurrentNavigation('main');
+      }
+    });
+    // Subscribe to config changes
+    this._fuseConfigService.config
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        // Boxed
+        if (this.fuseConfig.layout.width === 'boxed') {
+          this.document.body.classList.add('boxed');
+        }
+        else {
+          this.document.body.classList.remove('boxed');
+        }
+        // Color theme - Use normal for loop for IE11 compatibility
+        for (let i = 0; i < this.document.body.classList.length; i++) {
+          const className = this.document.body.classList[i];
+          if (className.startsWith('theme-')) {
+            this.document.body.classList.remove(className);
+          }
+        }
+        this.document.body.classList.add(this.fuseConfig.colorTheme);
+      });
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Subscribe to config changes
-        this._fuseConfigService.config
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((config) => {
+    // Config Button subscriptions (visibility and URL)
+    this.appService.onShowConfigButtonChanged
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(value => {
+      this.showConfigButton = value;
+      this.cdRef.detectChanges();
+    });
+    this.appService.onConfigurationUrlChanged
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(url => {
+      this.configurationUrl = url;
+    });
+  }
 
-                this.fuseConfig = config;
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
 
-                // Boxed
-                if ( this.fuseConfig.layout.width === 'boxed' )
-                {
-                    this.document.body.classList.add('boxed');
-                }
-                else
-                {
-                    this.document.body.classList.remove('boxed');
-                }
-
-                // Color theme - Use normal for loop for IE11 compatibility
-                for ( let i = 0; i < this.document.body.classList.length; i++ )
-                {
-                    const className = this.document.body.classList[i];
-
-                    if ( className.startsWith('theme-') )
-                    {
-                        this.document.body.classList.remove(className);
-                    }
-                }
-
-                this.document.body.classList.add(this.fuseConfig.colorTheme);
-            });
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Toggle sidebar open
-     *
-     * @param key
-     */
-    toggleSidebarOpen(key): void
-    {
-        this._fuseSidebarService.getSidebar(key).toggleOpen();
-    }
+  toggleSidebarOpen(key): void {
+    this._fuseSidebarService.getSidebar(key).toggleOpen();
+  }
 }

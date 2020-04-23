@@ -1,0 +1,127 @@
+<!-- RECAP -->
+<div
+  *ngIf="recap != null"
+  id="invoice"
+  class="modern page-layout blank"
+  fxLayout="row"
+>
+  <div class="invoice-container">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <button
+        fxLayoutAlign="start center"
+        matTooltip="Retour à la liste des fiches de suivi"
+        mat-icon-button
+        class="back mr-16"
+        [routerLink]="'/followupSheet'"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <mat-form-field fxLayoutAlign="end center">
+        <mat-select
+          name="service"
+          [(ngModel)]="selectedSheet"
+          (selectionChange)="getFollowupSheet()"
+        >
+          <mat-option
+            *ngFor="let sheetHistory of sheetsHistory"
+            [value]="sheetHistory"
+          >
+            {{ "SEMAINE " + sheetHistory.weekNumber }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- INVOICE -->
+    <div class="card">
+      <div class="content" *ngIf="recap.length > 0">
+        <div fxLayout="column">
+          <h1 fxLayoutAlign="center center" class="font-size-24">
+            <u>Synthèse fiches de suivi {{ recap[0].instanceName }}</u>
+          </h1>
+          <h2 fxLayoutAlign="center center">
+            <u>{{ "SEMAINE " + recap[0].weekNumber + " Année " + recap[0].year }}</u>
+          </h2>
+
+          <ul style="list-style: none; padding: 0px;">
+            <li *ngFor="let item of recap">
+              <div fxLayout="column">
+                <h1>
+                  {{ item.sector.name }}
+                  {{
+                    item.responsibleName
+                      ? item.responsibleName.replace(",", "")
+                      : ""
+                  }}
+                </h1>
+                <ul style="list-style: none; padding: 0px;">
+                  <li *ngFor="let section of item.sections">
+                    <h2
+                      style="color: white; background-color: gray;"
+                      class="p-8"
+                    >
+                      {{ section.ownerName + " - " + section.title }}
+                    </h2>
+                    <ul style="list-style: none; padding: 0px;">
+                      <li *ngFor="let folder of section.folders">
+                        <div fxLayout="column">
+                          <h2 style="background-color: gainsboro;" class="p-8">
+                            {{ folder.title }}
+                          </h2>
+                          <ul class="p-0 m-0">
+                            <li
+                              class="ml-16 mb-16"
+                              fxLayout="column"
+                              *ngFor="let point of folder.points"
+                            >
+                              <p [innerHTML]="point.contentLevelThree | replaceLineBreaks" class="font-size-16 m-0 point" ></p>
+                              <span *ngIf="point.noteLevelThree > 3" fxLayoutAlign="end" class="warn-900-fg" style="line-height: 1.6em;" >
+                                <mat-icon class="mr-4">supervised_user_circle</mat-icon>
+                                {{'Á TRAITER AU ' + recap[0].instanceName}}</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- FICHE VIDE -->
+      <div class="content" *ngIf="recap.length == 0" >
+        <div fxLayout="column">
+          <h1 fxLayoutAlign="center center">
+            Synthèse vide
+          </h1>
+          <h2 fxLayoutAlign="center center">
+            Il n'y a pas eu de points à traiter ni d'informations destinés à cette instance cette semaine.
+          </h2>
+        </div>
+      </div>
+    </div>
+    <!-- / INVOICE -->
+  </div>
+</div>
+<!-- ERROR PAGE -->
+<div
+  *ngIf="recap == null"
+  id="error-500"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+>
+  <div class="content" fxLayout="column" fxLayoutAlign="center center">
+    <div class="error-code">400</div>
+
+    <div class="message">
+      Vous n'avez pas les droits nécessaires pour accèder à cette ressource.
+    </div>
+
+    <div class="sub-message">
+      Détails de la ressource : Récapitulatif fiches de suivi : aucun secteur
+      n'est valide
+    </div>
+  </div>
+</div>

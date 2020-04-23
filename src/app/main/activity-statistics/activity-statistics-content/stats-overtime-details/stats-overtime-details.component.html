@@ -1,0 +1,62 @@
+<div class="mat-card mat-elevation-z4 mb-12" ngClass.lt-md="mt-12">
+  <h2 class="p-16 mt-0 mb-0">Détail des heures supplémentaires par semaine</h2>
+  <mat-table [dataSource]="statsOvertimeDetails">
+    <ng-container matColumnDef="weekNumber">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >N° Semaine</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let stat">
+        <span class="job-title">
+          {{ stat.weekNumber }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="totalWorkedHours">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Total heures travaillées</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let stat">
+        <span class="job-title">
+          {{ stat.totalWorkedHours }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="totalOverTimeHours">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Heures supplémentaires</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let stat">
+        <span class="job-title">
+          {{ stat.totalOverTimeHours }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="partialTaux">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Taux partiels</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let stat">
+        <span class="job-title">
+          {{ stat.partialTaux }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="dates">
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+        >Dates</mat-header-cell
+      >
+      <mat-cell fxLayoutAlign="center center" *matCellDef="let stat">
+        <span class="job-title">
+          {{ stat.dates }}
+        </span>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      *matRowDef="let stat; columns: displayedColumns"
+      class="activity"
+      matRipple
+    >
+    </mat-row>
+  </mat-table>
+</div>

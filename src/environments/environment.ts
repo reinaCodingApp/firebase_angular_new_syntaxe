@@ -3,21 +3,22 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    hmr       : false
+  production: false,
+  hmr: false
 };
 export const firebaseConfig = {
   apiKey: 'AIzaSyBzYrKv6pOy-MhgDYjw7xrKgRwjzPsPEJo',
-    authDomain: 'dev-p00001.firebaseapp.com',
-    databaseURL: 'https://dev-p00001.firebaseio.com',
-    projectId: 'dev-p00001',
-    storageBucket: 'dev-p00001.appspot.com',
-    messagingSenderId: '269047051742',
-    appId: '1:269047051742:web:2eaaba6b165f0bb9d0d94f',
-    measurementId: 'G-HSBG2ZMRNM'
+  authDomain: 'dev-p00001.firebaseapp.com',
+  databaseURL: 'https://dev-p00001.firebaseio.com',
+  projectId: 'dev-p00001',
+  storageBucket: 'dev-p00001.appspot.com',
+  messagingSenderId: '269047051742',
+  appId: '1:269047051742:web:2eaaba6b165f0bb9d0d94f',
+  measurementId: 'G-HSBG2ZMRNM'
 };
 
-
+export const firebaseCloudMessagingKey = 'AIzaSyD5VWN0wLdTKoFrX2r3JCpdsBCgoP0yrfA';
+export const BASE_URL = 'https://dev.version2.api.avs.fr/';
 
 /*
  * For easier debugging in development mode, you can import the following file

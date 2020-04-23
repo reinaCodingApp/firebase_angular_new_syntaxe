@@ -1,0 +1,1186 @@
+<div
+  class="page-layout carded fullwidth tabbed inner-scroll"
+  *ngIf="traceabilitySheet"
+>
+  <div class="center p-0">
+    <div
+    class="p-8 mat-elevation-z2 mb-4"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    style="background-color: white !important;"
+  >
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <h3 class="mr-12 ml-12">Semaine {{ traceabilitySheet.weekNumber }} , {{ traceabilitySheet.site.name }} </h3>
+    </div>
+  </div>
+
+    <div class="content-card" *ngIf="traceabilitySheet.id > 0">
+      <div class="content">
+        <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
+          <mat-tab label="Matériels Traçabilité">
+            <div
+              class="tab-content p-8"
+              ngClass.gt-sm="p-24"
+              fusePerfectScrollbar
+            >
+            <div fxLayout="row"fxLayoutAlign="center">
+            <button
+            *ngIf="habilitation.canEdit()"
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addSheetItem()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+            </div>
+              <div>
+                <!-- Sticks -->
+                <mat-accordion *ngIf="traceabilitySheet.sticks.length > 0">
+                  <mat-expansion-panel expanded="true" class="mt-16">
+                    <mat-expansion-panel-header class="add-panel">
+                      <mat-panel-title>
+                        Sticks
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-table [dataSource]="traceabilitySheet.sticks">
+                      <ng-container matColumnDef="iconSrc">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          COULEUR</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title">
+                            <img
+                              class="icon-width"
+                              [src]="
+                                'assets/traceabilitySheet/' + sheetItem.iconSrc
+                              "
+                            />
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="reference">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          RÉFÉRENCE</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.reference }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.reference"
+                                matInput
+                                name="referenceEdition"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="numberStart">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          DÉBUT</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.numberStart }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.numberStart"
+                                matInput
+                                name="numberStartEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="numberEnd">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          FIN</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.numberEnd }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.numberEnd"
+                                matInput
+                                name="numberEndEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell
+                          fxLayoutAlign="center center"
+                          *matHeaderCellDef
+                        ></mat-header-cell>
+                        <mat-cell
+                          fxLayoutAlign="center center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title" *ngIf="habilitation.canEdit()">
+                            <div
+                              *ngIf="!checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="enableUpdateSheetItemMode(sheetItem)"
+                              >
+                                <mat-icon>edit</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="deleteTraceabilitySheetItem(sheetItem)"
+                              >
+                                <mat-icon>delete_outline</mat-icon>
+                              </button>
+                            </div>
+                            <!-- Edition Mode -->
+                            <div
+                              *ngIf="checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="disableUpdateSheetItemMode()"
+                              >
+                                <mat-icon>close</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="updateTraceabilitySheetItem()"
+                              >
+                                <mat-icon>check</mat-icon>
+                              </button>
+                            </div>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row
+                        *matHeaderRowDef="displayedColumns1"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="let activity; columns: displayedColumns1"
+                        class="activity"
+                        matRipple
+                      >
+                      </mat-row>
+                    </mat-table>
+                  </mat-expansion-panel>
+                </mat-accordion>
+                <!-- Colsons -->
+                <mat-accordion *ngIf="traceabilitySheet.colsons.length > 0">
+                  <mat-expansion-panel expanded="true" class="mt-16">
+                    <mat-expansion-panel-header class="add-panel">
+                      <mat-panel-title>
+                        Colsons
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-table [dataSource]="traceabilitySheet.colsons">
+                      <ng-container matColumnDef="iconSrc">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          COULEUR</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title">
+                            <img
+                              class="icon-width"
+                              [src]="
+                                'assets/traceabilitySheet/' + sheetItem.iconSrc
+                              "
+                            />
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="reference">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          RÉFÉRENCE</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.reference }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.reference"
+                                matInput
+                                name="referenceEdition"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="numberStart">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          DÉBUT</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.numberStart }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.numberStart"
+                                matInput
+                                name="numberStartEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="numberEnd">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          FIN</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.numberEnd }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.numberEnd"
+                                matInput
+                                name="numberEndEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell
+                          fxLayoutAlign="center center"
+                          *matHeaderCellDef
+                        ></mat-header-cell>
+                        <mat-cell
+                          fxLayoutAlign="center center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title" *ngIf="habilitation.canEdit()">
+                            <div
+                              *ngIf="!checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="enableUpdateSheetItemMode(sheetItem)"
+                              >
+                                <mat-icon>edit</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="deleteTraceabilitySheetItem(sheetItem)"
+                              >
+                                <mat-icon>delete_outline</mat-icon>
+                              </button>
+                            </div>
+                            <!-- Edition Mode -->
+                            <div
+                              *ngIf="checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="disableUpdateSheetItemMode()"
+                              >
+                                <mat-icon>close</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="updateTraceabilitySheetItem()"
+                              >
+                                <mat-icon>check</mat-icon>
+                              </button>
+                            </div>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row
+                        *matHeaderRowDef="displayedColumns1"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="let activity; columns: displayedColumns1"
+                        class="activity"
+                        matRipple
+                      >
+                      </mat-row>
+                    </mat-table>
+                  </mat-expansion-panel>
+                </mat-accordion>
+                <!-- Feuillards -->
+                <mat-accordion *ngIf="traceabilitySheet.feuillards.length > 0">
+                  <mat-expansion-panel expanded="true" class="mt-16">
+                    <mat-expansion-panel-header class="add-panel">
+                      <mat-panel-title>
+                        Feuillards
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-table [dataSource]="traceabilitySheet.feuillards">
+                      <ng-container matColumnDef="iconSrc">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          COULEUR</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title">
+                            <img
+                              class="icon-width"
+                              [src]="
+                                'assets/traceabilitySheet/' + sheetItem.iconSrc
+                              "
+                            />
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="reference">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          RÉFÉRENCE</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.reference }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.reference"
+                                matInput
+                                name="referenceEdition"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="quantity">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          QUANTITÉ</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.quantity }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.quantity"
+                                matInput
+                                name="quantityEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell
+                          fxLayoutAlign="center center"
+                          *matHeaderCellDef
+                        ></mat-header-cell>
+                        <mat-cell
+                          fxLayoutAlign="center center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title" *ngIf="habilitation.canEdit()">
+                            <div
+                              *ngIf="!checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="enableUpdateSheetItemMode(sheetItem)"
+                              >
+                                <mat-icon>edit</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="deleteTraceabilitySheetItem(sheetItem)"
+                              >
+                                <mat-icon>delete_outline</mat-icon>
+                              </button>
+                            </div>
+                            <!-- Edition Mode -->
+                            <div
+                              *ngIf="checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="disableUpdateSheetItemMode()"
+                              >
+                                <mat-icon>close</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="updateTraceabilitySheetItem()"
+                              >
+                                <mat-icon>check</mat-icon>
+                              </button>
+                            </div>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row
+                        *matHeaderRowDef="displayedColumns2"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="let activity; columns: displayedColumns2"
+                        class="activity"
+                        matRipple
+                      >
+                      </mat-row>
+                    </mat-table>
+                  </mat-expansion-panel>
+                </mat-accordion>
+                <!-- Scotchs -->
+                <mat-accordion *ngIf="traceabilitySheet.scotchs.length > 0">
+                  <mat-expansion-panel expanded="true" class="mt-16">
+                    <mat-expansion-panel-header class="add-panel">
+                      <mat-panel-title>
+                        Scotchs
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-table [dataSource]="traceabilitySheet.scotchs">
+                      <ng-container matColumnDef="iconSrc">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          COULEUR</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title">
+                            <img
+                              class="icon-width"
+                              [src]="
+                                'assets/traceabilitySheet/' + sheetItem.iconSrc
+                              "
+                            />
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="reference">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          RÉFÉRENCE</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.reference }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.reference"
+                                matInput
+                                name="referenceEdition"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="quantity">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          QUANTITÉ</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.quantity }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.quantity"
+                                matInput
+                                name="quantityEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell
+                          fxLayoutAlign="center center"
+                          *matHeaderCellDef
+                        ></mat-header-cell>
+                        <mat-cell
+                          fxLayoutAlign="center center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title" *ngIf="habilitation.canEdit()">
+                            <div
+                              *ngIf="!checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="enableUpdateSheetItemMode(sheetItem)"
+                              >
+                                <mat-icon>edit</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="deleteTraceabilitySheetItem(sheetItem)"
+                              >
+                                <mat-icon>delete_outline</mat-icon>
+                              </button>
+                            </div>
+                            <!-- Edition Mode -->
+                            <div
+                              *ngIf="checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="disableUpdateSheetItemMode()"
+                              >
+                                <mat-icon>close</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="updateTraceabilitySheetItem()"
+                              >
+                                <mat-icon>check</mat-icon>
+                              </button>
+                            </div>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row
+                        *matHeaderRowDef="displayedColumns2"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="let activity; columns: displayedColumns2"
+                        class="activity"
+                        matRipple
+                      >
+                      </mat-row>
+                    </mat-table>
+                  </mat-expansion-panel>
+                </mat-accordion>
+                <!-- Pics -->
+                <mat-accordion *ngIf="traceabilitySheet.pics.length > 0">
+                  <mat-expansion-panel expanded="true" class="mt-16">
+                    <mat-expansion-panel-header class="add-panel">
+                      <mat-panel-title>
+                        Pics
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-table [dataSource]="traceabilitySheet.pics">
+                      <ng-container matColumnDef="iconSrc">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          COULEUR</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title">
+                            <img
+                              class="icon-width"
+                              [src]="
+                                'assets/traceabilitySheet/' + sheetItem.iconSrc
+                              "
+                            />
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="quantity">
+                        <mat-header-cell
+                          fxLayoutAlign="start center"
+                          *matHeaderCellDef
+                        >
+                          QUANTITÉ</mat-header-cell
+                        >
+                        <mat-cell
+                          fxLayoutAlign="start center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span
+                            class="job-title"
+                            *ngIf="!checkEditionMode(sheetItem)"
+                          >
+                            {{ sheetItem.quantity }}
+                          </span>
+                          <span
+                            class="job-title"
+                            *ngIf="checkEditionMode(sheetItem)"
+                          >
+                            <mat-form-field appearance="outline" fxFlex="100">
+                              <input
+                                [(ngModel)]="selectedSheetItem.quantity"
+                                matInput
+                                name="quantityEdition"
+                                type="number"
+                              />
+                            </mat-form-field>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell
+                          fxLayoutAlign="center center"
+                          *matHeaderCellDef
+                        ></mat-header-cell>
+                        <mat-cell
+                          fxLayoutAlign="center center"
+                          *matCellDef="let sheetItem"
+                        >
+                          <span class="job-title" *ngIf="habilitation.canEdit()">
+                            <div
+                              *ngIf="!checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="enableUpdateSheetItemMode(sheetItem)"
+                              >
+                                <mat-icon>edit</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="deleteTraceabilitySheetItem(sheetItem)"
+                              >
+                                <mat-icon>delete_outline</mat-icon>
+                              </button>
+                            </div>
+                            <!-- Edition Mode -->
+                            <div
+                              *ngIf="checkEditionMode(sheetItem)"
+                              class="buttons-row"
+                              fxLayout="row wrap"
+                              fxLayoutAlign="space-between center"
+                            >
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="warn"
+                                class="mat-elevation-z1"
+                                (click)="disableUpdateSheetItemMode()"
+                              >
+                                <mat-icon>close</mat-icon>
+                              </button>
+                              <button
+                                type="button"
+                                mat-icon-button
+                                color="accent"
+                                class="mat-elevation-z1"
+                                (click)="updateTraceabilitySheetItem()"
+                              >
+                                <mat-icon>check</mat-icon>
+                              </button>
+                            </div>
+                          </span>
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row
+                        *matHeaderRowDef="displayedColumns3"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="let activity; columns: displayedColumns3"
+                        class="activity"
+                        matRipple
+                      >
+                      </mat-row>
+                    </mat-table>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Informations Complémetaires">
+            <div
+              class="tab-content p-8"
+              ngClass.gt-sm="p-24"
+              fusePerfectScrollbar
+            >
+              <div
+                fxLayout.gt-sm="row"
+                fxLayout="column"
+                fxLayoutAlign.gt-sm="space-around start"
+                fxLayoutAlign="space-around"
+              >
+                <div
+                  fxLayout="column"
+                  fxLayoutAlign="space-around center"
+                  fxFlex="30"
+                  class="mb-16"
+                >
+                  <div fxLayout="row">
+                    <h3 class="m-0">Jours d'activité</h3>
+                  </div>
+                  <div fxLayout="row wrap">
+                    <div
+                      fxLayout="row"
+                      *ngFor="let day of traceabilitySheet.days; index as i"
+                    >
+                      <div fxLayout="column">
+                        <p style="text-align: center;">{{ getDayString(i) }}</p>
+                        <mat-icon
+                          matRipple
+                          [ngClass]="{
+                            'green-600': day,
+                            'red-600': !day
+                          }"
+                          class="enable-icon s-16"
+                          (click)="updateSheetDays(i)"
+                        ></mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="20">
+                  <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label> Nombre de bêtes sacrifiées:</mat-label>
+                    <input
+                      [readonly]="!habilitation.canEdit()"
+                      matInput
+                      name="quantityOfSacrifices"
+                      [(ngModel)]="traceabilitySheet.quantityOfSacrifices"
+                      (change)="updateQuantityOfSacrifices()"
+                    />
+                  </mat-form-field>
+                </div>
+                <div fxFlex="20">
+                  <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Code MEL</mat-label>
+                    <input
+                      [readonly]="!habilitation.canEdit()"
+                      matInput
+                      name="melCode"
+                      [(ngModel)]="traceabilitySheet.melCode"
+                      (change)="updateMelCode()"
+                    />
+                  </mat-form-field>
+                </div>
+                <div fxFlex="20">
+                  <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Tampon</mat-label>
+                    <input
+                      [readonly]="!habilitation.canEdit()"
+                      matInput
+                      name="tamponCode"
+                      [(ngModel)]="traceabilitySheet.tamponCode"
+                      (change)="updateTamponCode()"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div
+                fxLayout.gt-sm="row"
+                fxLayout="column"
+                fxLayoutAlign.gt-sm="space-around start"
+                fxLayoutAlign="space-around"
+                class="mt-20"
+              >
+                <div fxFlex="30">
+                  <div fxLayout="column" fxLayoutAlign="start">
+                    <mat-form-field appearance="outline" fxFlex="100">
+                      <mat-label>Responsable</mat-label>
+                      <mat-select
+                        [disabled]="!habilitation.canEdit()"
+                        class="custom-select"
+                        name="responsible"
+                        (selectionChange)="updateResponsible($event)"
+                      >
+                        <mat-option
+                          *ngFor="let employee of employees"
+                          [value]="employee"
+                        >
+                          {{ employee.fullName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <p class="m-8">
+                        {{
+                          traceabilitySheet.responsible
+                            ? traceabilitySheet.responsible.fullName
+                            : "--AUCUN RESPONSABLE--"
+                        }}
+                      </p>
+                      <div *ngIf="habilitation.canEdit()">
+                        <button
+                        *ngIf="traceabilitySheet.responsible"
+                        type="button"
+                        mat-icon-button
+                        color="warn"
+                        (click)="removeResponsible()"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="30">
+                  <div fxLayout="column" fxLayoutAlign="start">
+                    <mat-form-field appearance="outline" fxFlex="100">
+                      <mat-label>Équipe sur site</mat-label>
+                      <mat-select
+                        [disabled]="!habilitation.canEdit()"
+                        class="custom-select"
+                        name="employeeSite"
+                        (selectionChange)="addTeamMember($event)"
+                      >
+                        <mat-option
+                          *ngFor="let employee of employees"
+                          [value]="employee"
+                        >
+                          {{ employee.fullName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <div
+                      fxLayout="row"
+                      fxLayoutAlign="center center"
+                      *ngFor="let member of traceabilitySheet.team"
+                    >
+                      <p class="m-8">{{ member.fullName }}</p>
+                      <div *ngIf="habilitation.canEdit()">
+                        <button
+                        type="button"
+                        mat-icon-button
+                        color="warn"
+                        (click)="deleteTeamMember(member)"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="30">
+                  <div
+                    class="file-uploader"
+                    fxLayout="row wrap"
+                    fxLayoutAlign="center center"
+                  >
+                  <div *ngIf="habilitation.canEdit()">
+                    <h3 class="mr-12">Pièce jointes</h3>
+                    <input
+                      hidden
+                      #file
+                      type="file"
+                      name="file"
+                      id="file"
+                      class="inputfile"
+                      multiple="multiple"
+                      (change)="uploadAttachments(file.files)"
+                    />
+                    <button
+                      mat-fab
+                      color="warn"
+                      type="button"
+                      (click)="file.click()"
+                    >
+                      <mat-icon>attachment</mat-icon>
+                    </button>
+                  </div>
+
+                    <button
+                      *ngIf="traceabilitySheet.hasAttachments"
+                      mat-raised-button
+                      color="accent"
+                      type="button"
+                      (click)="getAttachments()"
+                      class="ml-16"
+                    >
+                      Afficher
+                    </button>
+                  </div>
+                  <div
+                    *ngIf="
+                      traceabilitySheet.hasAttachments &&
+                      traceabilitySheet.attachments.length > 0
+                    "
+                  >
+                    <div
+                      *ngFor="let attachment of traceabilitySheet.attachments"
+                      fxLayout="row"
+                      fxLayoutAlign="center center"
+                    >
+                      <span
+                        style="cursor:pointer"
+                        (click)="downloadAttachment(attachment)"
+                        >{{ attachment.fileName }}</span
+                      >
+                      <div *ngIf="habilitation.canEdit()">
+                        <button
+                        type="button"
+                        mat-icon-button
+                        color="warn"
+                        (click)="removeAttachment(attachment)"
+                        *ngIf="attachment.fileName"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <div
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      *ngIf="traceabilitySheet.id == 0"
+      fxFill
+    >
+      <h2>Aucune feuille de traçabilité n'existe pour le site sélectionné</h2>
+      <button
+        *ngIf="habilitation.canCreate()"
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="addTraceabilitySheet()"
+      >
+        Nouvelle feuille de traçabilité
+        <mat-icon class="s-20">add</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!traceabilitySheet" fxLayoutAlign="center center">
+  <h2>
+    Veuillez sélectionner un site et un numéro de semaine pour afficher la fiche
+    de traçabilité
+  </h2>
+</div>

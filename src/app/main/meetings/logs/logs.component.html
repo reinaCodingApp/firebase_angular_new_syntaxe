@@ -1,0 +1,72 @@
+<div class="content px-24">
+  <div class="header p-8" fxLayout="row" fxLayoutAlign="center center">
+    <h2>Tableau des consultations des diverses instances</h2>
+  </div>
+
+  <!-- <mat-table [dataSource]="logs">
+  <ng-container matColumnDef="employeeName">
+    <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+      >Nom</mat-header-cell
+    >
+    <mat-cell fxLayoutAlign="center center" *matCellDef="let log">
+      {{ log.employeeName }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="date">
+    <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+      >Date et heure</mat-header-cell
+    >
+    <mat-cell fxLayoutAlign="center center" *matCellDef="let log">
+      {{ log.date }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="action">
+    <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+      >Action</mat-header-cell
+    >
+    <mat-cell fxLayoutAlign="center center" *matCellDef="let log">
+      {{ log.action }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="ip">
+    <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+      >Addresse IP</mat-header-cell
+    >
+    <mat-cell fxLayoutAlign="center center" *matCellDef="let log">
+      {{ log.ip }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="url">
+    <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+      >Lien</mat-header-cell
+    >
+    <mat-cell fxLayoutAlign="center center" *matCellDef="let log">
+      {{ log.url }}
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let log; columns: displayedColumns"> </mat-row>
+</mat-table> -->
+  <ngx-datatable
+    class="material"
+    [rows]="logs"
+    [columnMode]="'force'"
+    [headerHeight]="48"
+    [footerHeight]="56"
+    [rowHeight]="'auto'"
+    [limit]="10"
+    [messages]="{
+      emptyMessage: '',
+      totalMessage: 'Totale'
+    }"
+  >
+    <ngx-datatable-column name="Nom" prop="employeeName"></ngx-datatable-column>
+    <ngx-datatable-column name="Date et heure" prop="date">
+    </ngx-datatable-column>
+    <ngx-datatable-column name="action" prop="action"> </ngx-datatable-column>
+    <ngx-datatable-column name="Addresse IP" prop="ip"> </ngx-datatable-column>
+    <ngx-datatable-column name="Lien" prop="url"> </ngx-datatable-column>
+  </ngx-datatable>
+</div>

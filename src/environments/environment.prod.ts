@@ -12,3 +12,5 @@ export const firebaseConfig = {
   appId: '1:992695524847:web:8f6c8d792718db63afea1a',
   measurementId: 'G-L7QB6JNSHM'
 };
+export const firebaseCloudMessagingKey = 'AIzaSyD5VWN0wLdTKoFrX2r3JCpdsBCgoP0yrfA';
+export const BASE_URL = 'https://api2.avs.fr/';

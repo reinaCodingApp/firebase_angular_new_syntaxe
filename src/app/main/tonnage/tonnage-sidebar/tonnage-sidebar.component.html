@@ -1,0 +1,104 @@
+<!-- SIDEBAR CONTENT -->
+<div
+  class="content p-8"
+  fusePerfectScrollbar
+  [@animate]="{ value: '*', params: { y: '50px' } }"
+>
+  <div class="demo-sidebar">
+    <form
+      #f="ngForm"
+      (ngSubmit)="getTonnages(f)"
+      class="mat-card mat-elevation-z4 p-8"
+      fxLayout="column"
+      fxLayoutAlign="start"
+      name="form"
+    >
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
+        fxFlex="1 0 auto"
+        class="mt-8"
+      >
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Sélectionner un partenaire</mat-label>
+          <mat-select
+            required
+            [(ngModel)]="tonnageFilterViewModel.siteId"
+            name="partner"
+          >
+            <mat-option>
+              <ngx-mat-select-search
+                ngModel
+                name="searchINput"
+                (ngModelChange)="searchSite($event)"
+                placeholderLabel="Rechercher"
+                noEntriesFoundLabel="pas de resultats"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let site of filtredSites" [value]="site.id">
+              {{ site.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Début</mat-label>
+          <input
+            required
+            matInput
+            [matDatepicker]="startDatePicker"
+            placeholder="Du"
+            [(ngModel)]="tonnageFilterViewModel.startDate"
+            name="startDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="startDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Fin</mat-label>
+          <input
+            required
+            matInput
+            [matDatepicker]="endDatePicker"
+            placeholder="Au"
+            [(ngModel)]="tonnageFilterViewModel.endDate"
+            name="endDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="endDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button
+          type="submit"
+          mat-raised-button
+          color="accent"
+          fxFlex="100"
+          (click)="commonService.closeSidebar('tonnage-sidebar')"
+        >
+          Afficher
+          <mat-icon class="s-20">filter_list</mat-icon>
+        </button>
+      </div>
+      <br />
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          fxFlex="100"
+          (click)="exportToExcel()"
+        >
+          Exporter un excel
+          <mat-icon class="s-20">arrow_downward</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- / SIDEBAR CONTENT -->

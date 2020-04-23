@@ -1,0 +1,22 @@
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="column" fxLayoutAlign="start start">
+    <div>{{ client.name }}</div>
+  </div>
+  <div fxLayout="column" fxLayoutAlign="end end">
+    <div>
+      <button
+        *ngIf="habilitation.canEdit()"
+        mat-icon-button
+        color="accent"
+        class="mat-elevation-z1"
+        (click)="
+          $event.preventDefault();
+          $event.stopPropagation();
+          updateClient(client)
+        "
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,160 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"
+        >{{
+          data.mode == "edit"
+            ? "Modifier fiche technique"
+            : "Nouvell fiche technique"
+        }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="addTechnicalSheet(f)"
+      name="technicalSheetForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Code feuille</mat-label>
+        <input
+          #sheetCode="ngModel"
+          [(ngModel)]="technicalSheet.sheetCode"
+          placeholder="Code feuille"
+          matInput
+          name="sheetCode"
+          required
+          minlength="8"
+          maxlength="8"
+        />
+        <mat-error
+          *ngIf="sheetCode.invalid && (sheetCode.dirty || sheetCode.touched)"
+        >
+          Veuillez saisir le code de la fiche technique FT... (8 caractères
+          obligatoires) !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Sites</mat-label>
+        <mat-select
+          #site="ngModel"
+          name="site"
+          required
+          [(ngModel)]="technicalSheet.site.id"
+        >
+          <mat-option *ngFor="let site of sites" [value]="site.id">
+            {{ site.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+          Veuillez choisir un site !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fournisseurs</mat-label>
+        <mat-select
+          #provider="ngModel"
+          name="provider"
+          required
+          [(ngModel)]="technicalSheet.provider.id"
+        >
+          <mat-option *ngFor="let provider of providers" [value]="provider.id">
+            {{ provider.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="provider.invalid && (provider.dirty || provider.touched)"
+        >
+          Veuillez choisir un fournisseur !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Date</mat-label>
+        <input
+          #validationDate="ngModel"
+          matInput
+          [matDatepicker]="validationDatePicker"
+          placeholder="Date"
+          [(ngModel)]="technicalSheet.validationDate"
+          name="validationDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="validationDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #validationDatePicker></mat-datepicker>
+        <mat-error
+          *ngIf="
+            validationDate.invalid &&
+            (validationDate.dirty || validationDate.touched)
+          "
+        >
+          Veuillez renseigner la date !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nom du produit</mat-label>
+        <input
+          #productName="ngModel"
+          [(ngModel)]="technicalSheet.productName"
+          placeholder="Produit ou mix"
+          matInput
+          name="productName"
+          required
+          minlength="3"
+        />
+        <mat-error
+          *ngIf="
+            productName.invalid && (productName.dirty || productName.touched)
+          "
+        >
+          Veuillez renseigner le nom du produit associé à la fiche !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Référence du produit</mat-label>
+        <input
+          #productCharacteristics="ngModel"
+          [(ngModel)]="technicalSheet.productCharacteristics"
+          placeholder="Référence du produit"
+          matInput
+          name="productCharacteristics"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Remarque</mat-label>
+        <input
+          [(ngModel)]="technicalSheet.comment"
+          placeholder="Remarque"
+          matInput
+          name="comment"
+        />
+      </mat-form-field>
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,173 @@
+<div id="non-printable" class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">
+        Impression semaines
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="printWeeks(f)"
+      name="printWeeksForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Site</mat-label>
+        <mat-select
+          #site="ngModel"
+          name="site"
+          required
+          [(ngModel)]="selectedSite"
+        >
+          <mat-option *ngFor="let site of sites" [value]="site">
+            {{ site.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+          Veuillez choisir un site !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Année</mat-label>
+        <mat-select [(ngModel)]="requestParameter.year" name="year">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Semaine début</mat-label>
+        <mat-select [(ngModel)]="requestParameter.weekStart" name="weekStart">
+          <mat-option *ngFor="let week of weeks" [value]="week">
+            {{ week }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Semaine fin</mat-label>
+        <mat-select [(ngModel)]="requestParameter.weekEnd" name="weekEnd">
+          <mat-option *ngFor="let week of weeks" [value]="week">
+            {{ week }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          Imprimer
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TEMPLATE TO PRINT -->
+<div id="printWeeksContent">
+  <div id="hidden_div" hidden style="max-width: 700px;margin:auto">
+    <div fxLayout="column" *ngIf="traceabilityPlanifications.length > 0">
+      <h3 fxLayout="row" fxLayoutAlign="center center">
+        LISTING DE LA PLANIFICATION D'UN SITE
+      </h3>
+      <div fxLayout="row" fxLayoutAlign="space-between" class="logo-info-div">
+        <div fxLayout="column" fxLayoutAlign="start start">
+          <h5>Service Traçabilité AVS</h5>
+          <h5>Mohamed MELLOUK</h5>
+          <h5>06 25 01 52 46 - t5acabilite@avs.fr</h5>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <img src="assets/images/logos/logoavs.jpg" />
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <h5>Planification du site : {{ selectedSite.name }}</h5>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <h5 class="week-color-div">
+          Période semaine de :
+          {{
+            getDateforYearAndWeek(
+              requestParameter.weekStart,
+              requestParameter.year
+            )
+          }}
+          au :
+          {{
+            getDateforYearAndWeek(
+              requestParameter.weekEnd,
+              requestParameter.year
+            )
+          }}
+        </h5>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <table style="border-collapse: collapse;width: 100%;">
+          <tr>
+            <th>Sem.</th>
+            <th>Date</th>
+            <th>Tampon(s)</th>
+            <th>Bague(s)</th>
+            <th>Couleur</th>
+          </tr>
+          <tr
+            *ngFor="let traceabilityPlanification of traceabilityPlanifications"
+          >
+            <td>{{ getWeekFromDate(traceabilityPlanification.startDate) }}</td>
+            <td>
+              {{ traceabilityPlanification.startDate | date: "dd/MM/yyyy" }}
+            </td>
+            <td>
+              <div
+                fxLayout="column"
+                fxLayout.gt-sm="row wrap"
+                *ngIf="traceabilityPlanification.items.length > 0"
+              >
+                <div
+                  *ngFor="
+                    let item of traceabilityPlanification.items[0]
+                      .traceabilityItems
+                  "
+                >
+                  <span *ngIf="!item.isRing"> {{ item.itemTitle }} - </span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div
+                fxLayout="column"
+                fxLayout.gt-sm="row wrap"
+                *ngIf="traceabilityPlanification.items.length > 0"
+              >
+                <div
+                  *ngFor="
+                    let item of traceabilityPlanification.items[0]
+                      .traceabilityItems
+                  "
+                >
+                  <span *ngIf="item.isRing"> {{ item.itemTitle }} - </span>
+                </div>
+              </div>
+            </td>
+            <td>{{ traceabilityPlanification.color }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

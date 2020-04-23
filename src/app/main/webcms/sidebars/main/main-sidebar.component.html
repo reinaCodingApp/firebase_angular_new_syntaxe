@@ -1,0 +1,81 @@
+<!-- SIDEBAR HEADER -->
+<div
+  fxLayout="column"
+  fxLayoutAlign="space-between start"
+  class="header accent p-24 pb-4"
+>
+  <div class="logo" fxFlex fxLayout="row" fxLayoutAlign="start center">
+    <mat-icon
+      class="logo-icon s-32"
+      [@animate]="{ value: '*', params: { delay: '50ms', scale: '0.2' } }"
+      >mail
+    </mat-icon>
+    <span
+      class="logo-text"
+      [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }"
+      >Messagerie</span
+    >
+  </div>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div
+  class="content"
+  fusePerfectScrollbar
+  [@animate]="{ value: '*', params: { y: '50px' } }"
+>
+  <div class="nav material2">
+      <div class="mt-24 nav-subheader">EN COURS</div>
+    <div class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active accent': currentUrl == 'webcms/discussions'}"
+        matRipple
+        [routerLink]="'/webcms/discussions'"
+      >
+      <mat-icon class="nav-link-icon primary-600-fg" >email</mat-icon>
+      <span> Courriers <span class="ml-4" *ngIf="counters.count1 > 0" > {{'(' + counters.count1 + ')'}}</span></span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active accent': currentUrl == 'webcms/frauds'}"
+        matRipple
+        [routerLink]="'/webcms/frauds'"
+      ><mat-icon class="nav-link-icon warn-600-fg" >warning</mat-icon>
+       <span> Fraudes <span class="ml-4" *ngIf="counters.count2 > 0" > {{' (' + counters.count2 + ')'}}</span> </span>
+      </a>
+    </div>
+    <div class="nav-subheader">SERVICES </div>
+    <div class="nav-item" *ngFor="let d of departments">
+        <a
+          class="nav-link"
+          [ngClass]="{ 'active accent': currentUrl == 'webcms/filter/' + d.id}"
+          [routerLink]="'/webcms/filter/' + d.id"
+          matRipple
+        ><mat-icon class="nav-link-icon" >folder</mat-icon>
+          <span class="text-capitalized">{{d.name}}</span>
+        </a>
+    </div>
+    <div class="nav-subheader">HISTORIQUE</div>
+    <div class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active accent': currentUrl == 'webcms/closed'}"
+        matRipple
+        [routerLink]="'/webcms/closed'"
+      ><mat-icon class="nav-link-icon green-600-fg" >playlist_add_check</mat-icon>
+        <span>Clôturées</span>
+      </a>
+    </div>
+    <div class="nav-item" *ngIf="inSearchMode === true" >
+      <a class="nav-link active accent" matRipple>
+        <mat-icon class="nav-link-icon green-600-fg" >search</mat-icon>
+        <span>Rechercher</span>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- / SIDEBAR CONTENT -->

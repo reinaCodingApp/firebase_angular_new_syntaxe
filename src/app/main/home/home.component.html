@@ -1,3 +1,198 @@
-<div>
-  home works
+<div
+  id="dashboard-project"
+  class="page-layout simple right-sidebar"
+  fxLayout="row"
+>
+  <!-- CENTER -->
+  <div class="center" fusePerfectScrollbar>
+    <!-- HEADER -->
+    <div
+      class="header accent p-24 pb-0"
+      fxLayout="column"
+      fxLayoutAlign="space-between"
+    >
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <span
+          class="mat-display-1 my-0 my-sm-24 welcome-message"
+          [@animate]="{ value: '*', params: { x: '50px' } }"
+          >Tableau de bord
+        </span>
+
+        <button
+          mat-icon-button
+          class="sidebar-toggle mr-8"
+          fxHide.gt-md
+          (click)="toggleSidebar('project-dashboard-right-sidebar-1')"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <div fxLayout="row" fxLayoutAlign="start center" class="mt-8">
+          <div class="selected-project px-72">Accueil</div>
+
+          <button
+            mat-icon-button
+            class="project-selector"
+
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+
+          <mat-menu #projectsMenu="matMenu">
+            <button mat-menu-item [routerLink]="'/activity'">
+              <span>Pointages</span>
+            </button>
+            <button mat-menu-item [routerLink]="'/tonnage'">
+              <span>Tonnages</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+      <mat-tab-group dynamicHeight>
+        <mat-tab label="Mur">
+          <timeline></timeline>
+        </mat-tab>
+        <mat-tab label="Indicateurs">
+          <div
+            class="p-12"
+            fxFlex="100"
+            *fuseIfOnDom
+            [@animateStagger]="{ value: '50' }"
+          >
+            <div class="message-box" fxLayout="row">
+              Prochainement en développement
+            </div>
+          </div>
+          <!-- / WIDGET GROUP -->
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <!-- / CONTENT -->
+  </div>
+  <!-- / CENTER -->
+
+  <!-- SIDEBAR -->
+  <fuse-sidebar
+    class="sidebar"
+    name="project-dashboard-right-sidebar-1"
+    position="right"
+    lockedOpen="gt-md"
+  >
+    <!-- SIDEBAR CONTENT -->
+    <div class="content">
+      <!-- WIDGET GROUP -->
+      <div
+        class="widget-group"
+        fxLayout="column"
+        fxFlex="100"
+        [@animateStagger]="{ value: '50' }"
+      >
+        <!-- NOW WIDGET -->
+        <fuse-widget
+          [@animate]="{ value: '*', params: { y: '100%' } }"
+          class="pb-0"
+        >
+          <!-- Front -->
+          <div class="fuse-widget-front">
+            <div
+              class="pl-16 pr-8 py-16"
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+            >
+              <div class="h3">
+                {{ dateNow.format("dddd, HH:mm:ss") }}
+              </div>
+              <div>
+                <button mat-icon-button>
+                  <mat-icon>access_time</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="p-16 pb-24"
+              fxLayout="column"
+              fxLayoutAlign="center center"
+            >
+              <div class="h1 secondary-text">
+                <span>{{ dateNow.format("MMMM") }}</span>
+              </div>
+
+              <div
+                class="font-size-72 line-height-88 secondary-text font-weight-400"
+              >
+                {{ dateNow.format("D") }}
+              </div>
+
+              <div class="h1 secondary-text">
+                <span>{{ dateNow.format("Y") }}</span>
+              </div>
+              <div>
+                <span class="subtitle" >Semaine {{ dateNow.week() }}</span>
+              </div>
+            </div>
+          </div>
+          <!-- / Front -->
+        </fuse-widget>
+        <!-- / NOW WIDGET -->
+
+        <!-- WEATHER WIDGET -->
+        <fuse-widget [@animate]="{ value: '*', params: { y: '100%' } }">
+          <!-- Front -->
+          <div class="fuse-widget-front">
+            <div
+              class="pl-16 pr-8 py-16"
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+            >
+              <div class="h4" fxLayout="row" fxLayoutAlign="start center">
+                Mes pointages
+              </div>
+              <div>
+                <button mat-icon-button>
+                  <mat-icon class="secondary-text">beenhere</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="py-16">
+              <div
+                class="py-16 px-24 bb"
+                fxLayout="row"
+                fxLayoutAlign="space-between center"
+                *ngFor="let activity of activities"
+                [class.green-bg]="activity.type === 1 && activity.finished"
+                [class.yellow-bg]="activity.type === 1 && !activity.finished"
+                [class.red-bg]="
+                  activity.type === 2 ||
+                  activity.type === 9 ||
+                  activity.type === 4
+                "
+                [class.gray-bg]="activity.type === 0"
+                [class.violet-bg]="activity.type === 5"
+                [class.blue-bg]="activity.type === 23"
+              >
+                <span class="h4">{{ activity.day }}</span>
+                <div fxLayout="row" fxLayoutAlign="start center">
+                  <span class="h2 font-weight-300 secondary-text">
+                    {{ activity.hours | date: "HH:mm":"+0000" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- / Front -->
+        </fuse-widget>
+        <!-- / WEATHER WIDGET -->
+      </div>
+      <!-- / WIDGET GROUP -->
+    </div>
+    <!-- / SIDEBAR CONTENT -->
+  </fuse-sidebar>
+  <!-- / SIDEBAR -->
 </div>

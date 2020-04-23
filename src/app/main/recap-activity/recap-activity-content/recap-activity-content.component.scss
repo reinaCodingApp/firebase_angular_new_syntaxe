@@ -1,0 +1,32 @@
+.activity-panel {
+  background-color: #f4f4f4;
+  -webkit-border-radius: 5px !important;
+  -moz-border-radius: 5px !important;
+  border-radius: 5px !important;
+  padding: 10px;
+  margin: 5px;
+}
+
+.activity-fullName {
+  font-weight: bold;
+  color: black;
+}
+
+.activity-time {
+  display: block;
+  padding-left: 5px;
+  font-weight: 600;
+  color: gray;
+}
+
+.activities-list {
+  list-style-type: none;
+  padding: 0px;
+}
+
+recap-activity {
+  mat-footer-row,
+  mat-row {
+    min-height: auto !important;
+  }
+}

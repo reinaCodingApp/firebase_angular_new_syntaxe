@@ -1,0 +1,137 @@
+@import "src/@fuse/scss/fuse";
+@import url(https://fonts.googleapis.com/css?family=Lato|Raleway&subset=latin,latin-ext);
+followup-sheet {
+  font-family: Raleway;
+  .fuse-card {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  @include media-breakpoint("sm") {
+    .custom-card {
+      max-width: 50% !important;
+      min-width: 50% !important;
+      // margin: 10px auto !important;
+    }
+  }
+div.sections{
+  .section{
+
+  }
+  .current-section {
+    background-color: #fd737e !important;
+    color: white !important;
+
+  }
+}
+
+  div.folder-title{
+    input{
+      text-transform: uppercase;
+      font-family: Raleway;
+      width: 100%;
+    }
+    .actions{
+      visibility: hidden;
+    }
+    &:hover{
+      .actions{
+        visibility: visible;
+      }
+    }
+  }
+  div.point-content{
+    position: relative;
+    textarea{
+      text-align: justify;
+      color:rgba(0,0,0,1);
+      line-height: 1.5em;
+      &:focus{
+        color:rgba(0,0,0, 0.8);
+      }
+    }
+    button.remove{
+      display: none;
+      position: absolute;
+      right: 7px;
+      bottom: 15px;
+      mat-icon{
+        color: rgba(0,0,0, 0.5);
+      }
+    }
+    &:hover{
+      button{
+        display: block;
+      }
+    }
+  }
+  button.add-point{
+    margin-top: -16px;
+  }
+  div.justify-content{
+    text-align: justify;
+  }
+  div.poles{
+    .nav-item {
+      text-decoration: none !important;
+      border: 1px solid;
+      border-radius: 0px;
+      margin-bottom: 8px;
+      border-color: #0000001f;
+    }
+
+    .nav.material2 .nav-item .nav-link,
+    .material2 .nav .nav-item .nav-link {
+      border-radius: 0px !important;
+      margin-right: 0px !important;
+      display: grid;
+    }
+  }
+
+  .pole-header {
+    font-size: 20px !important;
+    margin-top: 0px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .deadline-checked-yellow {
+    background-color: #ffd802 !important;
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .deadline-checked-red {
+    background-color: #ff4a4a !important;
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .deadline-checked-green {
+    background-color: #91dc5a !important;
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .articles-list {
+    background-color: #fff;
+    // width: 300px;
+    min-width: 280px;
+    margin: 16px;
+    padding: 16px;
+    border-radius: 4px;
+    @include mat-elevation(1);
+
+    @include media-breakpoint("xs") {
+      min-width: 300px;
+      margin: 16px 0;
+    }
+
+    .mat-list-item {
+      text-decoration: none !important;
+      border: 1px solid;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      border-color: #0000001f;
+    }
+  }
+}

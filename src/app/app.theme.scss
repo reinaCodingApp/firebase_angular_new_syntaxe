@@ -81,7 +81,17 @@ $typography: mat-typography-config(
 @import "src/app/layout/components/chat-panel/chat-panel.theme";
 @import "src/app/layout/components/toolbar/toolbar.theme";
 @import "src/app/main/login/login.theme";
-@import "src/app/main/posts/contacts.theme";
+@import "src/app/main/webcms/posts/contacts.theme";
+@import "src/app/main/webcms/mail.theme";
+@import "src/app/main/audit/audit.theme";
+@import "src/app/main/login/reset-password-request/reset-password-request.theme";
+@import "src/app/main/login/reset-password-form/reset-password-form.theme";
+@import "src/app/main/login/reset-password-confirm/reset-password-confirm.theme";
+@import "src/app/main/home/home-theme";
+@import "src/app/main/home/timeline/timeline.theme";
+@import '~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme.scss';
+
+
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
@@ -93,6 +103,15 @@ $typography: mat-typography-config(
     // Pages
     @include login-theme($theme);
     @include contacts-theme($theme);
+    @include mail-theme($theme);
+    @include audit-theme($theme);
+    @include reset-password-request-theme($theme);
+    @include reset-password-form-theme($theme);
+    @include reset-password-confirm-theme($theme);
+    @include home-theme($theme);
+    @include timeline-theme($theme);
+
+    @include mat-datetimepicker-theme($theme);
 
 }
 

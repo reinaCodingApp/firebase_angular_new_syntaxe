@@ -3,8 +3,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { LoginService } from './login.service';
-import { User } from 'app/models/user';
+import { User } from 'app/main/settings/models/user';
 import { Router } from '@angular/router';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-login',
@@ -17,14 +18,12 @@ export class LoginComponent implements OnInit
 {
     loginForm: FormGroup;
     showError = false;
-    constructor(private _fuseConfigService: FuseConfigService, private _formBuilder: FormBuilder, private loginService: LoginService, private router: Router)
-    {
-        this.loginService.getState().subscribe(state => {
-            if (state && state.uid) {
-                this.router.navigate(['home']);
-            }
-
-        });
+    constructor(private _fuseConfigService: FuseConfigService, 
+                private _formBuilder: FormBuilder,
+                private loginService: LoginService, 
+                private router: Router,
+                private loaderService: NgxUiLoaderService)
+    { 
         this._fuseConfigService.config = {
             layout: {navbar   : {hidden: true},
                 toolbar  : {hidden: true},
@@ -33,21 +32,23 @@ export class LoginComponent implements OnInit
             }
         };
     }
-    login() {
+    login(): void {        
+        this.loaderService.start();
         const user = {email: this.loginForm.get('email').value, password: this.loginForm.get('password').value} as User;
         this.loginService.login(user).then(result => {
-            console.log('navigation ', result.user.uid);
-            this.loginService.updateProfil();
-            this.router.navigate(['home']);
+          this.loaderService.stop();
+          this.loginService.onUserAuthenticates.next(result);
+          this.router.navigate(['home']);
         },
         err => {
+            this.loaderService.stop();
             this.showError = true;
             setTimeout(() => {
                 this.showError = false;
             }, 15000);
             console.log('err', err); });
     }
-    logout() {
+    logout(): void {
         this.loginService.logout();
     }
     ngOnInit(): void

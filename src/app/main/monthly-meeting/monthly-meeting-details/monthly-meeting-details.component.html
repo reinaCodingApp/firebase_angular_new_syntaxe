@@ -1,0 +1,137 @@
+<div class="page-layout simple">
+  <!-- HEADER -->
+  <div
+    class="header primary-bg p-16 p-sm-24"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+      <button
+        matTooltip="Retour à la liste des réunions mensuelle"
+        mat-icon-button
+        class="back mr-16"
+        [routerLink]="'/monthlyMeeting'"
+      >
+        <mat-icon class="fuse-white-500-fg">arrow_back</mat-icon>
+      </button>
+      <h1
+        class="fuse-white-500-fg"
+        [@animate]="{ value: '*', params: { delay: '100ms', y: '25px' } }"
+      >
+        {{ monthlyMeeting.title }}
+      </h1>
+    </div>
+    <div
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      *ngIf="habilitation.canEdit()"
+    >
+      <button
+        mat-fab
+        color="warn"
+        [@animate]="{
+          value: '*',
+          params: { delay: '600ms', scale: '0.2' }
+        }"
+        type="button"
+        class="ml-8"
+        (click)="addMonthlyMeetingPresence()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <div class="content p-sm-24">
+    <div>
+      <fuse-widget
+        [@animate]="{ value: '*', params: { y: '100%' } }"
+        class="widget"
+        fxLayout="row"
+        fxFlex="100"
+      >
+        <div class="fuse-widget-front">
+          <mat-table
+            #table
+            [dataSource]="monthlyMeeting.monthlyMeetingPresences"
+          >
+            <ng-container matColumnDef="employee">
+              <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.employee.fullName }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="startTimeStr">
+              <mat-header-cell *matHeaderCellDef>Heure arrivée</mat-header-cell>
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.startTimeStr }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="endTimeStr">
+              <mat-header-cell *matHeaderCellDef>Heure départ</mat-header-cell>
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.endTimeStr }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="defaultDepartment">
+              <mat-header-cell *matHeaderCellDef>Région</mat-header-cell>
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.defaultDepartment }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="startDateStr">
+              <mat-header-cell *matHeaderCellDef>Date d'entrée</mat-header-cell>
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.startDateStr }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="endDateStr">
+              <mat-header-cell *matHeaderCellDef
+                >Date de sortie</mat-header-cell
+              >
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.endDateStr }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="observations">
+              <mat-header-cell *matHeaderCellDef>Observations</mat-header-cell>
+              <mat-cell *matCellDef="let monthlyMeetingPresence">
+                {{ monthlyMeetingPresence.observations }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell
+                fxLayoutAlign="center center"
+                *matCellDef="let monthlyMeetingPresence"
+              >
+                <button
+                  mat-icon-button
+                  color="accent"
+                  class="mat-elevation-z1"
+                  (click)="updateMonthlyMeetingPresence(monthlyMeetingPresence)"
+                  *ngIf="habilitation.canEdit()"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+            <mat-row
+              *matRowDef="let monthlyMeetingPresence; columns: displayColumns"
+            >
+            </mat-row>
+          </mat-table>
+        </div>
+      </fuse-widget>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+  <div fxFlex class="mr-12">
+    <div class="fuse-card" style="max-width:100%; min-width:100%;height:100vh;">
+      <div
+        class="pr-16 pl-16"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+      >
+        <mat-form-field appearance="outline" fxFLex class="mr-12">
+          <mat-label>Nouveau groupe</mat-label>
+          <input
+            placeholder="Ajouter groupe"
+            matInput
+            type="text"
+            name="groupName"
+            [(ngModel)]="groupNotificationsName"
+          />
+        </mat-form-field>
+        <button
+          matTooltip="Ajouter un nouvea groupe"
+          mat-mini-fab
+          color="accent"
+          (click)="addNewGroupNotifications()"
+        >
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+      <div class="card-divider full-width"></div>
+      <table class="simple clickable">
+        <thead>
+          <tr></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let group of groupsNotifications">
+            <td (click)="selectedGroup = group">{{ group.name }}</td>
+            <td class="text-right">
+              <button
+                type="button"
+                mat-icon-button
+                color="warn"
+                (click)="deleteGroupNotifications(group)"
+              >
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div fxLayout="column" fxFlex class="ml-12" *ngIf="selectedGroup">
+    <div
+      class="fuse-card"
+      fxLayout="column"
+      style="max-width:100%; min-width:100%;height:100vh;"
+    >
+      <div class="p-16" fxLayout="row" fxLayoutAlign="space-between center">
+        <h2 class="m-0">{{ selectedGroup.name }}</h2>
+      </div>
+      <div class="card-divider full-width"></div>
+      <div fxLayout="column" fxFLex>
+        <mat-form-field appearance="outline" fxFlex="100" class="px-16 pt-16">
+          <mat-label>Emails</mat-label>
+          <mat-select name="emails" (selectionChange)="addEmail($event)">
+            <mat-option>
+              <ngx-mat-select-search
+                ngModel
+                name="searchINput"
+                (ngModelChange)="searchUser($event)"
+                placeholderLabel="Rechercher"
+                noEntriesFoundLabel="pas de resultats"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let user of filtredUsers" [value]="user.email">
+              {{ user.email }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <table class="simple clickable">
+          <thead>
+            <tr></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let email of selectedGroup.emails; index as emailIndex">
+              <td>{{ email }}</td>
+              <td class="text-right">
+                <button
+                  type="button"
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeEmail(email, emailIndex)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxFlex
+    class="ml-12"
+    *ngIf="!selectedGroup"
+  >
+    <h3>Veuillez choisir un groupe pour affcher la liste des emails</h3>
+  </div>
+</div>

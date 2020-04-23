@@ -5,7 +5,7 @@
         <div id="login-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
 
             <div class="logo">
-                <img src="assets/images/logos/fuse.svg">
+                <img src="assets/images/logos/logoavs.jpg">
             </div>
 
             <div class="title">AUTHENTIFICATION PAR ÉMAIL ET MOT DE PASSE</div>
@@ -34,6 +34,13 @@
                         Le mot de passe est obligatoire
                     </mat-error>
                 </mat-form-field>
+                <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
+                     fxLayoutAlign="space-between end">
+                    <div></div>
+                    <a class="forgot-password" [routerLink]="'/login/reset-password-request'">
+                        Réinitialiser mot de passe ?
+                    </a>
+                </div>
                 <button (click)="login()" mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
                         [disabled]="loginForm.invalid">
                     SE CONNECTER

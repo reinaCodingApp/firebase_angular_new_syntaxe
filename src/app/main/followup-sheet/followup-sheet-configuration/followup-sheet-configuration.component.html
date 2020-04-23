@@ -1,0 +1,105 @@
+<div class="page-layout simple">
+  <!-- HEADER -->
+  <div
+    class="header warn-bg p-16 p-sm-24"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+  >
+    <button
+      matTooltip="Retour à la liste des fiches de suivi"
+      mat-icon-button
+      class="back mr-16"
+      [routerLink]="'/followupSheet'"
+    >
+      <mat-icon class="fuse-white-500-fg">arrow_back</mat-icon>
+    </button>
+    <h1
+      class="fuse-white-500-fg"
+      [@animate]="{ value: '*', params: { delay: '100ms', y: '25px' } }"
+    >
+      Configuration des fiches de suivi
+    </h1>
+    <div
+      fxLayout="row"
+      fxLayoutAlign="end"
+      style="position: absolute;right:12px;"
+    >
+      <button mat-fab color="accent" (click)="addEmployeeLevel()" *ngIf="habilitation.isSuperAdmin()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <div class="content p-24">
+    <div>
+      <fuse-widget
+        [@animate]="{ value: '*', params: { y: '100%' } }"
+        class="widget"
+        fxLayout="row"
+        fxFlex="100"
+      >
+        <div class="fuse-widget-front">
+          <mat-table #table [dataSource]="employeesLevels">
+            <!-- fullName Column -->
+            <ng-container matColumnDef="employee">
+              <mat-header-cell *matHeaderCellDef>Employé</mat-header-cell>
+              <mat-cell *matCellDef="let employeeLevel">
+                {{ employeeLevel.employee.fullName }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- responsible Column -->
+            <ng-container matColumnDef="responsible">
+              <mat-header-cell *matHeaderCellDef>Responsable</mat-header-cell>
+              <mat-cell *matCellDef="let employeeLevel">
+                {{ employeeLevel.responsible.fullName }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- hierarchyLevel Column -->
+            <ng-container matColumnDef="hierarchyLevel">
+              <mat-header-cell *matHeaderCellDef
+                >Niveau hiérarchique</mat-header-cell
+              >
+              <mat-cell *matCellDef="let employeeLevel">
+                {{ employeeLevel.hierarchyLevel }}
+              </mat-cell>
+            </ng-container>
+
+            <!-- SectionDefaultTitle Column -->
+            <ng-container matColumnDef="sectionDefaultTitle">
+              <mat-header-cell *matHeaderCellDef
+                >Intitulé de la fiche</mat-header-cell
+              >
+              <mat-cell *matCellDef="let employeeLevel">
+                {{ employeeLevel.sectionDefaultTitle }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell
+                fxLayoutAlign="center center"
+                *matCellDef="let employeeLevel"
+              >
+                <button
+                  mat-icon-button
+                  color="accent"
+                  class="mat-elevation-z1"
+                  (click)="updateEmployeeLevel(employeeLevel)"
+                  *ngIf="habilitation.isSuperAdmin()"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+            <mat-row *matRowDef="let employeeLevel; columns: displayColumns">
+            </mat-row>
+          </mat-table>
+        </div>
+      </fuse-widget>
+    </div>
+  </div>
+</div>

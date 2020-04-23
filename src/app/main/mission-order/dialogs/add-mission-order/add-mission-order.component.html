@@ -1,0 +1,1078 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">
+        {{
+          data.mode == "new" ? "Créer ordre mission" : "Modifier ordre mission"
+        }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <!-- Stepper Horizontal -->
+      <mat-horizontal-stepper
+        *ngIf="!smallScreen"
+        labelPosition="bottom"
+        [linear]="true"
+      >
+        <!-- Mission infos -->
+        <mat-step
+          label="Mission infos"
+          ngModelGroup="generalInfo"
+          #generalInfo="ngModelGroup"
+          [stepControl]="generalInfo"
+        >
+          <div class="mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Objet de la mission</mat-label>
+              <input
+                #title="ngModel"
+                [(ngModel)]="newMissionOrder.title"
+                placeholder="Objet de la mission"
+                matInput
+                name="title"
+                required
+                minlength="3"
+              />
+              <mat-error
+                *ngIf="title.invalid && (title.dirty || title.touched)"
+              >
+                Veuillez renseigner le titre (3 caractères minimum) !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Début de la mission</mat-label>
+              <input
+                #start="ngModel"
+                matInput
+                [matDatepicker]="startPicker"
+                placeholder="Début de la mission"
+                [(ngModel)]="newMissionOrder.missionStart"
+                name="startPicker"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+              <mat-error
+                *ngIf="start.invalid && (start.dirty || start.touched)"
+              >
+                Veuillez renseigner la date de début de la mission !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Fin de la mission</mat-label>
+              <input
+                #end="ngModel"
+                matInput
+                [matDatepicker]="endPicker"
+                placeholder="Début de la mission"
+                [(ngModel)]="newMissionOrder.missionEnd"
+                name="endPicker"
+                required
+                [min]="newMissionOrder.missionStart"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+              <mat-error *ngIf="end.invalid && (end.dirty || end.touched)">
+                Veuillez renseigner la date de fin de la mission !
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button matStepperNext color="accent">Suivant</button>
+          </div>
+        </mat-step>
+        <!-- Clients -->
+        <mat-step label="Clients" [optional]="data.mode == 'edit'">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-form-field appearance="outline">
+                  <mat-label>Client</mat-label>
+                  <input
+                    #client="ngModel"
+                    matInput
+                    [(ngModel)]="clientName"
+                    placeholder="Ajouter un client"
+                    name="client"
+                  />
+                </mat-form-field>
+                <button
+                  type="button"
+                  color="accent"
+                  mat-icon-button
+                  aria-label="add client"
+                  (click)="addClient()"
+                >
+                  <mat-icon>check</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="newMissionOrder.clients.length != 0" fxLayout="row">
+                <mat-form-field appearance="outline" fxFlex="50" class="pr-4">
+                  <mat-label>Site</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="siteName"
+                    placeholder="Ajouter un site"
+                    name="site"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50" class="pl-4">
+                  <mat-label>Clients</mat-label>
+                  <mat-select name="clients" [(ngModel)]="clientIndex">
+                    <mat-option
+                      *ngFor="
+                        let client of newMissionOrder.clients;
+                        index as clientIndex
+                      "
+                      [value]="clientIndex"
+                    >
+                      {{ client.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <button
+                  type="button"
+                  mat-icon-button
+                  color="accent"
+                  aria-label="add site"
+                  (click)="addSite(clientIndex)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <div
+                *ngIf="newMissionOrder.clients.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex
+              >
+                <div class="details">
+                  <table width="100%">
+                    <thead>
+                      <tr>
+                        <th width="50%">Client</th>
+                        <th width="50%">Sites</th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="
+                        let client of newMissionOrder.clients;
+                        index as clientIndex
+                      "
+                    >
+                      <tr>
+                        <td>
+                          {{ client.name }}
+                          <button
+                            color="warn"
+                            mat-icon-button
+                            aria-label="remove client"
+                            (click)="removeClient(clientIndex)"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+                        <td>
+                          <p
+                            *ngFor="
+                              let site of client.sites;
+                              index as siteIndex
+                            "
+                          >
+                            {{ site.name }}
+                            <button
+                              color="warn"
+                              mat-icon-button
+                              aria-label="remove site"
+                              (click)="removeSite(clientIndex, siteIndex)"
+                            >
+                              <mat-icon>close</mat-icon>
+                            </button>
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button matStepperPrevious color="accent">Précédent</button>
+            <button mat-raised-button matStepperNext color="accent">Suivant</button>
+          </div>
+        </mat-step>
+        <!-- Intervenants -->
+        <mat-step label="Intervenants" [optional]="true">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <form #f2="ngForm"
+              (ngSubmit)="addMissionOrderEmployee(f2)"
+              name="composeForm"
+              class="compose-form"
+              fxLayout="column"
+              fxFlex>
+              <mat-form-field appearance="outline">
+                <mat-label>Choisir un salarié</mat-label>
+                <mat-select
+                  #employee="ngModel"
+                  name="employee"
+                  [(ngModel)]="missionOrderEmployee.employee"
+                  required
+                >
+                <mat-option>
+                  <ngx-mat-select-search
+                    ngModel
+                    name="searchINput"
+                    (ngModelChange)="searchEmployee($event)"
+                    placeholderLabel="Rechercher"
+                    noEntriesFoundLabel="pas de resultats"
+                  ></ngx-mat-select-search>
+                </mat-option>
+                  <mat-option
+                    *ngFor="let employee of filtredEmployees"
+                    [value]="employee"
+                  >
+                    {{ employee.fullName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre de jours facturés</mat-label>
+                <mat-select
+                  required
+                  #daysInvoiced="ngModel"
+                  name="days"
+                  [(ngModel)]="missionOrderEmployee.daysWork"
+                >
+                  <mat-option *ngFor="let day of dayWorks" [value]="day.day">
+                    {{ day.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Date de départ</mat-label>
+                <input
+                 required
+                  #missionOrderEmployeeStartPicker="ngModel"
+                  matInput
+                  [matDatepicker]="missionOrderEmployeeStartPicker"
+                  placeholder="Début de la mission"
+                  [(ngModel)]="missionOrderEmployee.start"
+                  name="missionOrderEmployeeStartPicker"
+                  [min]="newMissionOrder.missionStart"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="missionOrderEmployeeStartPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #missionOrderEmployeeStartPicker
+                ></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Date de fin</mat-label>
+                <input
+                  required
+                  #missionOrderEmployeeEndPicker="ngModel"
+                  matInput
+                  [matDatepicker]="missionOrderEmployeeEndPicker"
+                  placeholder="Début de la mission"
+                  [(ngModel)]="missionOrderEmployee.end"
+                  name="missionOrderEmployeeEndPicker"
+                  [min]="missionOrderEmployee.start"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="missionOrderEmployeeEndPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #missionOrderEmployeeEndPicker></mat-datepicker>
+              </mat-form-field>
+              <button
+                type="submit"
+                mat-button
+                color="accent"
+              >
+                Ajouter
+              </button>
+            </form>
+              <div
+                *ngIf="newMissionOrder.missionOrderEmployees.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex
+              >
+                <div class="details">
+                  <table width="100%">
+                    <thead>
+                      <tr>
+                        <th>Client</th>
+                        <th>Jours facturés</th>
+                        <th>Dates</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="
+                        let item of newMissionOrder.missionOrderEmployees;
+                        index as missionOrderEmployeeIndex
+                      "
+                    >
+                      <tr>
+                        <td>{{ item.employee.fullName }}</td>
+                        <td>{{ item.daysWork }}</td>
+                        <td>
+                          du
+                          <span>{{ item.start | date: "dd/MM/yyyy" }}</span>
+                          au
+                          <span>{{ item.end | date: "dd/MM/yyyy" }}</span>
+                        </td>
+                        <td>
+                          <button
+                            color="warn"
+                            mat-icon-button
+                            aria-label="remove client"
+                            (click)="
+                              removeMissionOrderEmployee(
+                                missionOrderEmployeeIndex
+                              )
+                            "
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button matStepperPrevious color="accent">Précédent</button>
+            <button mat-raised-button matStepperNext color="accent">Suivant</button>
+          </div>
+        </mat-step>
+        <!-- Frais -->
+        <mat-step label="Frais" [optional]="true">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <form #f3="ngForm"
+              (ngSubmit)="addMissionOrderCost(f3)"
+              name="composeForm"
+              class="compose-form"
+              fxLayout="column"
+              fxFlex>
+              <mat-form-field appearance="outline">
+                <mat-label>Choisir un type</mat-label>
+                <mat-select
+                  required
+                  #cost="ngModel"
+                  name="typeCost"
+                  [(ngModel)]="missionOrderCost.costType"
+                >
+                  <mat-option *ngFor="let type of costsTypes" [value]="type">
+                    {{ type.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="border-color: red !important;">
+                <mat-label>Montant</mat-label>
+                <input
+                  required
+                  matInput
+                  type="number"
+                  [(ngModel)]="missionOrderCost.cost"
+                  placeholder="Montant en €"
+                  name="cost"
+                  (input)="checkCost()"
+                />
+              </mat-form-field>
+              <mat-checkbox
+                [(ngModel)]="missionOrderCost.isPersonalCost"
+                name="isPersonalCost"
+                >Frais perso ?</mat-checkbox
+              >
+              <button
+                type="submit"
+                mat-button
+                color="accent"
+              >
+                Ajouter
+              </button>
+            </form>
+              <div
+                *ngIf="newMissionOrder.costs.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex
+              >
+                <div class="details">
+                  <table width="100%">
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Montant</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="
+                        let cost of newMissionOrder.costs;
+                        index as costIndex
+                      "
+                    >
+                      <tr>
+                        <td>
+                          {{ cost.costType.name }}
+                          {{ cost.isPersonalCost ? " (Frais personnel)" : "" }}
+                        </td>
+                        <td>{{ cost.cost }}</td>
+                        <td>
+                          <button
+                            color="warn"
+                            mat-icon-button
+                            aria-label="remove cost"
+                            (click)="removeMissionOrderCost(costIndex)"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button matStepperPrevious color="accent">Précédent</button>
+            <button mat-raised-button matStepperNext color="accent">Suivant</button>
+          </div>
+        </mat-step>
+        <!-- Remise -->
+        <mat-step label="Remise" [optional]="true">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <mat-form-field appearance="outline">
+                <mat-label>Montant de la remise</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [(ngModel)]="newMissionOrder.rebate"
+                  placeholder="Montant en €"
+                  name="rebate"
+                  (input)="checkRebate()"
+                />
+              </mat-form-field>
+              <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                <div class="details">
+                  <p>Remise  : {{ newMissionOrder.rebate == null ? "":  newMissionOrder.rebate }}</p>
+                  <p>{{ "Total des frais  : " + getTotalFrais() }}</p>
+                  <p>
+                    {{ "Total des frais perso  : " + getTotalFraisPerso() }}
+                  </p>
+                  <p>{{ "Intervenants  : " + getTotalIntervenants() }}</p>
+                  <p>{{ "TOTAL (après remise) : " + getTotal() }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button matStepperPrevious color="accent">Précédent</button>
+            <button mat-raised-button matStepperNext color="accent">Suivant</button>
+          </div>
+        </mat-step>
+        <!-- Rapport -->
+        <mat-step label="Rapport" [optional]="true">
+          <div class="mt-4">
+            <angular-editor
+              [config]="config"
+              [(ngModel)]="newMissionOrder.report"
+              name="report"
+            ></angular-editor>
+          </div>
+          <div
+            mat-dialog-actions
+            class="m-0 p-16"
+            fxLayout="row"
+            fxLayoutAlign="end end"
+          >
+            <button mat-raised-button matStepperPrevious color="accent">Précédent</button>
+            <button
+              mat-raised-button
+              color="accent"
+              type="submit"
+              [disabled]="f.invalid || newMissionOrder.clients.length <= 0"
+              (click)="onSubmit(f)"
+            >
+              Sauvegarder <mat-icon>save</mat-icon>
+            </button>
+            <button
+              *ngIf="false"
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="f.invalid"
+              (click)="onSubmit(f)"
+            >
+              Brouillion <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+      <!-- Stepper vertical -->
+      <mat-vertical-stepper
+        *ngIf="smallScreen"
+        labelPosition="bottom"
+        [linear]="true"
+      >
+        <!-- Mission infos -->
+        <mat-step
+          label="Mission infos"
+          ngModelGroup="generalInfo"
+          #generalInfo="ngModelGroup"
+          [stepControl]="generalInfo"
+        >
+          <div class="mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Objet de la mission</mat-label>
+              <input
+                #title="ngModel"
+                [(ngModel)]="newMissionOrder.title"
+                placeholder="Objet de la mission"
+                matInput
+                name="title"
+                required
+                minlength="3"
+              />
+              <mat-error
+                *ngIf="title.invalid && (title.dirty || title.touched)"
+              >
+                Veuillez renseigner le titre (3 caractères minimum) !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Début de la mission</mat-label>
+              <input
+                #start="ngModel"
+                matInput
+                [matDatepicker]="startPicker"
+                placeholder="Début de la mission"
+                [(ngModel)]="newMissionOrder.missionStart"
+                name="startPicker"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+              <mat-error
+                *ngIf="start.invalid && (start.dirty || start.touched)"
+              >
+                Veuillez renseigner la date de début de la mission !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Fin de la mission</mat-label>
+              <input
+                #end="ngModel"
+                matInput
+                [matDatepicker]="endPicker"
+                placeholder="Début de la mission"
+                [(ngModel)]="newMissionOrder.missionEnd"
+                name="endPicker"
+                required
+                [min]="newMissionOrder.missionStart"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+              <mat-error *ngIf="end.invalid && (end.dirty || end.touched)">
+                Veuillez renseigner la date de fin de la mission !
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </mat-step>
+        <!-- Clients -->
+        <mat-step label="Clients" [optional]="data.mode == 'edit'">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-form-field appearance="outline">
+                  <mat-label>Client</mat-label>
+                  <input
+                    #client="ngModel"
+                    matInput
+                    [(ngModel)]="clientName"
+                    placeholder="Ajouter un client"
+                    name="client"
+                  />
+                </mat-form-field>
+                <button
+                  type="button"
+                  color="accent"
+                  mat-icon-button
+                  aria-label="add client"
+                  (click)="addClient()"
+                >
+                  <mat-icon>check</mat-icon>
+                </button>
+              </div>
+              <div
+                *ngIf="newMissionOrder.clients.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="space-between center"
+                fxFlex
+              >
+                <mat-form-field appearance="outline" class="pr-4">
+                  <mat-label>Site</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="siteName"
+                    placeholder="Ajouter un site"
+                    name="site"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="pl-4">
+                  <mat-label>Clients</mat-label>
+                  <mat-select name="clients" [(ngModel)]="clientIndex">
+                    <mat-option
+                      *ngFor="
+                        let client of newMissionOrder.clients;
+                        index as clientIndex
+                      "
+                      [value]="clientIndex"
+                    >
+                      {{ client.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <button
+                  type="button"
+                  mat-icon-button
+                  color="accent"
+                  aria-label="add site"
+                  (click)="addSite(clientIndex)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <div
+                *ngIf="newMissionOrder.clients.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex
+              >
+                <div class="details">
+                  <table width="100%">
+                    <thead>
+                      <tr>
+                        <th width="50%">Client</th>
+                        <th width="50%">Sites</th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="
+                        let client of newMissionOrder.clients;
+                        index as clientIndex
+                      "
+                    >
+                      <tr>
+                        <td>
+                          {{ client.name }}
+                          <button
+                            color="warn"
+                            mat-icon-button
+                            aria-label="remove client"
+                            (click)="removeClient(clientIndex)"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+                        <td>
+                          <p
+                            *ngFor="
+                              let site of client.sites;
+                              index as siteIndex
+                            "
+                          >
+                            {{ site.name }}
+                            <button
+                              color="warn"
+                              mat-icon-button
+                              aria-label="remove site"
+                              (click)="removeSite(clientIndex, siteIndex)"
+                            >
+                              <mat-icon>close</mat-icon>
+                            </button>
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Intervenants -->
+        <mat-step label="Intervenants" [optional]="true">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <form #f2="ngForm"
+              (ngSubmit)="addMissionOrderEmployee(f2)"
+              name="composeForm"
+              class="compose-form"
+              fxLayout="column"
+              fxFlex>
+              <mat-form-field appearance="outline">
+                <mat-label>Choisir un salarié</mat-label>
+                <mat-select
+                  #employee="ngModel"
+                  name="employee"
+                  [(ngModel)]="missionOrderEmployee.employee"
+                  required
+                >
+                <mat-option>
+                  <ngx-mat-select-search
+                    ngModel
+                    name="searchINput"
+                    (ngModelChange)="searchEmployee($event)"
+                    placeholderLabel="Rechercher"
+                    noEntriesFoundLabel="pas de resultats"
+                  ></ngx-mat-select-search>
+                </mat-option>
+                  <mat-option
+                    *ngFor="let employee of filtredEmployees"
+                    [value]="employee"
+                  >
+                    {{ employee.fullName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre de jours facturés</mat-label>
+                <mat-select
+                  required
+                  #daysInvoiced="ngModel"
+                  name="days"
+                  [(ngModel)]="missionOrderEmployee.daysWork"
+                >
+                  <mat-option *ngFor="let day of dayWorks" [value]="day.day">
+                    {{ day.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Date de départ</mat-label>
+                <input
+                 required
+                  #missionOrderEmployeeStartPicker="ngModel"
+                  matInput
+                  [matDatepicker]="missionOrderEmployeeStartPicker"
+                  placeholder="Début de la mission"
+                  [(ngModel)]="missionOrderEmployee.start"
+                  name="missionOrderEmployeeStartPicker"
+                  [min]="newMissionOrder.missionStart"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="missionOrderEmployeeStartPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #missionOrderEmployeeStartPicker
+                ></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Date de fin</mat-label>
+                <input
+                  required
+                  #missionOrderEmployeeEndPicker="ngModel"
+                  matInput
+                  [matDatepicker]="missionOrderEmployeeEndPicker"
+                  placeholder="Début de la mission"
+                  [(ngModel)]="missionOrderEmployee.end"
+                  name="missionOrderEmployeeEndPicker"
+                  [min]="missionOrderEmployee.start"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="missionOrderEmployeeEndPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #missionOrderEmployeeEndPicker></mat-datepicker>
+              </mat-form-field>
+              <button
+                type="submit"
+                mat-button
+                color="accent"
+              >
+                Ajouter
+              </button>
+            </form>
+              <div
+                *ngIf="newMissionOrder.missionOrderEmployees.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex
+              >
+                <div class="details">
+                  <table width="100%">
+                    <thead>
+                      <tr>
+                        <th>Client</th>
+                        <th>Jours facturés</th>
+                        <th>Dates</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="
+                        let item of newMissionOrder.missionOrderEmployees;
+                        index as missionOrderEmployeeIndex
+                      "
+                    >
+                      <tr>
+                        <td>{{ item.employee.fullName }}</td>
+                        <td>{{ item.daysWork }}</td>
+                        <td>
+                          du
+                          <span>{{ item.start | date: "dd/MM/yyyy" }}</span>
+                          au
+                          <span>{{ item.end | date: "dd/MM/yyyy" }}</span>
+                        </td>
+                        <td>
+                          <button
+                            color="warn"
+                            mat-icon-button
+                            aria-label="remove client"
+                            (click)="
+                              removeMissionOrderEmployee(
+                                missionOrderEmployeeIndex
+                              )
+                            "
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Frais -->
+        <mat-step label="Frais" [optional]="true">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <form #f3="ngForm"
+              (ngSubmit)="addMissionOrderCost(f3)"
+              name="composeForm"
+              class="compose-form"
+              fxLayout="column"
+              fxFlex>
+              <mat-form-field appearance="outline">
+                <mat-label>Choisir un type</mat-label>
+                <mat-select
+                  required
+                  #cost="ngModel"
+                  name="typeCost"
+                  [(ngModel)]="missionOrderCost.costType"
+                >
+                  <mat-option *ngFor="let type of costsTypes" [value]="type">
+                    {{ type.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="border-color: red !important;">
+                <mat-label>Montant</mat-label>
+                <input
+                  required
+                  matInput
+                  type="number"
+                  [(ngModel)]="missionOrderCost.cost"
+                  placeholder="Montant en €"
+                  name="cost"
+                  (input)="checkCost()"
+                />
+              </mat-form-field>
+              <mat-checkbox
+                [(ngModel)]="missionOrderCost.isPersonalCost"
+                name="isPersonalCost"
+                >Frais perso ?</mat-checkbox
+              >
+              <button
+                type="submit"
+                mat-button
+                color="accent"
+              >
+                Ajouter
+              </button>
+            </form>
+              <div
+                *ngIf="newMissionOrder.costs.length != 0"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex
+              >
+                <div class="details">
+                  <table width="100%">
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Montant</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="
+                        let cost of newMissionOrder.costs;
+                        index as costIndex
+                      "
+                    >
+                      <tr>
+                        <td>
+                          {{ cost.costType.name }}
+                          {{ cost.isPersonalCost ? " (Frais personnel)" : "" }}
+                        </td>
+                        <td>{{ cost.cost }}</td>
+                        <td>
+                          <button
+                            color="warn"
+                            mat-icon-button
+                            aria-label="remove cost"
+                            (click)="removeMissionOrderCost(costIndex)"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Remise -->
+        <mat-step label="Remise" [optional]="true">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <mat-form-field appearance="outline">
+                <mat-label>Montant de la remise</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [(ngModel)]="newMissionOrder.rebate"
+                  placeholder="Montant en €"
+                  name="rebate"
+                  (input)="checkRebate()"
+                />
+              </mat-form-field>
+              <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                <div class="details">
+                  <p>Remise  : {{ newMissionOrder.rebate == null ? "":  newMissionOrder.rebate }}</p>
+                  <p>{{ "Total des frais  : " + getTotalFrais() }}</p>
+                  <p>
+                    {{ "Total des frais perso  : " + getTotalFraisPerso() }}
+                  </p>
+                  <p>{{ "Intervenants  : " + getTotalIntervenants() }}</p>
+                  <p>{{ "TOTAL (après remise) : " + getTotal() }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Rapport -->
+        <mat-step label="Rapport" [optional]="true">
+          <div class="mt-4">
+            <angular-editor
+              [config]="config"
+              [(ngModel)]="newMissionOrder.report"
+              name="report"
+            ></angular-editor>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </form>
+  </div>
+  <div
+    *ngIf="smallScreen"
+    mat-dialog-actions
+    class="m-0 p-16"
+    fxLayout="row"
+    fxLayoutAlign="end end"
+  >
+    <button
+      mat-raised-button
+      color="accent"
+      type="submit"
+      [disabled]="f.invalid || newMissionOrder.clients.length <= 0"
+      (click)="onSubmit(f)"
+    >
+      Sauvegarder <mat-icon>save</mat-icon>
+    </button>
+    <button
+      *ngIf="false"
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="f.invalid"
+      (click)="onSubmit(f)"
+    >
+      Brouillion <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</div>

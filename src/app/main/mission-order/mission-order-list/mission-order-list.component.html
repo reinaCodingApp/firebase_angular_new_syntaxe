@@ -1,0 +1,10 @@
+<div *ngIf="missionOrders.length === 0" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+    <span class="no-messages-text hint-text">Pas de resultats</span>
+</div>
+
+<div class="mail-list" [@animateStagger]="{value:'50'}">
+    <mission-order-item matRipple *ngFor="let missionOrder of missionOrders" [missionOrder]="missionOrder" (click)="readMail(missionOrder)"
+                    [ngClass]="{'current-mail':missionOrder?.id == currentMissionOrder?.id}"
+                    [@animate]="{value:'*',params:{y:'100%'}}">
+    </mission-order-item>
+</div>

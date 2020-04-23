@@ -1,0 +1,86 @@
+<div id="mail" class="page-layout carded left-sidebar inner-scroll">
+  <!-- TOP BACKGROUND -->
+  <div class="top-bg accent"></div>
+  <!-- / TOP BACKGROUND -->
+
+  <!-- SIDEBAR -->
+  <fuse-sidebar
+    class="sidebar sidebar-background"
+    name="tonnage-sidebar"
+    position="left"
+    lockedOpen="gt-lg"
+  >
+    <tonnage-sidebar></tonnage-sidebar>
+  </fuse-sidebar>
+  <!-- / SIDEBAR -->
+
+  <!-- CENTER -->
+  <div class="center ml-20 mr-20">
+    <!-- CONTENT HEADER -->
+    <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+        <button
+          mat-icon-button
+          class="sidebar-toggle mr-12"
+          fxHide.gt-lg
+          (click)="commonService.toggleSidebar('tonnage-sidebar')"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span
+          class="logo-text h2"
+          [@animate]="{
+            value: '*',
+            params: { delay: '100ms', x: '-25px' }
+          }"
+        >
+          Tonnages
+        </span>
+      </div>
+      <div
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        *ngIf="habilitation.canCreate()"
+      >
+        <button
+          mat-fab
+          color="warn"
+          [@animate]="{
+            value: '*',
+            params: { delay: '600ms', scale: '0.2' }
+          }"
+          type="button"
+          class="ml-8"
+          (click)="addTonnage()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <!-- / CONTENT HEADER -->
+
+    <!-- CONTENT CARD -->
+    <div
+      class="content-card mt-24"
+      [ngClass]="{ 'current-mail-selected': currentTonnage }"
+    >
+      <!-- CONTENT TOOLBAR -->
+      <div class="toolbar px-24 py-8" fxHide.gt-sm>
+        <div *ngIf="currentTonnage" fxHide.gt-sm>
+          <button mat-icon-button (click)="currentTonnage = null">
+            <mat-icon class="secondary-text">arrow_back</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- / CONTENT TOOLBAR -->
+      <!-- CONTENT -->
+      <div class="content" fxLayout="row">
+        <tonnage-list fusePerfectScrollbar fxFlex="1 1 0%"></tonnage-list>
+        <tonnage-details fusePerfectScrollbar fxFlex="3 1 0%"></tonnage-details>
+      </div>
+      <!-- / CONTENT -->
+    </div>
+    <!-- / CONTENT CARD -->
+  </div>
+  <!-- / CENTER -->
+</div>

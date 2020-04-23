@@ -1,0 +1,121 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"
+        >{{
+          data.mode == "edit" ? "Modifier un tonnage" : "Ajouter un tonnage"
+        }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSubmit(f)"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Sites</mat-label>
+        <mat-select
+          (selectionChange)="getPartnersForSite()"
+          #site="ngModel"
+          name="site"
+          required
+          [(ngModel)]="tonnage.site.id"
+        >
+        <mat-option>
+          <ngx-mat-select-search
+            ngModel
+            name="searchINput"
+            (ngModelChange)="searchSite($event)"
+            placeholderLabel="Rechercher"
+            noEntriesFoundLabel="pas de resultats"
+          ></ngx-mat-select-search>
+        </mat-option>
+          <mat-option *ngFor="let site of filtredSites" [value]="site.id">
+            {{ site.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+          Veuillez choisir un site !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Choix du partenaire</mat-label>
+        <mat-select
+          #partner="ngModel"
+          name="partner"
+          required
+          [(ngModel)]="tonnage.client.id"
+        >
+          <mat-option
+            *ngFor="let partner of partnersForSelectedSite"
+            [value]="partner.id"
+          >
+            {{ partner.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="partner.invalid && (partner.dirty || partner.touched)"
+        >
+          Veuillez choisir un partenaire !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Date du tonnage</mat-label>
+        <input
+          #date="ngModel"
+          matInput
+          [matDatepicker]="datePicker"
+          placeholder="Date du tonnage"
+          [(ngModel)]="tonnage.date"
+          name="date"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="datePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+        <mat-error *ngIf="date.invalid && (date.dirty || date.touched)">
+          Veuillez renseigner la date !
+        </mat-error>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field appearance="outline">
+          <mat-label>Observations</mat-label>
+          <textarea
+            matInput
+            name="observations"
+            [(ngModel)]="tonnage.observations"
+            rows="4"
+          >
+          </textarea>
+        </mat-form-field>
+      </div>
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,171 @@
+<div *ngIf="!client" fxLayout="column" fxLayoutAlign="center center" fxFlex>
+  <span
+    class="select-message-text hint-text"
+    fxLayoutAlign="center center"
+    [@animate]="{ value: '*', params: { delay: '400ms' } }"
+  >
+    <h2>Veuillez sélectionner un partenaire</h2>
+  </span>
+</div>
+<div *ngIf="client" fxFlex>
+  <div class="content" fxFlex>
+    <div fxLayout="column" fxLayoutAlign="start center">
+      <h2 fxLayout="row">{{ client.name }}</h2>
+    </div>
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Details">
+        <div class="tab-content p-24">
+          <table class="client-detail">
+            <tr>
+              <td>Nom</td>
+              <td>{{ client.name }}</td>
+            </tr>
+
+            <tr>
+              <td>Raison sociale</td>
+              <td>{{ client.entrepriseName }}</td>
+            </tr>
+            <tr>
+              <td>Code postal</td>
+              <td>{{ client.zipCode }}</td>
+            </tr>
+            <tr>
+              <td>Ville</td>
+              <td>{{ client.city }}</td>
+            </tr>
+            <tr>
+              <td>Pays</td>
+              <td>{{ client.country }}</td>
+            </tr>
+            <tr>
+              <td>Téléphone 1</td>
+              <td>{{ client.phone }}</td>
+            </tr>
+            <tr>
+              <td>Téléphone 2</td>
+              <td>{{ client.phone2 }}</td>
+            </tr>
+            <tr>
+              <td>Fax</td>
+              <td>{{ client.fax }}</td>
+            </tr>
+            <tr>
+              <td>Numéro RCS</td>
+              <td>{{ client.rcsNumber }}</td>
+            </tr>
+            <tr>
+              <td>Numéro TVA</td>
+              <td>{{ client.vatNumber }}</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>{{ client.email }}</td>
+            </tr>
+            <tr>
+              <td>Site Web</td>
+              <td>{{ client.webSite }}</td>
+            </tr>
+            <tr>
+              <td>Contact</td>
+              <td>{{ client.contact }}</td>
+            </tr>
+            <tr>
+              <td>infos complémentaires</td>
+              <td>{{ client.comments }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Associer un site">
+        <div class="tab-content p-24">
+          <div fxLayout="column" fxLayoutAlign="space-around" *ngIf="habilitation.canEdit()">
+            <form
+              #f="ngForm"
+              (ngSubmit)="addSiteToClient(f)"
+              name="form"
+              fxLayout="row"
+              fxLayoutAlign="center center"
+            >
+              <mat-form-field appearance="outline" class="pr-4">
+                <mat-label>Sites</mat-label>
+                <mat-select name="site" [(ngModel)]="selectedSite" required>
+                  <mat-option *ngFor="let site of sites" [value]="site.id">
+                    {{ site.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button
+                type="submit"
+                mat-icon-button
+                color="accent"
+                class="mat-elevation-z1 mb-20"
+                [disabled]="siteAlreadyExist()"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </form>
+          </div>
+          <mat-table [dataSource]="client.sites">
+            <ng-container matColumnDef="name">
+              <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+                >Nom</mat-header-cell
+              >
+              <mat-cell fxLayoutAlign="center center" *matCellDef="let site">
+                <span class="job-title">
+                  {{ site.name }}
+                </span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="city">
+              <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+                >Ville</mat-header-cell
+              >
+              <mat-cell fxLayoutAlign="center center" *matCellDef="let site">
+                <span class="job-title">
+                  {{ site.city }}
+                </span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="zipCode">
+              <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+                >Ville</mat-header-cell
+              >
+              <mat-cell fxLayoutAlign="center center" *matCellDef="let site">
+                <span class="job-title">
+                  {{ site.zipCode }}
+                </span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <mat-header-cell
+                fxLayoutAlign="center center"
+                *matHeaderCellDef
+              ></mat-header-cell>
+              <mat-cell fxLayoutAlign="center center" *matCellDef="let site">
+                <span class="job-title" *ngIf="habilitation.canDelete()">
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    class="mat-elevation-z1"
+                    (click)="removeSiteFromClient(site)"
+                  >
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </span>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row
+              *matHeaderRowDef="displayedColumns"
+            ></mat-header-row>
+            <mat-row
+              *matRowDef="let site; columns: displayedColumns"
+              class="activity"
+            >
+            </mat-row>
+          </mat-table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

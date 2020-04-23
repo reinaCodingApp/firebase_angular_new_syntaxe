@@ -1,0 +1,32 @@
+<div class="page-layout carded fullwidth tabbed inner-scroll">
+  <div class="top-bg accent"></div>
+
+  <div class="center">
+    <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+      <h2 class="m-0">PARAMÉTRAGES</h2>
+    </div>
+
+    <div class="content-card">
+      <div class="content">
+        <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
+          <mat-tab label="Secteurs salariés">
+            <div class="tab-content p-24" fusePerfectScrollbar>
+              <parameters-settings></parameters-settings>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Paramétrage jours feriés">
+            <div class="tab-content p-24" fusePerfectScrollbar>
+              <parameters-holidays></parameters-holidays>
+            </div>
+          </mat-tab>
+          <mat-tab label="Paramétrage employés">
+            <div class="tab-content p-24" fusePerfectScrollbar>
+              <parameters-employees></parameters-employees>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

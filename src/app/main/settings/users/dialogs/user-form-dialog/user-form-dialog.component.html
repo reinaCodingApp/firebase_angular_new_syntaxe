@@ -1,0 +1,85 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Nouvel utilisateur</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form fxLayout="column" #f="ngForm" name="userForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Adresse émail</mat-label>
+        <input [readonly]="action==='edit'" #email="ngModel" [(ngModel)]="user.email" placeholder="adresse émail" matInput type="email" name="email"
+          required minlength="3" />
+        <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+          Veuillez renseigner une adresse émail correcte
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input #displayName="ngModel" [(ngModel)]="user.displayName" placeholder="pseudo" matInput name="displayName"
+          required minlength="3" />
+        <mat-error *ngIf="displayName.invalid && (displayName.dirty || displayName.touched)">
+          Veuillez renseigner le nom d'utilisateur (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input #password="ngModel" [(ngModel)]="user.password" placeholder="mot de passe" matInput name="password"
+          required type="password" minlength="6" />
+        <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+          Veuillez renseigner un mot de passe correct (supérieur à 6 caractères)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Associer un employé</mat-label>
+        <mat-select name="employees" [(ngModel)]="selectedEmployeeId">
+          <mat-option>
+            <ngx-mat-select-search
+              ngModel
+              name="searchINput"
+              (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let e of filtredEmployees" [value]="e.id">
+            {{ e.fullName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Claims selection">
+          <mat-chip *ngFor="let claim of claims" [selectable]="selectable" [removable]="removable"
+            (removed)="remove(claim)">
+            {{claim}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="claim..." #claimInput [formControl]="claimsCtrl" [matAutocomplete]="auto"
+            [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let claim of filteredClaims | async" [value]="claim">
+            {{claim}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+    <div>
+      <button mat-raised-button color="accent"
+        (click)="matDialogRef.close({user: user, claims: claims, employeeId:selectedEmployeeId, action: action})"
+        class="save-button" [disabled]="!f.valid" aria-label="SAVE">
+        VALIDER
+      </button>
+    </div>
+  </div>
+
+</div>

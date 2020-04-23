@@ -46,7 +46,6 @@ fuse-sidebar {
                                 padding: 0;
                                 transform: translateX(0);
                                 left: auto;
-
                                 .avatar {
                                     width: 40px;
                                     height: 40px;
@@ -181,7 +180,19 @@ navbar {
                     padding: 8px;
                     transform: translateX(-50%);
                     left: 50%;
-
+                    .img-picker{
+                      position: absolute !important;
+                      left: -5px;
+                      bottom: -8px;
+                      display: none;
+                    }
+                    &:hover {
+                        .img-picker{
+                            display: block;
+                            cursor: pointer;
+                            transition: all 2s;
+                        }
+                    }
                     .avatar {
                         width: 72px;
                         height: 72px;

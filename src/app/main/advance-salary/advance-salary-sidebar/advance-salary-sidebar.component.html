@@ -1,0 +1,80 @@
+<div class="demo-sidebar">
+  <form
+    class="mat-card mat-elevation-z4 p-8"
+    fxLayout="column"
+    fxLayoutAlign="start"
+    name="form"
+  >
+    <div fxLayout="row wrap" fxLayoutAlign="start center" fxFlex="1 0 auto">
+      <mat-form-field appearance="outline" fxFlex="100" class="mt-16">
+        <mat-label>Sélection région</mat-label>
+        <mat-select [(ngModel)]="filterParams.departmentId" name="departmentId">
+          <mat-option
+            *ngFor="let department of departments"
+            [value]="department.id"
+          >
+            {{ department.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Etat</mat-label>
+        <mat-select [(ngModel)]="filterParams.statusId" name="status">
+          <mat-option [value]="-1">Tous</mat-option>
+          <mat-option
+            *ngFor="let status of advanceSalariesStatus"
+            [value]="status.id"
+          >
+            {{ status.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row wrap" fxLayoutAlign="start center" fxFlex="1 0 auto">
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Du</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startDatePicker"
+          placeholder="Du"
+          [(ngModel)]="filterParams.startDate"
+          name="startDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Au</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endDatePicker"
+          placeholder="Au"
+          [(ngModel)]="filterParams.endDate"
+          name="endDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button
+        mat-raised-button
+        color="accent"
+        fxFlex="100"
+        (click)="filterAdvanceSalaries()"
+      >
+        Afficher
+        <mat-icon class="s-20">filter_list</mat-icon>
+      </button>
+    </div>
+  </form>
+</div>

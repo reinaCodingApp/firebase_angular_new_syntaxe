@@ -1,0 +1,27 @@
+<h2
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  class="select-message-text hint-text"
+>
+  Relevés de tonnage
+</h2>
+<hr />
+<div
+  *ngIf="tonnages.length === 0"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxFlexFill
+>
+  <span class="no-messages-text hint-text">Pas de resultats</span>
+</div>
+<div class="mail-list" [@animateStagger]="{ value: '50' }">
+  <tonnage-item
+    matRipple
+    *ngFor="let tonnage of tonnages"
+    [tonnage]="tonnage"
+    (click)="getTonnageDetails(tonnage)"
+    [ngClass]="{ 'current-mail': tonnage?.id == currentTonnage?.id }"
+    [@animate]="{ value: '*', params: { y: '100%' } }"
+  >
+  </tonnage-item>
+</div>

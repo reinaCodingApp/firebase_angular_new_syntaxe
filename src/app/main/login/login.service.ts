@@ -1,39 +1,78 @@
-import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
-import { User } from './../../models/user';
-import { AngularFireAuthModule, AngularFireAuth } from '@angular/fire/auth';
+import { User } from '../settings/models/user';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { MainTools } from 'app/common/tools/main-tools';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Attachment } from 'app/common/models/attachment';
+import { finalize } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
-  constructor(private angularFireAuth: AngularFireAuth, private angularFirestore: AngularFirestore, private router: Router) {
-      angularFireAuth.authState.subscribe(state => {
-          console.log('state subscription', state);
-          if (state == null)
-          {
-            this.router.navigate(['login']);
-          }
+export class LoginService implements Resolve<any>{
+  onUserAuthenticates: BehaviorSubject<firebase.auth.UserCredential>;
+  onUserLogout: BehaviorSubject<any>;
+  onProfilePictureUploaded: BehaviorSubject<any>;
+
+  constructor(
+    private angularFireAuth: AngularFireAuth,
+    private angularFireStorage: AngularFireStorage,
+    private router: Router    
+  ) {
+    this.onUserAuthenticates = new BehaviorSubject(null);
+    this.onUserLogout = new BehaviorSubject({});
+    this.onProfilePictureUploaded = new BehaviorSubject(null);    
+  }
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    return new Promise((resolve, reject) => {
+      this.angularFireAuth.authState.subscribe(currentState => {
+        if (currentState && currentState.uid) {
+          this.router.navigate(['home']);
+          resolve();
+        }        
+        resolve();
       });
-      angularFireAuth.auth.currentUser
-   }
+    });
+  }
 
   login(user: User) {
     return this.angularFireAuth.auth.signInWithEmailAndPassword(user.email, user.password);
   }
-  getUserProfil(uid: string){
-      return this.angularFirestore.collection('/users', q => q.where('uid', '==', uid)).get();
-  }
-  updateProfil(){
-    const profilData = {displayName: 'Malick NDIONE',
-        photoURL: 'https://firebasestorage.googleapis.com/v0/b/rc0001-9ae8b.appspot.com/o/789313665.png?alt=media&token=71e2fa61-a782-4ec0-8c73-b14138c34351'};
-    this.angularFireAuth.auth.currentUser.updateProfile(profilData);
-  }
+
   logout() {
-      this.angularFireAuth.auth.signOut();
+    this.angularFireAuth.auth.signOut();
+    this.onUserLogout.next(null);
   }
-  getState() {
-      return this.angularFireAuth.authState;
+    
+  sendPasswordResetEmail(email: string) {
+    return this.angularFireAuth.auth.sendPasswordResetEmail(email);
+  }
+
+  confirmPasswordReset(oobCode: string, newPassword: string) {
+    return this.angularFireAuth.auth.confirmPasswordReset(oobCode, newPassword);
+  }
+
+  uploadProfilePicture(file: File): Observable<number> {
+    const filePath = file.name;
+    const size = MainTools.getFileSizeToString(file.size);
+    const storageRef = this.angularFireStorage.ref(filePath);
+    const uploadTask = this.angularFireStorage.upload(filePath, file);
+    uploadTask.snapshotChanges().pipe(
+      finalize(() => {
+        storageRef.getDownloadURL().subscribe(downloadURL => {
+          const attachemnt = { url: downloadURL, fileName: file.name, size: size } as Attachment;
+          this.onProfilePictureUploaded.next({ ...attachemnt });
+        });
+      })
+    ).subscribe();
+    return uploadTask.percentageChanges();
+  }
+
+  updateProfile(profileData: any): Promise<void> {
+    return this.angularFireAuth.auth.currentUser.updateProfile(profileData);
   }
 }

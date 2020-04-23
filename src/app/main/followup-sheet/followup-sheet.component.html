@@ -1,0 +1,286 @@
+<div id="contacts" class="page-layout simple fullwidth">
+  <!-- HEADER -->
+  <div class="header accent p-16 p-sm-24" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+    fxLayoutAlign.gt-xs="space-between center">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+        <button *ngIf="hierarchyLevel == 3" fxLayoutAlign="center center" mat-icon-button class="sidebar-toggle mr-12"
+        fxHide.gt-lg (click)="commonService.toggleSidebar('poles-sidebar')">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="logo-text h1" [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }">
+          Fiches de suivi
+        </span>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <div>
+        <span class="h2">{{ "SEMAINE " + sheet.weekNumber + " - " }}</span>
+        <span class="mat-subheading-2">{{sheet.date}}</span>
+      </div>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <div class="p-4 py-sm-0 px-sm-24 mat-elevation-z2 mb-4" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+    fxLayoutAlign.gt-xs="space-between center">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center">
+      <mat-form-field fxFlex *ngIf="hierarchyLevel != 3" class="mr-8">
+        <mat-select name="service" [(ngModel)]="selectedSheetId" (selectionChange)="getFollowupSheet()">
+          <mat-option *ngFor="let sheetHistory of sheetsHistory" [value]="sheetHistory.id">
+            {{ "SEMAINE " + sheetHistory.weekNumber }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="accent" class="m-8" *ngIf="false"
+        (click)="displayPrecedentWeekForAdmin()">
+        Charger la semaine précédente
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <button mat-stroked-button color="warn" class="m-8" [disabled]="!canEdit" (click)="submitOrCloseSheet()">
+        <mat-icon>send</mat-icon>
+        Finaliser et envoyer
+      </button>
+      <button *ngIf="false" mat-raised-button color="warn" class="m-8"
+        (click)="commonService.toggleSidebar('deadlines-sidebar')" fxHide.gt-lg>
+        Deadlines
+      </button>
+    </div>
+  </div>
+
+  <div class="content p-8">
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign.gt-sm="space-around start">
+      <!-- POLES -->
+      <div fxLayout="column" *ngIf="hierarchyLevel == 3">
+        <!-- POLES -->
+        <fuse-sidebar class="sidebar" name="poles-sidebar" position="left" lockedOpen="gt-lg">
+          <div class="content" fusePerfectScrollbar>
+            <div class="sidebar-content">
+              <div class="card">
+                <div class="poles content p-16" fusePerfectScrollbar>
+                  <div class="nav material2" *ngFor="let pole of poles">
+                    <div class="header p-16" fxLayout="row" fxLayoutAlign="start center">
+                      <span class="h2">{{ pole.name }}</span>
+                    </div>
+                    <div class="nav material2">
+                      <div class="nav-item" *ngFor="let sector of pole.sectors">
+                        <a
+                          class="nav-link"
+                          matRipple
+                          [ngClass]="{
+                            'active accent': selectedSector == sector.responsibleId
+                          }"
+                          (click)="getSectionsForAdmin(sector.responsibleId)"
+                          [matTooltip]="sector.responsible.fullName"
+                        >
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                          <div fxLayout="row" fxLayoutAlign="start center">
+                            {{ sector.name }}
+                          </div>
+                          <div fxLayout="row" fxLayoutAlign="end center">
+                            <mat-icon
+                              *ngIf="sector.submitted && sector.responsibleId"
+                              fxLayoutAlign="end center"
+                              [ngStyle]="{ 'color': selectedSector == sector.responsibleId ? 'white': '#039be5' }">
+                              assignment
+                            </mat-icon>
+                          </div>
+                      </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fuse-sidebar>
+        <!-- POINTS -->
+      </div>
+      <!-- SECTIONS -->
+      <div class="sections" fxLayout="column" fxLayoutAlign="start" fxFlex="20" fxFlex.lt-md="100" *ngIf="currentSection">
+          <div *ngFor="let section of sheet.sections" class="fuse-card mb-8 custom-card section" style="cursor: pointer;"
+            [ngClass]="{ 'current-section': section?.id == currentSection?.id }" (click)="getCurrentSction(section)">
+            <div class="py-4 px-8" fxLayout="row" fxLayoutAlign="start center">
+              <div class="h3">{{ section.title }}</div>
+            </div>
+            <div class="card-divider full-width"></div>
+            <div class="py-4 px-8" fxLayout="row" fxLayoutAlign="start center">
+              <div class="h4">{{ section.ownerName }}</div>
+            </div>
+        </div>
+      </div>
+      <!-- FOLDERS -->
+      <!-- EDIT MODE -->
+      <div fxLayout="column" class="pb-256" fxFlex.lg="70" fxFlex.md="70" fxFlex="55" fxFlex.lt-md="100"
+        *ngIf="canEdit">
+        <div *ngIf="currentSection">
+          <div class="fuse-card mb-8" *ngFor="let folder of currentSection.folders; index as folderIndex">
+            <div class="p-16 folder-title" fxLayout="row" fxLayoutAlign="space-between center">
+                <input
+                  class="h2 p-0"
+                  [(ngModel)]="folder.title"
+                  name="title"
+                  maxlength="50"
+                  (change)="renameSimpleTask(folder, folderIndex)"
+                />
+              <div class="actions">
+                <button mat-button (click)="deleteSimpleTask(folder, folderIndex)">
+                  <mat-icon color="warn">delete_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="card-divider full-width"></div>
+            <div fxLayout="column">
+              <div class="p-16 pb-0 pr-0" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between"
+                fxLayoutAlign.lt-sm="center" *ngFor="let point of folder.points; index as i">
+                <mat-form-field fxFlex="15">
+                  <mat-label>Instance</mat-label>
+                  <mat-select name="note" [(ngModel)]="point.note" (selectionChange)="addOrUpdatePoint(point, folderIndex, i)">
+                    <mat-select-trigger>
+                      <span fxLayout="row" fxLayoutAlign="center center">
+                        <mat-icon [ngClass]="point.note > 3 ? 'warn-700-fg' : 'amber-800-fg'" >label_important</mat-icon>
+                        <label class="pl-4">{{ getNoteTitle(point.note) }}</label>
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let note of notes" [value]="note.noteValue">
+                      {{ note.noteText }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div fxFlex="75" class="point-content">
+                  <mat-form-field class="p-0" class="w-100-p">
+                    <textarea class="pr-48 pb-4" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1" name="note{{ i }}" [(ngModel)]="point.content" matInput (change)="addOrUpdatePoint(point, folderIndex, i)">
+                </textarea>
+                  </mat-form-field>
+                  <button class="remove" mat-icon-button (click)="deletePoint(point.id, i, folder)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="center" fxLayout="row" fxLayoutAlign="end center">
+                <div fxLayout="row" fxFlex="75" fxLayoutAlign="center center" fxLayout.lt-sm="column"
+                  fxLayoutAlign.lt-sm="center center">
+                  <button class="add-point" mat-flat-button (click)="createNewPoint(folder)">
+                    <mat-icon color="warn">add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-divider full-width"></div>
+            <div class="p-8 pt-16" fxLayout="row" fxLayoutAlign="start">
+              <div class="file-uploader" fxLayout="row wrap" fxLayoutAlign="start center">
+                <input hidden #file type="file" name="file" id="file" class="inputfile" multiple="multiple"
+                  (change)="uploadAttachments(file.files, folder, folderIndex)" />
+                <button matTooltip="Joindre des documents" mat-button color="accent" type="button"
+                  (click)="file.click()">
+                  <mat-icon>attach_file</mat-icon>
+                </button>
+              </div>
+              <div fxLayout="row wrap" fxLayoutAlign="start center" *ngIf="folder.attachments.length > 0">
+                <div *ngFor="
+                    let attachment of folder.attachments;
+                    index as attachmentIndex
+                  ">
+                  <span style="cursor:pointer" (click)="downloadAttachment(attachment)">{{ attachment.fileName }}</span>
+                  <button type="button" mat-icon-button color="warn" (click)="
+                      removeAttachment(attachment, folder, attachmentIndex)
+                    " *ngIf="attachment.fileName">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayoutAlign="center center">
+          <button class="m-8" mat-raised-button color="accent" (click)="addSimpleTask(currentSection)"
+            [disabled]="!canEdit" *ngIf="currentSection" matTooltip="Nouveau dossier">
+            <mat-icon class="mr-4">add</mat-icon>
+            <mat-icon>folder</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- DISPLAY MODE -->
+      <div class="pb-256" fxLayout="column" fxFlex.lg="70" fxFlex.md="70" fxFlex="55" fxFlex.lt-md="100" *ngIf="!canEdit" >
+        <div *ngIf="currentSection">
+          <div class="fuse-card mb-24" *ngFor="let folder of currentSection.folders; index as folderIndex">
+            <div class="p-16" fxLayout="row">
+              <div class="h2 pr-16">{{ folder.title }}</div>
+            </div>
+            <div class="card-divider full-width"></div>
+            <div class="p-16 pb-12" fxLayout="row" *ngFor="let point of folder.points; index as i">
+              <div fxFlex="15">
+                <span class="px-8 py-4 fuse-white-500-fg" [ngClass]="point.note > 3 ? 'warn-700-bg' : 'amber-800-bg'" >{{ getNoteTitle(point.note) }}</span>
+              </div>
+              <div class="font-size-16 justify-content" fxLayout="row" fxLayoutAlign="start">
+                <div class="h4" [outerHTML]="point.content | replaceLineBreaks"></div>
+              </div>
+            </div>
+            <div *ngIf="folder.attachments && folder.attachments.length > 0" class="card-divider full-width"></div>
+            <div *ngIf="folder.attachments && folder.attachments.length > 0" class="p-8 pt-16" fxLayout="column"
+              fxLayoutAlign="start">
+              <div fxLayout="row" fxLayoutAlign="start center" *ngIf="folder.attachments.length > 0">
+                <mat-icon class="mx-16">attach_file</mat-icon>
+                <div *ngFor="let attachment of folder.attachments;" color="accent">
+                  <span color="accent" style="cursor:pointer" class="mr-12" (click)="downloadAttachment(attachment)">
+                    {{ attachment.fileName }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- DEADLINES -->
+      <div *ngIf="false" fxLayout="column" fxFlex-gt-lg="15" fxFlex.lt-xl="0 0 auto">
+        <fuse-sidebar *ngIf="hierarchyLevel != 3" class="sidebar" name="deadlines-sidebar" position="right"
+          lockedOpen="gt-lg">
+          <div class="content" fusePerfectScrollbar>
+            <div class="sidebar-content">
+              <div class="card">
+                <div class="content p-16" fusePerfectScrollbar>
+                  <h1 class="mt-0">Mes tâches</h1>
+                  <div class="fuse-card mb-8" *ngFor="let deadline of deadlines">
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <div fxLayout="column" fxFlex="85">
+                        <div class="p-16" fxLayout="row" fxLayoutAlign="space-between center">
+                          <div class="h4">{{ deadline.folderName }}</div>
+                        </div>
+                        <div class="card-divider full-width"></div>
+                        <div class="p-8" fxLayout="row wrap" fxLayoutAlign="start">
+                          <div class="h4">{{ deadline.content }}</div>
+                        </div>
+                        <div class="card-divider full-width"></div>
+                        <div class="p-8" fxLayout="row" fxLayoutAlign="start center">
+                          <div class="h4">{{ "Deadline " + deadline.endDate }}</div>
+                        </div>
+                      </div>
+                      <!-- ISCLOSED -->
+                      <div fxLayout="row" fxLayoutAlign="center center" fxFlex="15" [ngClass]="{
+                          'deadline-checked-yellow':
+                            !deadline.isLate && !deadline.isClosed,
+                          'deadline-checked-green': deadline.isClosed,
+                          'deadline-checked-red': deadline.isLate
+                        }">
+                        <mat-icon style="color: white;">check_circle_outline</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fuse-sidebar>
+        <!-- POINTS -->
+      </div>
+    </div>
+    <!-- NO SECTION, NO SUBMITTED FOLLOWUPSHEET  -->
+    <div *ngIf="!currentSection" fxLayoutAlign="center start">
+      <p class="font-size-20">
+        Aucune fiche de suivi
+      </p>
+    </div>
+  </div>
+</div>

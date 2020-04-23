@@ -1,0 +1,19 @@
+clients-details {
+  .client-detail {
+    width: 100%;
+    text-transform: uppercase;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0px;
+  }
+  table.client-detail tr td {
+    border: 1px solid lightgray;
+    padding: 10px;
+    font-style: italic;
+    width: 50%;
+  }
+  table.client-detail tr td:first-child {
+    font-weight: bold;
+    font-style: initial;
+  }
+}

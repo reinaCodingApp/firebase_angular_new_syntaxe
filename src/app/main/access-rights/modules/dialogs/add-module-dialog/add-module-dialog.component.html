@@ -1,0 +1,134 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"
+        >{{ data.mode == "edit" ? "Modifier un module" : "Ajouter un module" }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSubmit(f)"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input
+          #title="ngModel"
+          [(ngModel)]="module.title"
+          placeholder="Nom du module"
+          matInput
+          name="title"
+          required
+          minlength="3"
+        />
+        <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">
+          Veuillez renseigner le nom (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="data.mode != 'edit'">
+        <mat-label>Clé</mat-label>
+        <mat-select
+          #key="ngModel"
+          name="key"
+          required
+          [(ngModel)]="module.key"
+        >
+          <mat-option> </mat-option>
+          <mat-option *ngFor="let key of availableKeys" [value]="key">
+            {{ key }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="key.invalid && (key.dirty || key.touched)">
+          Veuillez choisir une clé !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="data.mode == 'edit'">
+        <input [(ngModel)]="module.key" matInput name="key" readonly />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="moduleType != 'childModule'">
+        <mat-label>Type</mat-label>
+        <mat-select
+          #type="ngModel"
+          name="type"
+          required
+          [(ngModel)]="module.type"
+        >
+          <mat-option value="collapsable">
+            Collapsable
+          </mat-option>
+          <mat-option value="item">
+            Item
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="type.invalid && (type.dirty || type.touched)">
+          Veuillez choisir un type !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field
+        appearance="outline"
+        *ngIf="
+          (moduleType == 'parentModule' && module?.type == 'item') ||
+          moduleType == 'childModule'
+        "
+      >
+        <mat-label>Url</mat-label>
+        <input
+          #url="ngModel"
+          [(ngModel)]="module.url"
+          placeholder="Url"
+          matInput
+          name="url"
+          required
+        />
+        <mat-error *ngIf="url.invalid && (url.dirty || url.touched)">
+          Veuillez renseigner l'URL !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Icon</mat-label>
+        <input
+          #icon="ngModel"
+          [(ngModel)]="module.icon"
+          placeholder="Icon"
+          matInput
+          name="icon"
+          required
+        />
+        <mat-error *ngIf="icon.invalid && (icon.dirty || icon.touched)">
+          Veuillez renseigner l'icon !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-checkbox [(ngModel)]="module.displayInMenu" name="displayInMenu">
+        Aficher sur le menu ?
+      </mat-checkbox>
+
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div
+  *ngIf="tickets.length === 0"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxFlexFill
+>
+  <span class="no-messages-text hint-text">Il n'y a pas de ticket!</span>
+</div>
+
+<div class="mail-list" [@animateStagger]="{ value: '50' }">
+  <ticket-list-item
+    matRipple
+    *ngFor="let ticket of tickets"
+    [ticket]="ticket"
+    (click)="getTicketDetails(ticket.id)"
+    [ngClass]="{ 'current-mail': ticket?.id == currentTicket?.id }"
+    [@animate]="{ value: '*', params: { y: '100%' } }"
+  >
+  </ticket-list-item>
+</div>

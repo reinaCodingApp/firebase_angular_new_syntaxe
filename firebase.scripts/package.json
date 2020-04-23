@@ -1,0 +1,21 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^8.9.2"
+  },
+  "devDependencies": {
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "init-root-user": "ts-node -e \"require('./src/index.ts').createRootUser()\"",
+    "init-modulesKeys": "ts-node -e \"require('./src/index.ts').initializeModulesKeys()\"",
+    "init-modulesDatabase": "ts-node -e \"require('./src/index.ts').initializeModulesDatabase()\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

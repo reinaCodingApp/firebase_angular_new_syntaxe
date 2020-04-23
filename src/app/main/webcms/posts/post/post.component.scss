@@ -1,0 +1,56 @@
+div.categories {
+  li {
+    list-style: none;
+    padding: 5px 10px;
+    font-size: 1.2em;
+    display: inline-block;
+    cursor: pointer;
+    &.selected{
+      color: red;
+      cursor: default;
+      font-weight: bold;
+      text-decoration: underline;
+
+    }
+  }
+
+}
+
+div.container {
+  max-width:800px;
+  margin:0 auto;
+}
+div.title{
+  padding:25px 0;
+  input{
+      display:block;
+      width: 100%;
+      padding: 5px;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      outline: none;
+      font-size: 1.2em;
+  }
+  width:100%;
+}
+div.avs-post-content {
+  width: 100%;
+  height: 650px;
+  padding:10px;
+  border:1px solid black;
+  overflow-y: scroll;
+}
+div.add{
+  label{
+    color: red;
+    font-weight: bold;
+    padding-left: 15px;
+  }
+}
+div.confirmation{
+  color: gray;
+  margin: 15px 0;
+  font-size: 1.5em;
+  font-weight: bold;
+}

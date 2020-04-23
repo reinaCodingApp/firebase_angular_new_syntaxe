@@ -1,0 +1,27 @@
+<h2
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  class="select-message-text hint-text"
+>
+  Clients
+</h2>
+<hr />
+<div
+  *ngIf="clients.length === 0"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxFlexFill
+>
+  <span class="no-messages-text hint-text">Pas de resultats</span>
+</div>
+<div class="mail-list" [@animateStagger]="{ value: '50' }">
+  <clients-item
+    matRipple
+    *ngFor="let client of clients"
+    [client]="client"
+    (click)="getClientDetails(client)"
+    [ngClass]="{ 'current-mail': client?.id == currentClient?.id }"
+    [@animate]="{ value: '*', params: { y: '100%' } }"
+  >
+  </clients-item>
+</div>

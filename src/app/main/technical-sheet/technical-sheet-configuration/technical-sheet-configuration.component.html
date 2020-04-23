@@ -1,0 +1,109 @@
+<div class="page-layout simple">
+  <!-- HEADER -->
+  <div
+    class="header warn-bg p-16 p-sm-24"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+  >
+    <button
+      matTooltip="Retour à la liste des fiches de suivi"
+      mat-icon-button
+      class="back mr-16"
+      [routerLink]="'/technicalSheet'"
+    >
+      <mat-icon class="fuse-white-500-fg">arrow_back</mat-icon>
+    </button>
+    <h1
+      class="fuse-white-500-fg"
+      [@animate]="{ value: '*', params: { delay: '100ms', y: '25px' } }"
+    >
+      Gestion des fournisseurs
+    </h1>
+    <div
+      fxLayout="row"
+      fxLayoutAlign="end"
+      style="position: absolute;right:12px;"
+    >
+      <button
+        mat-fab
+        color="accent"
+        (click)="addProvider()"
+        *ngIf="habilitation.isSuperAdmin()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <div class="content p-24">
+    <div>
+      <fuse-widget
+        [@animate]="{ value: '*', params: { y: '100%' } }"
+        class="widget"
+        fxLayout="row"
+        fxFlex="100"
+      >
+        <div class="fuse-widget-front">
+          <mat-table #table [dataSource]="providers">
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+              <mat-cell *matCellDef="let provider">
+                {{ provider.name }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="city">
+              <mat-header-cell *matHeaderCellDef>Ville</mat-header-cell>
+              <mat-cell *matCellDef="let provider">
+                {{ provider.city }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="adress">
+              <mat-header-cell *matHeaderCellDef>Adresse</mat-header-cell>
+              <mat-cell *matCellDef="let provider">
+                {{ provider.adress }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="country">
+              <mat-header-cell *matHeaderCellDef>Pays</mat-header-cell>
+              <mat-cell *matCellDef="let provider">
+                {{ provider.country }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell
+                fxLayoutAlign="center center"
+                *matCellDef="let provider"
+              >
+                <button
+                  mat-icon-button
+                  color="accent"
+                  class="mat-elevation-z1"
+                  (click)="updateProvider(provider)"
+                  *ngIf="habilitation.isSuperAdmin()"
+                  class="mr-8"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  class="mat-elevation-z1"
+                  (click)="deleteProvider(provider)"
+                  *ngIf="habilitation.isSuperAdmin()"
+                  [disabled]="!provider.canDelete"
+                >
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+            <mat-row *matRowDef="let provider; columns: displayColumns">
+            </mat-row>
+          </mat-table>
+        </div>
+      </fuse-widget>
+    </div>
+  </div>
+</div>

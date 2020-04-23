@@ -1,32 +1,56 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { FuseSharedModule } from '@fuse/shared.module';
+import { HomeService } from './home.service';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatDividerModule, MatMenuModule, MatSelectModule, MatTableModule, MatTabsModule, MatTooltipModule, MatExpansionModule, MatDialogModule, MatInputModule, MatRadioModule, MatCheckboxModule, MatStepperModule, MatRippleModule, MatSlideToggleModule } from '@angular/material';
+import { FuseSidebarModule, FuseWidgetModule } from '@fuse/components';
+import { TimelineComponent } from './timeline/timeline.component';
+import { NewsDetailDialogComponent } from './timeline/dialogs/news-detail-dialog/news-detail-dialog.component';
+import { AddNewsDialogComponent } from './timeline/dialogs/add-news-dialog/add-news-dialog.component';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, ...canActivate(redirectUnauthorizedToLoginPage) }
+  { path: 'home', component: HomeComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { source: HomeService } }
 ];
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, TimelineComponent, NewsDetailDialogComponent, AddNewsDialogComponent],
   imports: [
     RouterModule.forChild(routes),
     MatButtonModule,
-    MatCheckboxModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatTableModule,
+    MatTabsModule,
+    NgxChartsModule,
+    FuseSharedModule,
+    FuseSidebarModule,
+    FuseWidgetModule,
+    MatTooltipModule,
+    MatExpansionModule,
+    MatDialogModule,
     MatInputModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatStepperModule,
+    MatRippleModule,
+    MatSlideToggleModule
 
-    FuseSharedModule
   ],
-  exports: [HomeComponent]
+  exports: [HomeComponent],
+  providers: [HomeService],
+  entryComponents: [
+    NewsDetailDialogComponent,
+    AddNewsDialogComponent
+  ]
 })
 export class HomeModule { }

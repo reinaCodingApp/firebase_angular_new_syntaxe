@@ -1,3 +1,4 @@
+import { AppService } from 'app/app.service';
 import { LoginService } from './../../../main/login/login.service';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -9,7 +10,8 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
-import { User } from 'app/models/user';
+import { User } from 'app/main/settings/models/user';
+import { Router } from '@angular/router';
 
 @Component({
     selector     : 'toolbar',
@@ -26,31 +28,27 @@ export class ToolbarComponent implements OnInit, OnDestroy
     languages: any;
     navigation: any;
     selectedLanguage: any;
-    userStatusOptions: any[];   
-    private _unsubscribeAll: Subject<any>;   
+    userStatusOptions: any[];
+    private _unsubscribeAll: Subject<any>;
     currentUser: User;
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
-        private _translateService: TranslateService,
-        private loginService: LoginService
+        private router: Router,
+        private loginService: LoginService,
+        private appService: AppService
     )
     {
-        this.navigation = navigation;        
+        this.navigation = navigation;
         this._unsubscribeAll = new Subject();
     }
     ngOnInit(): void
     {
-        this.loginService.getState().subscribe( u => {
-           if (u) {
-            this.currentUser = new User();
-            this.currentUser.displayName = u.displayName;
-            this.currentUser.email = u.email;
-            this.currentUser.photoURL = u.photoURL;            
-           }
-            
-        });
-        
+        this.appService.getCurrentUser().subscribe(data => {
+          if (data) {
+            this.currentUser = data;
+          }
+        });        
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((settings) => {
@@ -59,8 +57,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
                 this.hiddenNavbar = settings.layout.navbar.hidden === true;
             });
 
-        // Set the selected language from default languages
-        this.selectedLanguage = _.find(this.languages, {id: this._translateService.currentLang});
+        this.loginService.onUserLogout.subscribe(result => {
+              if (!result) {
+                  this.router.navigateByUrl('/login');
+              }
+        });
     }
     ngOnDestroy(): void
     {
@@ -71,7 +72,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     toggleSidebarOpen(key): void
     {
         this._fuseSidebarService.getSidebar(key).toggleOpen();
-    }    
+    }
     logout() {
         this.loginService.logout();
     }

@@ -1,0 +1,26 @@
+@import "src/@fuse/scss/fuse";
+
+.site-active {
+  background-color: #91dc5b !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.site-inactive {
+  background-color: #ef4b4a !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.site-green {
+  color: limegreen !important;
+  font-weight: 900 !important;
+}
+
+.site-red {
+  color: orangered !important ;
+  font-weight: 900 !important;
+}
+
+
+

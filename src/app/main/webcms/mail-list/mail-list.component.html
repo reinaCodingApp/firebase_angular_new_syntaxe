@@ -1,0 +1,10 @@
+<div *ngIf="discussions.length === 0" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+    <span class="no-messages-text hint-text">Il n'y a pas de message!</span>
+</div>
+
+<div class="mail-list" [@animateStagger]="{value:'50'}">
+    <mail-list-item matRipple *ngFor="let discussion of discussions" [mail]="discussion" (click)="readMail(discussion.id)"
+                    [ngClass]="{'current-mail':discussion?.id == currentDiscussion?.id}"
+                    [@animate]="{value:'*',params:{y:'100%'}}">
+    </mail-list-item>
+</div>

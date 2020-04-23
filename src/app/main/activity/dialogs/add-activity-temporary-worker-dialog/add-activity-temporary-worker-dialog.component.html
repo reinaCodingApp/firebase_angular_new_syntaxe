@@ -1,0 +1,470 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">
+        Intérimaire
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
+      <mat-tab label="Présence">
+        <div class="dialog-content-wrapper">
+          <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+            <form
+              #activityForm="ngForm"
+              (ngSubmit)="addActivity(activityForm, false)"
+              name="composeForm"
+              class="compose-form"
+              fxLayout="column"
+              fxFlex
+            >
+              <mat-form-field appearance="outline">
+                <mat-label>Séléection salarié</mat-label>
+                <mat-select
+                  #employee="ngModel"
+                  name="employee"
+                  required
+                  [(ngModel)]="activity.employee.id"
+                >
+                <mat-option>
+                  <ngx-mat-select-search
+                    ngModel
+                    name="searchINput"
+                    (ngModelChange)="searchEmployee($event)"
+                    placeholderLabel="Rechercher"
+                    noEntriesFoundLabel="pas de resultats"
+                  ></ngx-mat-select-search>
+                </mat-option>
+                  <mat-option
+                    *ngFor="let employee of filtredEmployees"
+                    [value]="employee.id"
+                  >
+                    {{ employee.fullName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    employee.invalid && (employee.dirty || employee.touched)
+                  "
+                >
+                  Veuillez choisir un salarié !
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Séléection site</mat-label>
+                <mat-select
+                  #site="ngModel"
+                  name="site"
+                  required
+                  [(ngModel)]="activity.site.id"
+                >
+                <mat-option>
+                  <ngx-mat-select-search
+                    ngModel
+                    name="searchINput"
+                    (ngModelChange)="searchSite($event)"
+                    placeholderLabel="Rechercher"
+                    noEntriesFoundLabel="pas de resultats"
+                  ></ngx-mat-select-search>
+                </mat-option>
+                  <mat-option *ngFor="let site of filtredSites" [value]="site.id">
+                    {{ site.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+                  Veuillez choisir un site !
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Date</mat-label>
+                <input
+                  #day="ngModel"
+                  matInput
+                  [matDatepicker]="dayPicker"
+                  placeholder="Date"
+                  [(ngModel)]="activity.startDate"
+                  name="day"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dayPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dayPicker></mat-datepicker>
+                <mat-error *ngIf="day.invalid && (day.dirty || day.touched)">
+                  Veuillez renseigner la date de l'activité'!
+                </mat-error>
+              </mat-form-field>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="space-between center"
+                fxFlex="1 0 auto"
+              >
+                <mat-form-field fxFlex="45" class="pr-4">
+                  <mat-label>Heure de début</mat-label>
+                  <input
+                    #startTime="ngModel"
+                    matInput
+                    [matDatetimepicker]="startTimePicker"
+                    placeholder="Début"
+                    [(ngModel)]="activity.startTime"
+                    name="startTimePicker"
+                    required
+                  />
+                  <mat-datetimepicker-toggle
+                    matSuffix
+                    [for]="startTimePicker"
+                  ></mat-datetimepicker-toggle>
+                  <mat-datetimepicker
+                    type="time"
+                    timeInterval="5"
+                    #startTimePicker
+                  ></mat-datetimepicker>
+                  <mat-error
+                    *ngIf="
+                      startTime.invalid &&
+                      (startTime.dirty || startTime.touched)
+                    "
+                  >
+                    Veuillez renseigner l'heure de début!
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex="45" class="pr-4">
+                  <mat-label>Heure de fin</mat-label>
+                  <input
+                    #endTime="ngModel"
+                    matInput
+                    [matDatetimepicker]="endTimePicker"
+                    placeholder="Fin"
+                    [(ngModel)]="activity.endTime"
+                    name="endTimePicker"
+                  />
+                  <mat-datetimepicker-toggle
+                    matSuffix
+                    [for]="endTimePicker"
+                  ></mat-datetimepicker-toggle>
+                  <mat-datetimepicker
+                    type="time"
+                    timeInterval="5"
+                    #endTimePicker
+                  ></mat-datetimepicker>
+                  <mat-error
+                    *ngIf="
+                      endTime.invalid && (endTime.dirty || endTime.touched)
+                    "
+                  >
+                    Veuillez renseigner l'heure de fin!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex="1 0 auto"
+              >
+                <mat-form-field appearance="outline">
+                  <mat-label>Remarque</mat-label>
+                  <textarea
+                    matInput
+                    name="title"
+                    [(ngModel)]="activity.title"
+                    rows="4"
+                  >
+                  </textarea>
+                </mat-form-field>
+              </div>
+
+              <div
+                mat-dialog-actions
+                class="m-0 p-16"
+                fxLayout="row"
+                fxLayoutAlign="end end"
+              >
+                <button mat-raised-button color="accent" type="submit">
+                  Créer
+                  <mat-icon>check</mat-icon>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Absence">
+        <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+          <form
+            #activityAbsenceForm="ngForm"
+            (ngSubmit)="addActivity(activityAbsenceForm, true)"
+            name="composeForm"
+            class="compose-form"
+            fxLayout="column"
+            fxFlex
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Salariés</mat-label>
+              <mat-select
+                #employee="ngModel"
+                name="employee"
+                required
+                [(ngModel)]="activityAbsence.employee.id"
+              >
+              <mat-option>
+                <ngx-mat-select-search
+                  ngModel
+                  name="searchINput"
+                  (ngModelChange)="searchEmployee($event)"
+                  placeholderLabel="Rechercher"
+                  noEntriesFoundLabel="pas de resultats"
+                ></ngx-mat-select-search>
+              </mat-option>
+                <mat-option
+                  *ngFor="let employee of filtredEmployees"
+                  [value]="employee.id"
+                >
+                  {{ employee.fullName }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+              >
+                Veuillez choisir un salarié !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Type d'absence</mat-label>
+              <mat-select
+                #absenceType="ngModel"
+                name="absenceType"
+                required
+                [(ngModel)]="activityAbsence.absenceType.id"
+              >
+                <mat-option
+                  *ngFor="let absenceType of activityAbsenceTypes"
+                  [value]="absenceType.id"
+                >
+                  {{ absenceType.title }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  absenceType.invalid &&
+                  (absenceType.dirty || absenceType.touched)
+                "
+              >
+                Veuillez choisir un type d'absence !
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex="100">
+              <mat-label>Début</mat-label>
+              <input
+                #startDate="ngModel"
+                matInput
+                [matDatepicker]="startDatePicker"
+                placeholder="Début"
+                [(ngModel)]="activityAbsence.startDate"
+                name="startDate"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startDatePicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+              <mat-error
+                *ngIf="
+                  startDate.invalid && (startDate.dirty || startDate.touched)
+                "
+              >
+                Veuillez renseigner la date début de l'absence!
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100">
+              <mat-label>Fin</mat-label>
+              <input
+                #endDate="ngModel"
+                matInput
+                [matDatepicker]="endDatePicker"
+                placeholder="Fin"
+                [(ngModel)]="activityAbsence.endDate"
+                name="endDate"
+                [min]="activityAbsence.startDate"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endDatePicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endDatePicker></mat-datepicker>
+              <mat-error
+                *ngIf="endDate.invalid && (endDate.dirty || endDate.touched)"
+              >
+                Veuillez renseigner la date fin de l'absence!
+              </mat-error>
+            </mat-form-field>
+            <div
+              mat-dialog-actions
+              class="m-0 p-16"
+              fxLayout="row"
+              fxLayoutAlign="end end"
+            >
+              <button mat-raised-button color="accent" type="submit">
+                Créer
+                <mat-icon>check</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-tab>
+      <mat-tab label="Mission à l'étranger">
+        <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+          <form
+            #foreignMissionForm="ngForm"
+            (ngSubmit)="addForeignMission(foreignMissionForm)"
+            name="composeForm"
+            class="compose-form"
+            fxLayout="column"
+            fxFlex
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Salariés</mat-label>
+              <mat-select
+                #employee="ngModel"
+                name="employee"
+                required
+                [(ngModel)]="foreignMission.employee.id"
+              >
+              <mat-option>
+                <ngx-mat-select-search
+                  ngModel
+                  name="searchINput"
+                  (ngModelChange)="searchEmployee($event)"
+                  placeholderLabel="Rechercher"
+                  noEntriesFoundLabel="pas de resultats"
+                ></ngx-mat-select-search>
+              </mat-option>
+                <mat-option
+                  *ngFor="let employee of filtredEmployees"
+                  [value]="employee.id"
+                >
+                  {{ employee.fullName }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+              >
+                Veuillez choisir un salarié !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Sites</mat-label>
+              <mat-select
+                #site="ngModel"
+                name="site"
+                required
+                [(ngModel)]="foreignMission.site.id"
+              >
+              <mat-option>
+                <ngx-mat-select-search
+                  ngModel
+                  name="searchINput"
+                  (ngModelChange)="searchSite($event)"
+                  placeholderLabel="Rechercher"
+                  noEntriesFoundLabel="pas de resultats"
+                ></ngx-mat-select-search>
+              </mat-option>
+                <mat-option *ngFor="let site of filtredSites" [value]="site.id">
+                  {{ site.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+                Veuillez choisir un site !
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Début de mission</mat-label>
+              <input
+                #departingDate="ngModel"
+                matInput
+                [matDatetimepicker]="departingDatePicker"
+                placeholder="Début de la mission"
+                [(ngModel)]="foreignMission.departingDate"
+                name="departingDatePicker"
+                required
+              />
+              <mat-datetimepicker-toggle
+                matSuffix
+                [for]="departingDatePicker"
+              ></mat-datetimepicker-toggle>
+              <mat-datetimepicker
+                type="datetime"
+                timeInterval="5"
+                #departingDatePicker
+              ></mat-datetimepicker>
+              <mat-error
+                *ngIf="
+                  departingDate.invalid &&
+                  (departingDate.dirty || departingDate.touched)
+                "
+              >
+                Veuillez renseigner la date début de la mission !
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Fin de la mission</mat-label>
+              <input
+                #returningDate="ngModel"
+                matInput
+                [matDatetimepicker]="returningDatePicker"
+                placeholder="Début de la mission"
+                [(ngModel)]="foreignMission.returningDate"
+                name="returningDatePicker"
+                required
+                [min]="foreignMission.departingDate"
+              />
+              <mat-datetimepicker-toggle
+                matSuffix
+                [for]="returningDatePicker"
+              ></mat-datetimepicker-toggle>
+              <mat-datetimepicker
+                type="datetime"
+                openOnFocus="true"
+                timeInterval="5"
+                #returningDatePicker
+              ></mat-datetimepicker>
+              <mat-error
+                *ngIf="
+                  returningDate.invalid &&
+                  (returningDate.dirty || returningDate.touched)
+                "
+              >
+                Veuillez renseigner la date de fin de la mission !
+              </mat-error>
+            </mat-form-field>
+            <div
+              mat-dialog-actions
+              class="m-0 p-16"
+              fxLayout="row"
+              fxLayoutAlign="end end"
+            >
+              <button mat-raised-button color="accent" type="submit">
+                Créer
+                <mat-icon>check</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

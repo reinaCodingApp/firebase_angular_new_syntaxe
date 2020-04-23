@@ -1,0 +1,68 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"> Cloner permissions </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSubmit(f)"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Utilisateur</mat-label>
+        <mat-select
+          #user="ngModel"
+          name="user"
+          required
+          [(ngModel)]="selectedUserUid"
+        >
+          <mat-option>
+            <ngx-mat-select-search
+              ngModel
+              name="searchINput"
+              (ngModelChange)="searchUser($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <ng-container *ngFor="let user of filtredUsers">
+            <mat-option
+              [value]="user.uid"
+              *ngIf="user.uid != data.currentUser.uid"
+            >
+              {{ user.displayName }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngIf="user.invalid && (user.dirty || user.touched)">
+          Veuillez choisir un utilisateur !
+        </mat-error>
+      </mat-form-field>
+
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit">
+          Cloner
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

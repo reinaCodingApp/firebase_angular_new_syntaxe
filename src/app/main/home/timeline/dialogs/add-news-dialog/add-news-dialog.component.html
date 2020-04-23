@@ -1,0 +1,29 @@
+<div  class="popup-container dialog-content-wrapper">
+    <form #f="ngForm" name="addNewsForm" fxLayout="column">
+        <mat-form-field appearance="outline" fxFlex="50" class="pr-4">
+            <mat-label>Titre</mat-label>
+            <input  maxlength="{{minLengthTitle * 3 }}" [(ngModel)]="title" name="news_title" matInput />
+        </mat-form-field>
+        <div class="mt-4">
+            <mat-form-field appearance="outline" class="w-100-p">
+                <mat-label>Contenu</mat-label>
+                <textarea maxlength="{{contentMaxSize}}" matInput name="title" [(ngModel)]="content" rows="10">
+                </textarea>
+            </mat-form-field>
+        </div>
+    </form>
+    <div class="m-0 p-16" fxLayout="row"  fxLayoutAlign="end center">
+        <div>
+            <button class="m-4" mat-raised-button (click)="matDialogRef.close()" color="warn">
+                Annuler
+            </button>
+            <button *ngIf="action==='new'" (click)="addNews()"  [disabled]="!title || title.length < minLengthTitle || !content || content.length < minLengthContent || content.length >= contentMaxSize" class="m-4" mat-raised-button color="accent" type="submit">
+                Poster
+            </button>
+            <button *ngIf="action==='edit'" (click)="updateNewsDetail()"  [disabled]="!title || title.length < minLengthTitle || !content || content.length < minLengthContent || content.length >= contentMaxSize" class="m-4" mat-raised-button  color="accent" type="submit">
+                Enregistrer
+            </button>
+        </div>
+
+    </div>
+</div>

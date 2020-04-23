@@ -1,0 +1,698 @@
+<!-- Activities Display -->
+<div class="p-12" [hidden]="displayCounters || displayTemporaryWorkers">
+  <div class="content">
+    <div
+      class="header p-8"
+      fxLayout.gt-md="row"
+      fxLayout.lt-md="column"
+      fxLayoutAlign="space-between center"
+    >
+      <div
+        fxLayoutAlign="space-between center"
+        class="pl-4"
+        *ngIf="habilitation.isAdmin()"
+      >
+        <button
+          *ngIf="!isTemporaryWorker"
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="displayCountersMode(true)"
+        >
+          Compteurs
+        </button>
+        <button
+          *ngIf="isTemporaryWorker"
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="displayTemporaryWorkersMode(true)"
+        >
+          Intérimaires
+        </button>
+      </div>
+      <div
+        *ngIf="!isTemporaryWorker"
+        fxLayoutAlign="space-between center"
+        class="search-wrapper mt-16 mt-md-0 pl-4"
+      >
+        <div class="search" fxFlex fxLayout="row" fxLayoutAlign="end center">
+          <button mat-icon-button class="secondary-text">
+            <mat-icon>search</mat-icon>
+          </button>
+          <input
+            placeholder="Filtrer les salariés par site"
+            name="search"
+            [(ngModel)]="filterValue"
+            (keyup.enter)="onFilterBySite()"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- PER EMPLOYEE MODE -->
+  <div *ngIf="!displaySimpleList">
+    <div *ngFor="let activityPerEmployee of activitiesPerEmployee" class="mt-8">
+      <div fxLayout="column" fxLayoutAlign="center">
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex class="mb-8">
+          <div class="employee-row mat-elevation-z2">
+            {{ activityPerEmployee.employee.fullName }}
+          </div>
+        </div>
+        <div
+          *ngFor="
+            let activityPerWeek of activityPerEmployee.activitiesPerWeek;
+            index as i
+          "
+          fxLayout="row"
+          class="mb-8"
+        >
+          <div
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            fxFlex="10"
+            fxHide.lt-md
+            class="week-number-column"
+          >
+            <div>
+              <div class="week-number-label">Semaine</div>
+              <div class="week-number">
+                {{ activityPerWeek.weekNumber }}
+              </div>
+              <div class="total-worktime">
+                {{ activityPerWeek.totalWorkTimeString }}
+              </div>
+            </div>
+          </div>
+          <div fxFlex>
+            <mat-table [dataSource]="activityPerWeek.activities">
+              <ng-container matColumnDef="day">
+                <mat-header-cell fxLayoutAlign="start center" *matHeaderCellDef
+                  >DATE</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title">
+                    {{ activity.day }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="startTime">
+                <mat-header-cell fxLayoutAlign="start center" *matHeaderCellDef
+                  >DÉBUT</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title">
+                    {{ activity.startTime }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="totalBreakTimeString">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  *matHeaderCellDef
+                  fxHide.lt-md
+                  >PAUSES</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                  fxHide.lt-md
+                >
+                  <span class="job-title">
+                    {{ activity.totalBreakTimeString }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="endTime">
+                <mat-header-cell fxLayoutAlign="start center" *matHeaderCellDef
+                  >FIN</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title">
+                    {{ activity.endTime }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="totalWorkedTimeString">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  *matHeaderCellDef
+                  fxHide.lt-sm
+                  >TOTAL HEURES</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                  fxHide.lt-sm
+                >
+                  <span class="job-title">
+                    {{ activity.totalWorkedTimeString }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="site">
+                <mat-header-cell fxLayoutAlign="start center" *matHeaderCellDef
+                  >SITE</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title">
+                    {{ activity.site.name }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="bonusString">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  fxHide.lt-sm
+                  *matHeaderCellDef
+                  >PRIME</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  fxHide.lt-sm
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title">
+                    {{ activity.bonusString }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="provider">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  *matHeaderCellDef
+                  [fxHide]="!isTemporaryWorker"
+                  >Agence</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                  [fxHide]="!isTemporaryWorker"
+                >
+                  <span class="job-title">
+                    {{ activity.providerName }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="manuallyCreated">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  fxHide.lt-sm
+                  *matHeaderCellDef
+                  >[T]</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  fxHide.lt-sm
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title" *ngIf="activity.activityType == 1">
+                    <mat-icon color="accent">
+                      {{
+                        activity.manuallyCreated
+                          ? "keyboard"
+                          : "stay_current_portrait"
+                      }}
+                    </mat-icon>
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="dayCounter">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  *matHeaderCellDef
+                  fxHide.lt-sm
+                  >J</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  *matCellDef="let activity"
+                  fxHide.lt-sm
+                >
+                  <span class="job-title">
+                    {{ activity.dayCounter > 0 ? activity.dayCounter : "" }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="title">
+                <mat-header-cell
+                  fxLayoutAlign="start center"
+                  fxHide.lt-md
+                  *matHeaderCellDef
+                  >REMARQUE</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="start center"
+                  fxHide.lt-md
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title">
+                    {{ activity.title }}
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <mat-header-cell
+                  fxLayoutAlign="center center"
+                  fxHide.lt-sm
+                  class="actions-header"
+                  *matHeaderCellDef
+                  >ACTIONS</mat-header-cell
+                >
+                <mat-cell
+                  fxLayoutAlign="center center"
+                  fxHide.lt-sm
+                  class="actions-cell"
+                  *matCellDef="let activity"
+                >
+                  <span class="job-title" *ngIf="habilitation.canEdit()">
+                    <button mat-button [matMenuTriggerFor]="actionsMenu">
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+                    <mat-menu #actionsMenu="matMenu">
+                      <button
+                        mat-menu-item
+                        (click)="updateActivity(activity)"
+                        [disabled]="activity.activityType != 1"
+                      >
+                        <mat-icon color="accent">edit</mat-icon>
+                        Modifier
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="updateBonusActivity(activity)"
+                        [disabled]="activity.activityType != 1"
+                      >
+                        <mat-icon color="primary">euro_symbol</mat-icon>
+                        Primes
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="updateBreaksActivity(activity)"
+                        [disabled]="activity.activityType != 1"
+                      >
+                        <mat-icon color="primary">local_cafe</mat-icon>
+                        Pauses
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="deleteActivity(activity)"
+                        [disabled]="
+                          (activity.activityType != 1 &&
+                            activity.activityType != 2 &&
+                            activity.activityType != 5) ||
+                          (activity.activityType != 1 && !isTemporaryWorker)
+                        "
+                        *ngIf="habilitation.canDelete()"
+                      >
+                        <mat-icon color="warn">delete_outline</mat-icon
+                        >Supprimer
+                      </button>
+                    </mat-menu>
+                  </span>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+                [hidden]="i > 0"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let activity; columns: displayedColumns"
+                class="activity"
+                matRipple
+                [class.green-bg]="
+                  activity.activityType === 1 && activity.activityState === 3
+                "
+                [class.yellow-bg]="
+                  activity.activityType === 1 && activity.activityState < 3
+                "
+                [class.red-bg]="
+                  activity.activityType === 2 ||
+                  activity.activityType === 9 ||
+                  activity.activityType === 4
+                "
+                [class.gray-bg]="activity.activityType === 0"
+                [class.violet-bg]="activity.activityType === 5"
+                [class.blue-bg]="activity.activityType === 23"
+              >
+              </mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- LIST MODE -->
+  <div *ngIf="displaySimpleList && !isTemporaryWorker">
+    <div class="mt-8">
+      <div fxFlex>
+        <mat-table
+          [dataSource]="activities"
+          matSort
+          (matSortChange)="sortActivities($event)"
+        >
+          <ng-container matColumnDef="fullName">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="fullName"
+              >SALARIE</mat-header-cell
+            >
+            <mat-cell fxLayoutAlign="start center" *matCellDef="let activity">
+              <span class="job-title">
+                {{ activity.employee.fullName }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="day">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="day"
+              >DATE</mat-header-cell
+            >
+            <mat-cell fxLayoutAlign="start center" *matCellDef="let activity">
+              <span class="job-title">
+                {{ activity.startDate }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="startTime">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="startTime"
+              >DÉBUT</mat-header-cell
+            >
+            <mat-cell fxLayoutAlign="start center" *matCellDef="let activity">
+              <span class="job-title">
+                {{ activity.startTime }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="totalBreakTimeString">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="totalBreakTime"
+              fxHide.lt-md
+              >PAUSES</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              *matCellDef="let activity"
+              fxHide.lt-md
+            >
+              <span class="job-title">
+                {{ activity.totalBreakTimeString }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="endTime">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="endTime"
+              >FIN</mat-header-cell
+            >
+            <mat-cell fxLayoutAlign="start center" *matCellDef="let activity">
+              <span class="job-title">
+                {{ activity.endTime }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="totalWorkedTimeString">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="totalWorkedTime"
+              fxHide.lt-sm
+              >TOTAL HEURES</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              *matCellDef="let activity"
+              fxHide.lt-sm
+            >
+              <span class="job-title">
+                {{ activity.totalWorkedTimeString }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="site">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              mat-sort-header="site"
+              >SITE</mat-header-cell
+            >
+            <mat-cell fxLayoutAlign="start center" *matCellDef="let activity">
+              <span class="job-title">
+                {{ activity.site.name }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="bonusString">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              fxHide.lt-sm
+              *matHeaderCellDef
+              >PRIME</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              fxHide.lt-sm
+              *matCellDef="let activity"
+            >
+              <span class="job-title">
+                {{ activity.bonusString }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="provider">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              [fxHide]="!isTemporaryWorker"
+              >Agence</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              *matCellDef="let activity"
+              [fxHide]="!isTemporaryWorker"
+            >
+              <span class="job-title">
+                {{ activity.providerName }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="manuallyCreated">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              fxHide.lt-sm
+              *matHeaderCellDef
+              >[T]</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              fxHide.lt-sm
+              *matCellDef="let activity"
+            >
+              <span class="job-title" *ngIf="activity.activityType == 1">
+                <mat-icon color="accent">
+                  {{
+                    activity.manuallyCreated
+                      ? "keyboard"
+                      : "stay_current_portrait"
+                  }}
+                </mat-icon>
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="dayCounter">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              *matHeaderCellDef
+              fxHide.lt-sm
+              >J</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              *matCellDef="let activity"
+              fxHide.lt-sm
+            >
+              <span class="job-title">
+                {{ activity.dayCounter > 0 ? activity.dayCounter : "" }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="title">
+            <mat-header-cell
+              fxLayoutAlign="start center"
+              fxHide.lt-md
+              *matHeaderCellDef
+              >REMARQUE</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="start center"
+              fxHide.lt-md
+              *matCellDef="let activity"
+            >
+              <span class="job-title">
+                {{ activity.title }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <mat-header-cell
+              fxLayoutAlign="center center"
+              fxHide.lt-sm
+              class="actions-header"
+              *matHeaderCellDef
+              >ACTIONS</mat-header-cell
+            >
+            <mat-cell
+              fxLayoutAlign="center center"
+              fxHide.lt-sm
+              class="actions-cell"
+              *matCellDef="let activity"
+            >
+              <span class="job-title" *ngIf="habilitation.canEdit()">
+                <button mat-button [matMenuTriggerFor]="actionsMenu">
+                  <mat-icon>more_horiz</mat-icon>
+                </button>
+                <mat-menu #actionsMenu="matMenu">
+                  <button
+                    mat-menu-item
+                    (click)="updateActivity(activity)"
+                    [disabled]="activity.activityType != 1"
+                  >
+                    <mat-icon color="accent">edit</mat-icon>
+                    Modifier
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="updateBonusActivity(activity)"
+                    [disabled]="activity.activityType != 1"
+                  >
+                    <mat-icon color="primary">euro_symbol</mat-icon>
+                    Primes
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="updateBreaksActivity(activity)"
+                    [disabled]="activity.activityType != 1"
+                  >
+                    <mat-icon color="primary">local_cafe</mat-icon>
+                    Pauses
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="deleteActivity(activity)"
+                    [disabled]="
+                      (activity.activityType != 1 &&
+                        activity.activityType != 2 &&
+                        activity.activityType != 5) ||
+                      (activity.activityType != 1 && !isTemporaryWorker)
+                    "
+                    *ngIf="habilitation.canDelete()"
+                  >
+                    <mat-icon color="warn">delete_outline</mat-icon>Supprimer
+                  </button>
+                </mat-menu>
+              </span>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+          <mat-row
+            *matRowDef="let activity; columns: displayedColumns2"
+            class="activity"
+            matRipple
+            [class.green-bg]="
+              activity.activityType === 1 && activity.activityState === 3
+            "
+            [class.yellow-bg]="
+              activity.activityType === 1 && activity.activityState < 3
+            "
+            [class.red-bg]="
+              activity.activityType === 2 ||
+              activity.activityType === 9 ||
+              activity.activityType === 4
+            "
+            [class.gray-bg]="activity.activityType === 0"
+            [class.violet-bg]="activity.activityType === 5"
+            [class.blue-bg]="activity.activityType === 23"
+          >
+          </mat-row>
+        </mat-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Counters Display -->
+<div class="content" *ngIf="displayCounters">
+  <div
+    class="header p-8"
+    fxLayout.gt-md="row"
+    fxLayout.lt-md="column"
+    fxLayoutAlign="space-between center"
+  >
+    <div fxLayoutAlign="space-between center" class="pl-4">
+      <h3>Compteurs de présence et de congés payés pour les cadres</h3>
+    </div>
+    <div fxLayoutAlign="space-between center" class="mt-16 mt-md-0 pl-4">
+      <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="displayCountersMode(false)"
+        >
+          Fermer
+          <mat-icon class="s-20">close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <activity-employees-counters></activity-employees-counters>
+  </div>
+</div>
+
+<!-- Temporary Workers Display -->
+<div class="p-12 content" *ngIf="displayTemporaryWorkers">
+  <div
+    class="header p-8"
+    fxLayout.gt-md="row"
+    fxLayout.lt-md="column"
+    fxLayoutAlign="space-between center"
+  >
+    <div fxFlex fxLayoutAlign="end center" class="mt-16 mt-md-0 pl-4">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="displayTemporaryWorkersMode(false)"
+      >
+        Fermer
+        <mat-icon class="s-20">close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div>
+    <activity-temporary-workers></activity-temporary-workers>
+  </div>
+</div>

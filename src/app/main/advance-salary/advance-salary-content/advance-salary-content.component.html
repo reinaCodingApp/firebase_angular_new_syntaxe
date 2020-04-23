@@ -1,0 +1,88 @@
+<div class="demo-content line-height-1.75">
+  <div id="ngx-datatable">
+    <!-- CONTENT -->
+    <div class="table-wrapper content p-4">
+      <ngx-datatable
+        class="material"
+        [rows]="rows"
+        [loadingIndicator]="loadingIndicator"
+        [columnMode]="'force'"
+        [headerHeight]="48"
+        [footerHeight]="56"
+        [rowHeight]="'auto'"
+        [reorderable]="reorderable"
+        [selectionType]="'checkbox'"
+        [limit]="10"
+        [messages]="{
+          emptyMessage: 'Pas de resultats',
+          totalMessage: 'Totale'
+        }"
+      >
+        <ngx-datatable-column
+          name="NOM"
+          prop="employee.fullName"
+          cellClass="employee-fullName"
+        ></ngx-datatable-column>
+
+        <ngx-datatable-column name="DEMANDÉ" prop="requestAmount">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.requestAmount + " €" }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="ACCORDÉ" prop="requestAwarded">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.requestAwarded + " €" }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="DATE" prop="requestDate">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.requestDate }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="ETAT"
+          prop="advanceSalaryStatus.name"
+        ></ngx-datatable-column>
+        <ngx-datatable-column
+          *ngIf="!smallScreen"
+          name="ACTIONS"
+          [resizeable]="false"
+          [canAutoResize]="true"
+          [sortable]="false"
+        >
+          <ng-template
+            let-row="row"
+            let-value="value"
+            ngx-datatable-cell-template
+          >
+            <div
+              class="buttons-row"
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+            >
+              <button
+                *ngIf="habilitation.canEdit()"
+                mat-icon-button
+                color="accent"
+                class="mat-elevation-z1"
+                (click)="updateAdvanceSalary(row)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                *ngIf="habilitation.canDelete()"
+                mat-icon-button
+                color="warn"
+                class="mat-elevation-z1"
+                (click)="deleteAdvanceSalary(row)"
+              >
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

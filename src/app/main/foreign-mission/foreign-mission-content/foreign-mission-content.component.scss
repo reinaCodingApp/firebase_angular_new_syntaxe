@@ -1,0 +1,20 @@
+@import "src/@fuse/scss/fuse";
+
+foreign-mission-content {
+  .employee-fullName {
+    background-color: #d94354 !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+
+  .datatable-body-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+  .datatable-header-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+}

@@ -1,0 +1,138 @@
+<div class="demo-sidebar">
+  <form
+    #f="ngForm"
+    class="mat-card mat-elevation-z4 p-8 mb-24"
+    fxLayout="column"
+    fxLayoutAlign="start"
+    name="form"
+  >
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+      <h3 class="mt-12 mb-0">Types de sites</h3>
+    </div>
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+      fxFlex="1 0 auto"
+      class="mt-8"
+    >
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Types de sites</mat-label>
+        <mat-select
+          [(ngModel)]="siteFilter.siteTypeId"
+          name="siteType"
+          (selectionChange)="getFiltredSites()"
+        >
+          <mat-option [value]="0">
+            Tous
+          </mat-option>
+          <mat-option *ngFor="let siteType of siteTypes" [value]="siteType.id">
+            {{ siteType.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox
+        [(ngModel)]="siteFilter.showDisabled"
+        name="showDisableEmployee"
+        (change)="getFiltredSites()"
+        >Afficher les sites résiliés
+      </mat-checkbox>
+      <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <h3>Types de listes</h3>
+      </div>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Types de listes</mat-label>
+        <mat-select
+          [(ngModel)]="siteFilter.siteGroupId"
+          name="filtreListType"
+          (selectionChange)="getFiltredSites()"
+        >
+          <mat-option
+            *ngFor="let filtreListType of filtreListTypes"
+            [value]="filtreListType.item1"
+          >
+            {{ filtreListType.item2 }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <!-- Export Ecel -->
+  <div
+    class="mat-card mat-elevation-z4 p-8 mb-24"
+    fxLayout="column"
+    fxLayoutAlign="start"
+  >
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+      <h3 class="m-0">Exports Excel</h3>
+    </div>
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+      fxFlex="1 0 auto"
+      class="mt-8"
+    >
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Types de sites</mat-label>
+        <mat-select
+          [(ngModel)]="typesIdentifiers"
+          name="siteTypeToExport"
+          multiple
+        >
+          <mat-option *ngFor="let siteType of siteTypes" [value]="siteType.id">
+            {{ siteType.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        fxFlex="100"
+        (click)="PrintSitesLists()"
+      >
+        Exporter
+        <mat-icon class="s-20">arrow_downward</mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- Stats -->
+  <div
+    class="mat-card mat-elevation-z4 p-8 mb-24"
+    fxLayout="column"
+    fxLayoutAlign="start"
+  >
+    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto">
+      <h3 class="m-0 font-weight-800">Stats. partenaires</h3>
+    </div>
+    <div
+      *ngIf="stats"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="1 0 auto"
+    >
+      <p class="m-4">{{ stats.b }} boucheries</p>
+      <p class="m-4">{{ stats.r }} restaurants</p>
+      <p class="m-4">{{ stats.a }} abattoirs</p>
+      <p class="m-4">{{ stats.c }} CEVs</p>
+    </div>
+  </div>
+  <!-- Génération d’agréments -->
+  <div
+    *ngIf="habilitation.isAdmin()"
+    class="mat-card mat-elevation-z4 p-8"
+    fxLayout="column"
+    fxLayoutAlign="start"
+  >
+    <button
+      type="button"
+      mat-raised-button
+      color="warn"
+      fxFlex="100"
+      (click)="commonService.toggleSidebar('sites-sidebar-right')"
+    >
+      Génération d’agréments
+    </button>
+  </div>
+</div>

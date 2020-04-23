@@ -1,0 +1,80 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule, MatExpansionModule, MatTooltipModule, MatMenuModule } from '@angular/material';
+import {MatSelectInfiniteScrollModule} from 'ng-mat-select-infinite-scroll';
+
+import { TraceabilityComponent } from './traceability.component';
+import { TraceabilityService } from './traceability.service';
+import { TraceabilitySidebarComponent } from './traceability-sidebar/traceability-sidebar.component';
+import { TraceabilityContentComponent } from './traceability-content/traceability-content.component';
+import { AddTraceabilityDialogComponent } from './dialogs/add-traceability-dialog/add-traceability-dialog.component';
+import { AddExceptioncodeDialogComponent } from './dialogs/add-exceptioncode-dialog/add-exceptioncode-dialog.component';
+import { PrintWeeksDialogComponent } from './dialogs/print-weeks-dialog/print-weeks-dialog.component';
+
+import { FuseSharedModule } from '@fuse/shared.module';
+import { FuseSidebarModule } from '@fuse/components';
+
+import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+
+const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
+const routes: Routes = [
+  {
+    path: 'traceability',
+    component: TraceabilityComponent,
+    ...canActivate(redirectUnauthorizedToLoginPage),
+    resolve: { resolve: TraceabilityService }
+  }
+];
+
+@NgModule({
+  declarations: [
+    TraceabilityComponent,
+    TraceabilitySidebarComponent,
+    TraceabilityContentComponent,
+    AddTraceabilityDialogComponent,
+    AddExceptioncodeDialogComponent,
+    PrintWeeksDialogComponent
+  ],
+  imports: [
+    RouterModule.forChild(routes),
+
+    MatButtonModule,
+    MatIconModule,
+    MatTabsModule,
+    MatDividerModule,
+    MatListModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatTableModule,
+    MatExpansionModule,
+    NgxMatSelectSearchModule,
+    MatSelectInfiniteScrollModule,
+    MatTooltipModule,
+    MatMenuModule,
+    FuseSidebarModule,
+    FuseSharedModule,
+    CustomConfirmDialogModule
+  ],
+  entryComponents: [
+    AddTraceabilityDialogComponent,
+    AddExceptioncodeDialogComponent,
+    PrintWeeksDialogComponent
+  ]
+})
+export class TraceabilityModule {
+}

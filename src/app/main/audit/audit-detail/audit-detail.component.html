@@ -1,0 +1,108 @@
+<div id="academy-course" class="page-layout simple left-sidebar inner-scroll">
+
+    <!-- SIDEBAR -->
+    <fuse-sidebar class="sidebar" name="academy-course-left-sidebar-1" position="left" lockedOpen="gt-md">
+
+        <!-- SIDEBAR CONTENT -->
+        <div class="content" fusePerfectScrollbar>
+
+            <div class="steps" *ngIf="currentAudit && currentAudit.menus">
+
+                <div class="step"
+                     *ngFor="let menu of currentAudit.menus; let i = index; let last = last; let first = first"
+                     (click)="loadMenuSections(menu, i)"
+                     [ngClass]="{'current': currentStep === i, 'completed': currentStep > i, 'last': last, 'first': first}">
+                    <div class="index">
+                        <span>{{ i + 1 }}</span>
+                    </div>
+                    <div class="title">{{menu.title}}</div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- / SIDEBAR CONTENT -->
+
+    </fuse-sidebar>
+    <!-- / SIDEBAR -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-icon-button class="sidebar-toggle mr-16" fxHide.gt-md
+                    (click)="toggleSidebar('academy-course-left-sidebar-1')">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <button mat-icon-button class="mr-16" [routerLink]="'/audits'">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div>
+                <h2 *ngIf="currentAudit" >{{'Établissement ' + currentAudit.site.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
+            </div>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT -->
+        <div id="course-content" class="content" *ngIf="currentAudit">
+            <ng-container *ngFor="let step of currentAudit.menus; let i = index;">
+
+                <div class="course-step" fusePerfectScrollbar
+                     *ngIf="currentStep === i"
+                     [@slideIn]="animationDirection">
+              <div>
+              </div>
+                    <div id="course-step-content" *ngIf="currentMenu && currentMenu.id.length > 0" class="course-step-content">
+                      <div class="section" *ngFor="let section of currentMenu.sections">
+                        <h1 [innerHTML]="section.title" ></h1>
+                        <div  class="audit-item p-16 mb-24" *ngFor="let item of section.items"
+                            [class.mat-elevation-z2]="true">
+                          <p [innerHTML]="item.title"></p>
+                          <div fxLayout="row" fxLayoutAlign="end end" >
+                            <button (click)="updateEffectiveValue(item,v)" mat-raised-button class="mx-4" color="{{item.effectiveValue==v ? 'accent' :''}}" *ngFor="let v of item.possibleValues.values" >{{v}}</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="course-step-content" *ngIf="currentMenu && currentMenu.id.length === 0" class="course-step-content">
+                        <mat-form-field appearance="outline" class="w-100-p">
+                            <mat-label>Rapport général</mat-label>
+                            <textarea [readonly]="!habilitation.canEdit()" matInput name="title" [(ngModel)]="currentAudit.report" (change)="updateAuditPrperties()" rows="18">
+                            </textarea>
+                        </mat-form-field>
+                    </div>
+              </div>
+            </ng-container>
+        </div>
+        <!-- / CONTENT -->
+
+        <div class="step-navigation">
+
+            <button mat-fab class="previous mat-accent fuse-white-fg"
+                    (click)="gotoPreviousStep()"
+                    [disabled]="currentStep === 0"
+                    [fxHide]="currentStep === 0">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            <button mat-fab class="next mat-accent fuse-white-fg"
+                    (click)="gotoNextStep()"
+                    [disabled]="currentStep === totalMenusCount - 1"
+                    [fxHide]="currentStep === totalMenusCount - 1">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+
+            <button mat-fab class="done green-600"
+                    routerLink="/audits"
+                    [disabled]="currentStep !== totalMenusCount - 1"
+                    [fxShow]="currentStep === totalMenusCount - 1">
+                <mat-icon>check</mat-icon>
+            </button>
+
+        </div>
+
+    </div>
+    <!-- / CENTER -->
+
+</div>
