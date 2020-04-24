@@ -86,7 +86,7 @@
         </button>
       </div>
       <br />
-      <div fxLayout="row" fxLayoutAlign="start center">
+      <div *ngIf="tonnageFilterViewModel.siteId" Layout="row" fxLayoutAlign="start center">
         <button
           type="button"
           mat-raised-button
