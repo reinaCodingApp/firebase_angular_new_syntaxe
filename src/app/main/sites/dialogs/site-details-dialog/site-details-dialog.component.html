@@ -127,6 +127,26 @@
           />
         </mat-form-field>
         <mat-form-field appearance="outline">
+          <mat-label>Date d"entrée</mat-label>
+          <input
+            [ngModel]="site.entryDate | date :'dd/MM/yyyy'"
+            placeholder="Date d'entrée"
+            matInput
+            name="entryDate"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="!site.active">
+          <mat-label>Date de sortie</mat-label>
+          <input
+            [ngModel]="site.releaseDate | date :'dd/MM/yyyy'"
+            placeholder="Date de sortie"
+            matInput
+            name="releaseDate"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>Contact</mat-label>
           <input
             [(ngModel)]="site.contact"
