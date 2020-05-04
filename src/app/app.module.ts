@@ -1,3 +1,4 @@
+import { ChangelogModule } from './main/changelog/changelog.module';
 import { LoginService } from './main/login/login.service';
 import { AppService } from './app.service';
 import { LoginModule } from './main/login/login.module';
@@ -135,6 +136,7 @@ const appRoutes: Routes = [
     FollowupSheetModule,
     MeetingsModule,
     MonthlyMeetingModule,
+    ChangelogModule,
 
     // 3rd party modules
     NgxUiLoaderModule

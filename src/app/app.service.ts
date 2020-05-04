@@ -8,7 +8,7 @@ import { Module } from './main/access-rights/models/module';
 import { FuseNavigationItem } from '@fuse/types';
 import { AccessRightsService } from './main/access-rights/access-rights.service';
 import { Habilitation } from './main/access-rights/models/habilitation';
-import { AppVersion } from './common/models/app-version';
+import { AppVersion } from './main/changelog/models/app-version';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,7 @@ export class AppService {
   onCurentUserChanged: BehaviorSubject<User>;
   onNavigationMenuChanged: BehaviorSubject<any>;
   onAppVersionChanged: BehaviorSubject<AppVersion>;
+  latestKnownAppVersion: AppVersion = null;
 
   constructor(private angularFireAuth: AngularFireAuth,
               private angularFirestore: AngularFirestore

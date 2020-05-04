@@ -5,5 +5,12 @@ export class AppVersion {
   date: number;
   versionCode: number;
   versionName: string;
-  details: string;
+  vName: string;
+  details: VersionDetail;
+}
+
+export class VersionDetail {
+  new: string[];
+  fixed: string [];
+  improved: string [];
 }

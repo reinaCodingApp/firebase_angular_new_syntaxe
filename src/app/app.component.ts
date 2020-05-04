@@ -1,4 +1,4 @@
-import { AppVersion } from './common/models/app-version';
+import { AppVersion } from './main/changelog/models/app-version';
 import { Component, Inject, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
@@ -18,6 +18,7 @@ import { AppService } from './app.service';
 import { FcmMessagingService } from './common/services/fcm-messaging.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from './main/settings/models/user';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -44,8 +45,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private _platform: Platform,
     private appService: AppService,
     private cdRef: ChangeDetectorRef,
-    private fcmMessagingService: FcmMessagingService,
-    private angularFireAuth: AngularFireAuth
+    private angularFireAuth: AngularFireAuth,
+    private router: Router,
+    private fcmMessagingService: FcmMessagingService
   ) {
     // Add languages
     this._translateService.addLangs(['en', 'tr']);
@@ -78,9 +80,10 @@ export class AppComponent implements OnInit, OnDestroy {
         const lastVersion = result.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as AppVersion))[0];
         if (!this.currentAppVersion) {
           this.currentAppVersion = lastVersion;
+          this.appService.latestKnownAppVersion = lastVersion;
         } else {
           if (lastVersion.versionCode > this.currentAppVersion.versionCode) {
-            window.location.reload();
+            this.router.navigate(['changelog']);
           }
         }
         this.appService.onAppVersionChanged.next(lastVersion);
