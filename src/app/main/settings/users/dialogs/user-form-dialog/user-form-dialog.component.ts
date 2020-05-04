@@ -3,7 +3,7 @@ import { UsersService } from '../../users.service';
 import { User } from 'app/main/settings/models/user';
 import { MatDialogRef, MAT_DIALOG_DATA, MatAutocompleteSelectedEvent, MatAutocomplete, MatChipInputEvent } from '@angular/material';
 import { Observable } from 'rxjs';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Employee } from 'app/common/models/employee';
@@ -12,6 +12,7 @@ import { DefaultClaim } from 'app/common/models/default-claim';
 import { TourSheetService } from 'app/main/tour-sheet/tour-sheet.service';
 import { CommonService } from 'app/common/services/common.service';
 import { Department } from 'app/main/webcms/models/department';
+import { AppService } from 'app/app.service';
 
 @Component({
   selector: 'user-form-dialog',
@@ -36,18 +37,21 @@ export class UserFormDialogComponent implements OnInit {
   filteredClaims: Observable<string[]>;
   claims: string[] = [];
   allClaims: string[] = [];
+  connectedUser: User;
 
-  @ViewChild('claimInput', {static: false}) claimInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
-  constructor(private commonService: CommonService,
-              @Inject(MAT_DIALOG_DATA) private data: any,
-              public matDialogRef: MatDialogRef<UserFormDialogComponent>) {
+  @ViewChild('claimInput', { static: false }) claimInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  constructor(
+    private commonService: CommonService,
+    private appService: AppService,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    public matDialogRef: MatDialogRef<UserFormDialogComponent>) {
 
     this.allClaims = [...EmbeddedDatabase.availableClaims];
     if (this.data && this.data.action === 'edit') {
       this.action = this.data.action;
       console.log(this.data.user);
-      this.user = {...this.data.user};
+      this.user = { ...this.data.user };
       this.claims = this.getClaimsFromObject(this.user.customClaims);
       if (this.user.customClaims && this.user.customClaims.employeeId && this.user.customClaims.employeeId > 0) {
         this.selectedEmployeeId = this.user.customClaims.employeeId;
@@ -58,9 +62,6 @@ export class UserFormDialogComponent implements OnInit {
       this.claims = [];
       this.selectedEmployeeId = -1;
     }
-    this.filteredClaims = this.claimsCtrl.valueChanges.pipe(
-      startWith(null),
-      map((claim: string | null) => claim ? this._filter(claim) : this.allClaims.slice()));
   }
 
   add(event: MatChipInputEvent): void {
@@ -128,6 +129,17 @@ export class UserFormDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.appService.getCurrentUser().subscribe(user => {
+      if (user) {
+        this.connectedUser = user;
+        if (!this.connectedUser.customClaims.isRoot) {
+          this.allClaims = this.allClaims.filter(c => c !== 'root');
+        }
+        this.filteredClaims = this.claimsCtrl.valueChanges.pipe(
+          startWith(null),
+          map((claim: string | null) => claim ? this._filter(claim) : this.allClaims.slice()));
+      }
+    });
     this.commonService.getEmployees(true).then(result => {
       this.employees = result as Employee[];
       this.filtredEmployees = result as Employee[];

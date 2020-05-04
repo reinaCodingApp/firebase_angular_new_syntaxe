@@ -26,8 +26,10 @@ export class QuickPanelComponent implements OnInit {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     });
 
-    this.appService.onShowSettingsButtonChanged.subscribe((showSettingsButton) => {
-      this.showSettingsButton = showSettingsButton;
+    this.appService.getCurrentUser().subscribe(user => {
+      if (user) {
+        this.showSettingsButton = user.customClaims.isRoot || user.customClaims.isTechAdmin;
+      }
     });
   }
 }

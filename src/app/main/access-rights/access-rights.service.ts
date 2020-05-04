@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { firestoreCollections } from 'app/data/firestoreCollections';
 import { Module } from 'app/main/access-rights/models/module';
@@ -10,6 +10,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { User } from 'app/main/settings/models/user';
 import { MatDialog } from '@angular/material';
 import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
+import { AppService } from 'app/app.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,40 +24,54 @@ export class AccessRightsService implements Resolve<any> {
   constructor(
     private angularFirestore: AngularFirestore,
     private angularFireFunctions: AngularFireFunctions,
-    private matDialog: MatDialog) {
+    private matDialog: MatDialog,
+    private appService: AppService,
+    private router: Router) {
     this.onModulesChanged = new BehaviorSubject(null);
     this.onUserChanged = new BehaviorSubject(null);
     this.onFilteredModuleschanged = new BehaviorSubject(null);
     this.onAvailableKeysChanged = new BehaviorSubject([]);
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (route.params.userId) {
-      const userId = route.params.userId;
-      return new Promise((resolve, reject) => {
-        Promise.all([
-          this.loadUserAccessRights(userId)
-        ]).then(
-          () => {
-            resolve();
-          },
-          reject
-        );
-      });
-    }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
     return new Promise((resolve, reject) => {
-      Promise.all([
-        this.loadModules(),
-        // this.initializeModulesKeys(),
-        // this.initializeModulesDatabase()
-      ]).then(
-        () => {
+      this.appService.getCurrentUser().subscribe(user => {
+        if (user) {
+          if (user.customClaims.isRoot || user.customClaims.isTechAdmin) {
+            if (route.params.userId) {
+              const userId = route.params.userId;
+              this.loadUserAccessRights(userId).then(() => {
+                resolve();
+              }, (err) => {
+                reject(err);
+              });
+            } else {
+              if (user.customClaims.isRoot) {
+                this.loadModules().then(() => {
+                  resolve();
+                }, (err) => {
+                  reject(err);
+                });
+              } else {
+                this.router.navigateByUrl('/home');
+                resolve();
+              }
+            }
+          }
+          else {
+            this.router.navigateByUrl('/home');
+            resolve();
+          }
+        } else {
+          this.router.navigateByUrl('/login');
           resolve();
-        },
-        reject
-      );
+        }
+      }, (err) => {
+        reject(err);
+      });
     });
   }
+
   loadModules() {
     return new Promise((resolve, reject) => {
       this.angularFirestore.collection(firestoreCollections.modules)
@@ -161,14 +176,14 @@ export class AccessRightsService implements Resolve<any> {
       const newModule: Module = { index: i, id: m.id, title: m.title, key: '', icon: m.icon, type: m.type, exactMatch: true, displayInMenu: m.displayInMenu } as Module;
       if (newModule.type !== 'collapsable') {
         newModule.url = m.url;
-        newModule.key = await this.getKey(m.id);
+        newModule.key = await this.appService.getKey(m.id);
       }
       if (newModule.type === 'collapsable') {
         newModule.children = [];
-        newModule.key = await this.getKey(m.id);
+        newModule.key = await this.appService.getKey(m.id);
         let j = 0;
         for (const child of m.children) {
-          const childKey = await this.getKey(child.id);
+          const childKey = await this.appService.getKey(child.id);
           newModule.children.push({
             index: j, id: child.id, title: child.title, url: child.url, key: childKey,
             icon: child.icon, type: child.type, exactMatch: true, displayInMenu: child.displayInMenu
@@ -184,20 +199,7 @@ export class AccessRightsService implements Resolve<any> {
     writeBatch.commit();
   }
 
-  getKey(id: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.angularFirestore.collection(firestoreCollections.moduleKeys).doc(id)
-        .get().subscribe(async data => {
-          if (data.exists) {
-            const moduleKey = data.data() as any;
-            resolve(moduleKey.key);
-          }
-        }, err => {
-          reject();
-          console.log(err);
-        });
-    });
-  }
+
 
   initializeModulesKeys(): void {
     const uniqueKeys = [...EmbeddedDatabase.modulesUniqueKeys];

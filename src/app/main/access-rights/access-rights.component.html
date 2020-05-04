@@ -10,13 +10,24 @@
 
   </div>
   <!-- / HEADER -->
-  <div class="content p-24">
+  <div class="content p-sm-24">
     <div>
       <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row" fxFlex="100">
         <div class="fuse-widget-front">
-          <div class="p-24 mb-8 border-bottom" fxLayout="row" fxLayoutAlign="space-between center">
-          <div class="h2" *ngIf="currentUser && currentUser.displayName">{{currentUser.displayName}}</div>
+          <div class="p-24 mb-8 border-bottom" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
+            <div fxLayout="column" fxLayoutAlign="space-between start">
+              <div class="h3" *ngIf="currentUser && currentUser.displayName">{{currentUser.displayName}}</div>
+              <div class="mat-caption" *ngIf="currentUser && currentUser.email">{{currentUser.email}}</div>
+            </div>
           <div>
+            <div fxLayout.xs="column" fxLayout="row wrap" fxLayoutAlign="space-between end">
+              <mat-checkbox
+              class="mr-12 p-4"
+              (change)="selectPermissions($event.checked)"
+              name="selectPermissions"
+              >Sélectionner tout
+            </mat-checkbox>
+            <div>
               <button mat-raised-button color="primary" (click)="clonePermissions()" class="mr-8">
                 Cloner
                 <mat-icon>supervisor_account</mat-icon>
@@ -25,6 +36,8 @@
                 Enregistrer
                 <mat-icon>save</mat-icon>
               </button>
+            </div>
+            </div>
             </div>
           </div>
 

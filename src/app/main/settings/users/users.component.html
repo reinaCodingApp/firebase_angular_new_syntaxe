@@ -23,12 +23,14 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="end center">
         <a
+          *ngIf="connectedUser.customClaims.isRoot"
           class="pr-12 mat-title"
           [routerLink]="'/settings/modules'"
           style="color: white !important;"
-          >Gestion des modules</a
-        >
+          >Gestion des modules
+        </a>
         <button
+          *ngIf="connectedUser.customClaims.isRoot || connectedUser.customClaims.isTechAdmin"
           (click)="popup(null, 'new')"
           mat-fab
           color="warn"
@@ -110,6 +112,12 @@
                   <th mat-header-cell *matHeaderCellDef></th>
                   <td mat-cell *matCellDef="let u">
                     <button
+                      *ngIf="
+                        !(
+                          u.customClaims.isRoot &&
+                          !connectedUser.customClaims.isRoot
+                        )
+                      "
                       mat-icon-button
                       [matMenuTriggerFor]="card20Menu"
                       aria-label="more"
@@ -119,7 +127,6 @@
                     <mat-menu #card20Menu="matMenu">
                       <button
                         [routerLink]="['/access-rights', u.uid]"
-                        *ngIf="isSuperAdmin"
                         mat-menu-item
                         aria-label="edit"
                         target="_blank"
@@ -129,7 +136,6 @@
                       </button>
                       <button
                         (click)="popup(u, 'edit')"
-                        *ngIf="isSuperAdmin"
                         mat-menu-item
                         aria-label="edit"
                         target="_blank"

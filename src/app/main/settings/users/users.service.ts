@@ -33,19 +33,9 @@ export class UsersService {
   passwordGuard(): string {
     return this.defaultPasswordGuard;
   }
-  listUsers() {
+  listUsers(): Promise<any> {
     const listUsersFn = this.angularFireFunctions.functions.httpsCallable('listUsers');
-    listUsersFn().then(response => {
-      let users = response.data.map(u => {
-        const result = { uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL } as User;
-        if (u.customClaims) {
-          result.customClaims = (u.customClaims as DefaultClaim);
-        }
-        return result;
-      });
-      users = users.sort((a, b) => a.displayName.localeCompare(b.displayName));
-      this.onUsersChanged.next(users);
-    });
+    return listUsersFn();
   }
   createUser(user: User) {
     const createUserFn = this.angularFireFunctions.functions.httpsCallable('createUser');

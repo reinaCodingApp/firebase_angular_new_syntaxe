@@ -19,33 +19,17 @@ export class AppService {
   currentUser: User;
   onCurentUserChanged: BehaviorSubject<User>;
   onNavigationMenuChanged: BehaviorSubject<any>;
-  onShowSettingsButtonChanged: BehaviorSubject<boolean>;
   onAppVersionChanged: BehaviorSubject<AppVersion>;
 
   constructor(private angularFireAuth: AngularFireAuth,
-              private angularFirestore: AngularFirestore,
-              private accessRightsService: AccessRightsService) {
+              private angularFirestore: AngularFirestore
+              ) {
     this.onShowConfigButtonChanged = new BehaviorSubject(false);
     this.onConfigurationUrlChanged = new BehaviorSubject('');
     this.onCurentUserChanged = new BehaviorSubject(null);
     this.onNavigationMenuChanged = new BehaviorSubject(null);
-    this.onShowSettingsButtonChanged = new BehaviorSubject(false);
     this.onAppVersionChanged = new BehaviorSubject(null);
-    this.angularFireAuth.authState.subscribe(async (result) => {
-      if (result) {
-        const user = { uid: result.uid, email: result.email, displayName: result.displayName, photoURL: result.photoURL } as User;
-        const tokenResult = await result.getIdTokenResult();
-        if (tokenResult) {
-          user.customClaims = tokenResult.claims;
-          this.onShowSettingsButtonChanged.next(user.customClaims.isRoot);
-        }
-        this.currentUser = user;
-        this.onCurentUserChanged.next(this.currentUser);
-        this.loadNavigationMenu(this.currentUser);
-      } else {
-        this.loadNavigationMenu(null);
-      }
-    });
+
   }
   loadNavigationMenu(user: User): void {
     if (!user) {
@@ -106,7 +90,7 @@ export class AppService {
   getHabilitation(user: User, moduleIdentifier: string): Promise<Habilitation> {
     return new Promise((resolve, reject) => {
       const claims = user.customClaims;
-      this.accessRightsService.getKey(moduleIdentifier).then(moduleKey => {
+      this.getKey(moduleIdentifier).then(moduleKey => {
         const habilitation = new Habilitation(claims[moduleKey]);
         resolve(habilitation);
       }, reject);
@@ -116,5 +100,20 @@ export class AppService {
   setConfigButtonParameters(visible: boolean, configurationUrl: string): void {
     this.onShowConfigButtonChanged.next(visible);
     this.onConfigurationUrlChanged.next(configurationUrl);
+  }
+
+  getKey(id: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.angularFirestore.collection(firestoreCollections.moduleKeys).doc(id)
+        .get().subscribe(async data => {
+          if (data.exists) {
+            const moduleKey = data.data() as any;
+            resolve(moduleKey.key);
+          }
+        }, err => {
+          reject();
+          console.log(err);
+        });
+    });
   }
 }

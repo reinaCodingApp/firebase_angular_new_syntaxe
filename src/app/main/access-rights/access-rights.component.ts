@@ -85,6 +85,18 @@ export class AccessRightsComponent implements OnInit, OnDestroy {
       });
   }
 
+  selectPermissions(status: boolean): void {
+    if (status) {
+      this.filteredModules.forEach(m => {
+        m.grantedAccess = 7;
+      });
+    } else {
+      this.filteredModules.forEach(m => {
+        m.grantedAccess = 0;
+      });
+    }
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();

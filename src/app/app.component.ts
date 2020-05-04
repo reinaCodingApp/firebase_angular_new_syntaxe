@@ -16,6 +16,8 @@ import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import { AppService } from './app.service';
 import { FcmMessagingService } from './common/services/fcm-messaging.service';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { User } from './main/settings/models/user';
 
 
 @Component({
@@ -42,7 +44,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private _platform: Platform,
     private appService: AppService,
     private cdRef: ChangeDetectorRef,
-    private fcmMessagingService: FcmMessagingService
+    private fcmMessagingService: FcmMessagingService,
+    private angularFireAuth: AngularFireAuth
   ) {
     // Add languages
     this._translateService.addLangs(['en', 'tr']);
@@ -56,6 +59,20 @@ export class AppComponent implements OnInit, OnDestroy {
       this.document.body.classList.add('is-mobile');
     }
     this._unsubscribeAll = new Subject();
+    this.angularFireAuth.authState.subscribe(async (result) => {
+      if (result) {
+        const user = { uid: result.uid, email: result.email, displayName: result.displayName, photoURL: result.photoURL } as User;
+        const tokenResult = await result.getIdTokenResult();
+        if (tokenResult) {
+          user.customClaims = tokenResult.claims;
+        }
+        this.appService.currentUser = user;
+        this.appService.onCurentUserChanged.next(user);
+        this.appService.loadNavigationMenu(user);
+      } else {
+        this.appService.loadNavigationMenu(null);
+      }
+    });
     this.appService.getLastAppVersion().subscribe( result => {
       if (result && result.length > 0) {
         const lastVersion = result.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as AppVersion))[0];
