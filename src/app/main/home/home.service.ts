@@ -42,6 +42,9 @@ export class HomeService implements Resolve<any>
             }, (err) => {
               reject(err);
             });
+        } else {
+          this.router.navigate(['login']);
+          resolve();
         }
       }, (err) => {
         reject(err);

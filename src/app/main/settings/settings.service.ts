@@ -26,6 +26,9 @@ export class SettingsService implements Resolve<any> {
             this.usersService.listUsers();
             resolve();
           }
+        } else {
+          this.router.navigate(['login']);
+          resolve();
         }
       }, (err) => {
         reject(err);
