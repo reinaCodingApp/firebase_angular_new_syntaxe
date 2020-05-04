@@ -26,7 +26,7 @@
           </mat-form-field>
         </div>
         <div>
-          <button mat-raised-button color="accent" type="submit">
+          <button mat-raised-button color="accent" type="submit" [disabled]="tonnage.isValidated">
             Valider
           </button>
         </div>
@@ -36,7 +36,12 @@
 </div>
 <mat-tab-group mat-align-tabs="center" mat-stretch-tabs *ngIf="tonnage">
   <mat-tab label="Carcasses">
-    <form #f="ngForm" name="form" (ngSubmit)="addTonnageDetail(f)" *ngIf="habilitation.canEdit()">
+    <form
+      #f="ngForm"
+      name="form"
+      (ngSubmit)="addTonnageDetail(f)"
+      *ngIf="habilitation.canEdit()"
+    >
       <div
         class="mat-elevation-z2 add-panel p-12"
         fxLayoutAlign="space-around center"
@@ -89,10 +94,22 @@
         </div>
         <div>
           <button
+            [disabled]="tonnage.isValidated"
             mat-icon-button
             color="accent"
             class="mat-elevation-z1"
             type="submit"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+          <button
+            [disabled]="tonnage.isValidated"
+            class="ml-8"
+            matTooltip="Ajouter tonnage details par poids totale et quantité"
+            mat-mini-fab
+            color="accent"
+            type="button"
+            (click)="addTonnageDetailByTotalWeightAndQuantity()"
           >
             <mat-icon>add</mat-icon>
           </button>
@@ -126,7 +143,7 @@
               matInput
               name="weight"
               type="number"
-              (keyup.enter)='updateTonnageDetail(tonnage)'
+              (keyup.enter)="updateTonnageDetail(tonnage)"
             />
           </mat-form-field>
         </mat-cell>
@@ -153,13 +170,14 @@
           fxLayoutAlign="center center"
           *matHeaderCellDef
         ></mat-header-cell>
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let tonnage">
+        <mat-cell fxLayoutAlign="center center" *matCellDef="let tonnageDetails">
           <div
             class="buttons-row"
             fxLayout="row wrap"
             fxLayoutAlign="space-between center"
           >
             <button
+              [disabled]="tonnage.isValidated"
               mat-icon-button
               color="accent"
               class="mat-elevation-z1"
@@ -169,6 +187,7 @@
               <mat-icon>edit</mat-icon>
             </button>
             <button
+              [disabled]="tonnage.isValidated"
               mat-icon-button
               color="warn"
               class="mat-elevation-z1"
@@ -243,6 +262,7 @@
           </div>
           <div>
             <button
+              [disabled]="tonnage.isValidated"
               mat-icon-button
               color="accent"
               class="mat-elevation-z1"
@@ -313,6 +333,7 @@
             fxLayoutAlign="space-between center"
           >
             <button
+              [disabled]="tonnage.isValidated"
               *ngIf="habilitation.canEdit()"
               mat-icon-button
               color="accent"
@@ -322,6 +343,7 @@
               <mat-icon>edit</mat-icon>
             </button>
             <button
+              [disabled]="tonnage.isValidated"
               *ngIf="habilitation.canDelete()"
               mat-icon-button
               color="warn"

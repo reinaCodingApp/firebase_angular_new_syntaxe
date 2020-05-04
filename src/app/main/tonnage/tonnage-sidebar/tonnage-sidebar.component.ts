@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { RequestParameter } from 'app/main/tonnage/models/requestParameter';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CommonService } from 'app/common/services/common.service';
+import { Client } from '../models/client';
 
 @Component({
   selector: 'tonnage-sidebar',
@@ -22,6 +23,8 @@ export class TonnageSidebarComponent implements OnInit {
   sites: Site[];
   filtredSites: Site[];
   habilitation: Habilitation = new Habilitation(0);
+  partners: Client[];
+  partnersForSelectedSite: Client[] = [];
 
   constructor(
     private _tonnageService: TonnageService,
@@ -34,8 +37,12 @@ export class TonnageSidebarComponent implements OnInit {
       this.tonnageFilterViewModel = tonnageFilterViewModel;
     });
     this._tonnageService.onSitesChanged.subscribe((sites) => {
+      sites.unshift({ id: 0, name: 'Tous' });
       this.sites = sites;
       this.filtredSites = sites;
+    });
+    this._tonnageService.onPartnersChanged.subscribe((partners) => {
+      this.partners = partners;
     });
     this._tonnageService.onHabilitationLoaded.subscribe(habilitationResult => {
       this.habilitation = habilitationResult;
@@ -64,6 +71,7 @@ export class TonnageSidebarComponent implements OnInit {
     this._loaderService.start();
     const requestParameter: RequestParameter = {
       siteId: this.tonnageFilterViewModel.siteId,
+      partnerId: this.tonnageFilterViewModel.partnerId,
       startDate: moment(this.tonnageFilterViewModel.startDate).format('YYYY-MM-DD'),
       endDate: moment(this.tonnageFilterViewModel.endDate).format('YYYY-MM-DD')
     };
@@ -88,6 +96,14 @@ export class TonnageSidebarComponent implements OnInit {
     }
     searchInput = searchInput.toLowerCase();
     this.filtredSites = this.sites.filter(s => s.name.toLowerCase().indexOf(searchInput) > -1);
+  }
+
+  getPartnersForSite(): void {
+    const filteredPartners = this.partners.filter((x) => {
+      return x.sites.filter((y) => y.id === this.tonnageFilterViewModel.siteId).length > 0;
+    });
+    this.partnersForSelectedSite = filteredPartners;
+    this.tonnageFilterViewModel.partnerId = 0;
   }
 }
 

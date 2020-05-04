@@ -33,9 +33,12 @@ export class TonnageService implements Resolve<any>
 
   private UPDATE_TONNAGE_DETAILS_URI = 'tonnage/detail/update';
   private ADD_TONNAGE_DETAILS_URI = 'tonnage/detail/add';
+  private ADD_TONNAGE_DETAILS_BY_TOTAL_WEIGHT_URI = 'tonnage/detail/add/total_weight';
   private ADD_TONNAGE_GIBLET_DETAILS_URI = 'tonnage/gilbet/add';
   private DELETE_TONNAGE_DETAILS_URI = 'tonnage/detail/delete';
   private GENERATE_STATS_FOR_SITE = 'tonnage/statistics';
+  private VALDATE_TONNAGE = 'tonnage/validate';
+  private OPEN_TONNAGE = 'tonnage/open';
 
   onPartnersChanged: BehaviorSubject<Client[]>;
   onCurrentTonnageChanged: BehaviorSubject<Tonnage>;
@@ -158,6 +161,11 @@ export class TonnageService implements Resolve<any>
     return this._httpClient.post<boolean>(url, tonnageDetails);
   }
 
+  addTonnageDetailByTotalWeightAndQuantity(tonnageDetails: TonnageDetail): Observable<boolean> {
+    const url = `${BASE_URL}${this.ADD_TONNAGE_DETAILS_BY_TOTAL_WEIGHT_URI}`;
+    return this._httpClient.post<boolean>(url, tonnageDetails);
+  }
+
   addTonnageGibletDetail(tonnageGibletDetails: TonnageDetail): Observable<boolean> {
     const url = `${BASE_URL}${this.ADD_TONNAGE_GIBLET_DETAILS_URI}`;
     return this._httpClient.post<boolean>(url, tonnageGibletDetails);
@@ -176,6 +184,16 @@ export class TonnageService implements Resolve<any>
   generateStatsForSite(requestParameter: RequestParameter): any {
     const url = `${BASE_URL}${this.GENERATE_STATS_FOR_SITE}`;
     return this._httpClient.post<any>(url, requestParameter, { responseType: 'blob' as 'json' });
+  }
+
+  validateTonnage(tonnage: Tonnage): any {
+    const url = `${BASE_URL}${this.VALDATE_TONNAGE}?tonnageId=${tonnage.id}`;
+    return this._httpClient.get<any>(url);
+  }
+
+  openTonnage(tonnage: Tonnage): any {
+    const url = `${BASE_URL}${this.OPEN_TONNAGE}?tonnageId=${tonnage.id}`;
+    return this._httpClient.get<any>(url);
   }
 
   refreshData(): void {

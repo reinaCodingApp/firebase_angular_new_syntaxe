@@ -6,4 +6,9 @@ export class TotalTonnageByType {
   pr30: string;
   pr50: string;
   pr100: string;
+
+  totalCarcassWeight: number;
+  totalCarcassQuantity: number;
+  totalGibletWeight: number;
+  totalGibletQuantity: number;
 }

@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
+import { AddTonnageDetailsDialogComponent } from '../dialogs/add-tonnage-details-dialog/add-tonnage-details-dialog.component';
 
 @Component({
   selector: 'tonnage-details',
@@ -200,6 +201,19 @@ export class TonnageDetailsComponent implements OnInit {
 
   reverseList(): void {
     this.tonnage.details = [...this.tonnage.details.reverse()];
+  }
+
+  addTonnageDetailByTotalWeightAndQuantity(): void {
+    this.dialogRef = this._matDialog.open(AddTonnageDetailsDialogComponent, {
+      panelClass: 'mail-compose-dialog',
+      data: this.tonnage
+    });
+    this.dialogRef.afterClosed()
+      .subscribe(response => {
+        if (response) {
+          this.refreshCurrentTonnageDetails();
+        }
+      });
   }
 
 }

@@ -20,11 +20,12 @@
         class="mt-8"
       >
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Sélectionner un partenaire</mat-label>
+          <mat-label>Sélectionner un site</mat-label>
           <mat-select
             required
             [(ngModel)]="tonnageFilterViewModel.siteId"
-            name="partner"
+            name="site"
+            (selectionChange)="getPartnersForSite()"
           >
             <mat-option>
               <ngx-mat-select-search
@@ -37,6 +38,24 @@
             </mat-option>
             <mat-option *ngFor="let site of filtredSites" [value]="site.id">
               {{ site.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Sélectionner un partenaire</mat-label>
+          <mat-select
+            required
+            [(ngModel)]="tonnageFilterViewModel.partnerId"
+            name="client"
+          >
+            <mat-option *ngIf="tonnageFilterViewModel.siteId" [value]="0">
+              Tous
+            </mat-option>
+            <mat-option
+              *ngFor="let partner of partnersForSelectedSite"
+              [value]="partner.id"
+            >
+              {{ partner.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -86,7 +105,10 @@
         </button>
       </div>
       <br />
-      <div *ngIf="tonnageFilterViewModel.siteId" Layout="row" fxLayoutAlign="start center">
+      <div
+        Layout="row"
+        fxLayoutAlign="start center"
+      >
         <button
           type="button"
           mat-raised-button

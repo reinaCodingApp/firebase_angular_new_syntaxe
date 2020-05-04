@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TonnageService } from '../tonnage.service';
 import { TotalTonnageByType } from 'app/main/tonnage/models/totalTonnageByType';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'tonnage-stats',
   templateUrl: './tonnage-stats.component.html',
   styleUrls: ['./tonnage-stats.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class TonnageStatsComponent implements OnInit {
   totalBySelectedPeriod: TotalTonnageByType[];

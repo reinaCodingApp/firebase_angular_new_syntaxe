@@ -79,4 +79,52 @@ export class TonnageItemComponent implements OnInit {
       });
   }
 
+  validateTonnage(): void {
+    this.dialogRef = this._matDialog.open(CustomConfirmDialogComponent, {
+      panelClass: 'confirm-dialog',
+      data: {
+        title: 'Valider tonnage',
+        message: 'Voulez-vous valider ce tonnage ?'
+      }
+    });
+    this.dialogRef.afterClosed()
+      .subscribe(response => {
+        if (response) {
+          this._tonnageService.validateTonnage(this.tonnage).subscribe((result) => {
+            if (result) {
+              this._tonnageService.onCurrentTonnageChanged.next(null);
+              this._tonnageService.refreshData();
+            }
+            console.log(result);
+          }, (err) => {
+            console.log(err);
+          });
+        }
+      });
+  }
+
+  openTonnage(): void {
+    this.dialogRef = this._matDialog.open(CustomConfirmDialogComponent, {
+      panelClass: 'confirm-dialog',
+      data: {
+        title: 'Ouvrir tonnage',
+        message: 'Voulez-vous ouvrir ce tonnage ?'
+      }
+    });
+    this.dialogRef.afterClosed()
+      .subscribe(response => {
+        if (response) {
+          this._tonnageService.openTonnage(this.tonnage).subscribe((result) => {
+            if (result) {
+              this._tonnageService.onCurrentTonnageChanged.next(null);
+              this._tonnageService.refreshData();
+            }
+            console.log(result);
+          }, (err) => {
+            console.log(err);
+          });
+        }
+      });
+  }
+
 }

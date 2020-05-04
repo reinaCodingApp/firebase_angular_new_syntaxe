@@ -8,92 +8,59 @@
         Cliquez pour afficher les statistiques
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <mat-checkbox
-      (change)="onDisplayStatsChanged($event.checked)"
-      [checked]="displayByPeriod"
-      >Afficher les stats pour le tonnage sélectionné
-    </mat-checkbox>
-    <mat-table [dataSource]="totalData">
-      <ng-container matColumnDef="animalType">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >TYPE</mat-header-cell
-        >
-        <mat-cell
-          fxLayoutAlign="center center"
-          *matCellDef="let total"
-          class="type-column"
-        >
-          <span class="job-title">
-            {{ total.animalType }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="realWeight">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >POIDS RÉEL</mat-header-cell
-        >
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let total">
-          <span class="job-title">
-            {{ total.realWeight }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="averageWeight">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >POIDS MOYEN</mat-header-cell
-        >
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let total">
-          <span class="job-title">
-            {{ total.averageWeight }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="total">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >TOTAL</mat-header-cell
-        >
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let total">
-          <span class="job-title">
-            {{ total.total }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="pr30">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >30%</mat-header-cell
-        >
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let total">
-          <span class="job-title">
-            {{ total.pr30 }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="pr50">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >50%</mat-header-cell
-        >
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let total">
-          <span class="job-title">
-            {{ total.pr50 }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="pr100">
-        <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-          >100%</mat-header-cell
-        >
-        <mat-cell fxLayoutAlign="center center" *matCellDef="let total">
-          <span class="job-title">
-            {{ total.pr100 }}
-          </span>
-        </mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="totaldisplayedColumns"></mat-header-row>
-      <mat-row
-        *matRowDef="let total; columns: totaldisplayedColumns"
-        class="activity"
+    <div fxLayout="column" fxLayoutAlign="space-between">
+      <div fxLayout="row" fxFlex="100">
+        <mat-checkbox
+          (change)="onDisplayStatsChanged($event.checked)"
+          [checked]="displayByPeriod"
+          >Afficher les stats pour le tonnage sélectionné
+        </mat-checkbox>
+      </div>
+      <div
+        class="widget-group p-12"
+        fxLayout="row wrap"
+        fxFlex="100"
+        *fuseIfOnDom
+        [@animateStagger]="{ value: '50' }"
       >
-      </mat-row>
-    </mat-table>
+        <fuse-widget
+          *ngFor="let total of totalData"
+          [@animate]="{ value: '*', params: { y: '100%' } }"
+          class="widget"
+          fxLayout="column"
+          fxFlex="100"
+          fxFlex.gt-xs="50"
+          fxFlex.gt-md="25"
+        >
+          <div class="fuse-widget-front">
+            <div
+              class="pl-16 pr-8 py-16 h-52 border-bottom"
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+            >
+              <div class="h3">{{ total.animalType }}</div>
+            </div>
+            <div
+              class="pt-8 pb-32"
+              fxLayout="column"
+              fxLayoutAlign="center center"
+            >
+              <div class="red-fg font-size-22 line-height-42">
+                {{ total.totalCarcassWeight }} Kg
+              </div>
+              <div class="h3 secondary-text font-weight-500">
+                {{ total.totalCarcassQuantity }}
+              </div>
+              <div class="red-fg font-size-22 line-height-42">
+                {{ total.totalGibletWeight }} Kg
+              </div>
+              <div class="h3 secondary-text font-weight-500">
+                {{ total.totalGibletQuantity }}
+              </div>
+            </div>
+          </div>
+        </fuse-widget>
+      </div>
+    </div>
   </mat-expansion-panel>
 </mat-accordion>

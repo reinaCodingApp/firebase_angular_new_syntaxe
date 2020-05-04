@@ -1,0 +1,93 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">
+        Ajouter tonnage details par poids totale et quantité
+      </span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="addTonnageDetailByTotalWeight(f)"
+      name="composeForm"
+      class="compose-form"
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select
+          required
+          name="type"
+          [(ngModel)]="newTonnageDetails.itemType"
+        >
+          <mat-option
+            *ngFor="let tonnageItemType of tonnageItemTypes"
+            [value]="tonnageItemType"
+          >
+            {{ tonnageItemType.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Poids totale</mat-label>
+        <input
+          matInput
+          name="title"
+          type="number"
+          [(ngModel)]="newTonnageDetails.weight"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quantité</mat-label>
+        <input
+          matInput
+          name="quantity"
+          type="number"
+          [(ngModel)]="newTonnageDetails.quantity"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pourcentage</mat-label>
+        <mat-select
+          name="percentage"
+          [(ngModel)]="newTonnageDetails.percentage"
+          required
+        >
+          <mat-option
+            *ngFor="let percentage of possiblePercentage"
+            [value]="percentage"
+          >
+            {{ percentage }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div
+        mat-dialog-actions
+        class="m-0 p-16"
+        fxLayout="row"
+        fxLayoutAlign="end end"
+      >
+        <button mat-raised-button color="accent" type="submit" [disabled]="!isValidatedValues()">
+           Créer
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

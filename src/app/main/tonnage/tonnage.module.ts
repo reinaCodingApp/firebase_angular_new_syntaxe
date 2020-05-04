@@ -18,7 +18,7 @@ import { MatDatepickerModule, MatTableModule, MatTabsModule, MatExpansionModule,
 import { TranslateModule } from '@ngx-translate/core';
 
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseSidebarModule } from '@fuse/components';
+import { FuseSidebarModule, FuseWidgetModule } from '@fuse/components';
 
 import { TonnageComponent } from './tonnage.component';
 import { TonnageService } from './tonnage.service';
@@ -32,6 +32,7 @@ import { TonnageStatsComponent } from './tonnage-stats/tonnage-stats.component';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+import { AddTonnageDetailsDialogComponent } from './dialogs/add-tonnage-details-dialog/add-tonnage-details-dialog.component';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
@@ -50,7 +51,8 @@ const routes: Routes = [
     TonnageItemComponent,
     TonnageDetailsComponent,
     AddTonnageDialogComponent,
-    TonnageStatsComponent
+    TonnageStatsComponent,
+    AddTonnageDetailsDialogComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -75,6 +77,7 @@ const routes: Routes = [
     NgxMatSelectSearchModule,
     MatTooltipModule,
     CustomConfirmDialogModule,
+    FuseWidgetModule,
 
     TranslateModule,
 
@@ -82,7 +85,8 @@ const routes: Routes = [
     FuseSidebarModule
   ],
   entryComponents: [
-    AddTonnageDialogComponent
+    AddTonnageDialogComponent,
+    AddTonnageDetailsDialogComponent
   ]
 })
 export class TonnageModule {
