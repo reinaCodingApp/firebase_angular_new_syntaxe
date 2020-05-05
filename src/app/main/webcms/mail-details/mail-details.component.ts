@@ -49,7 +49,7 @@ export class MailDetailsComponent implements OnInit, OnDestroy {
     private _matDialog: MatDialog
   ) {
     this.unsubscribeAll = new Subject();
-    this.appService.getCurrentUser()
+    this.appService.onCurentUserChanged
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(response => {
         this.connectedEmployeeId = response.customClaims.employeeId;

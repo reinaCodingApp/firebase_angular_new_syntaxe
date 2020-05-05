@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { User } from './main/settings/models/user';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
@@ -9,6 +9,7 @@ import { FuseNavigationItem } from '@fuse/types';
 import { AccessRightsService } from './main/access-rights/access-rights.service';
 import { Habilitation } from './main/access-rights/models/habilitation';
 import { AppVersion } from './main/changelog/models/app-version';
+import { first, mergeMap, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +97,26 @@ export class AppService {
         resolve(habilitation);
       }, reject);
     });
+  }
+  async getConnectedUser(): Promise<User> {
+    if (this.currentUser) {
+      return Promise.resolve(this.currentUser);
+    }
+    return await this.angularFireAuth.authState.
+    pipe(first(), mergeMap(u => {
+          if (!u) {
+            return Promise.resolve(null);
+          }
+          return u.getIdTokenResult().then(claims => {
+            const user = { uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL } as User;
+            if (claims) {
+              user.customClaims = claims.claims;
+            }
+            this.currentUser = user;
+            return user;
+          });
+        })
+     ).toPromise();
   }
 
   setConfigButtonParameters(visible: boolean, configurationUrl: string): void {

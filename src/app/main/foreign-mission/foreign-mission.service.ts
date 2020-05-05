@@ -54,7 +54,7 @@ export class ForeignMissionService implements Resolve<any>{
 
   resolve(): Observable<any> | Promise<any> | any {
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {

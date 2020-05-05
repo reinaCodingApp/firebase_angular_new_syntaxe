@@ -1,7 +1,8 @@
+import { mergeMap } from 'rxjs/operators';
 import { AppService } from 'app/app.service';
 import { Injectable } from '@angular/core';
 import { Resolve, Router } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { BASE_URL } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { AbsencesMainViewModel } from 'app/main/activity/models/absencesMainViewModel';
@@ -39,7 +40,8 @@ export class ActivityAbsenceService implements Resolve<any>{
 
   resolve(): Observable<any> | Promise<any> | any {
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser()
+      .then(user => {
         if (user) {
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {
@@ -61,9 +63,8 @@ export class ActivityAbsenceService implements Resolve<any>{
           this.router.navigate(['login']);
           resolve();
         }
-      }, (err) => {
-        reject(err);
-      });
+      }
+      );
     });
   }
   getAbsencesMainViewModel(): Promise<AbsencesMainViewModel> {

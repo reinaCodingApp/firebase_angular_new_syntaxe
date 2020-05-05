@@ -1,3 +1,4 @@
+import { AppService } from 'app/app.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -18,12 +19,13 @@ export class LoginComponent implements OnInit
 {
     loginForm: FormGroup;
     showError = false;
-    constructor(private _fuseConfigService: FuseConfigService, 
+    constructor(private _fuseConfigService: FuseConfigService,
                 private _formBuilder: FormBuilder,
-                private loginService: LoginService, 
+                private loginService: LoginService,
                 private router: Router,
+                private appService: AppService,
                 private loaderService: NgxUiLoaderService)
-    { 
+    {
         this._fuseConfigService.config = {
             layout: {navbar   : {hidden: true},
                 toolbar  : {hidden: true},
@@ -32,13 +34,17 @@ export class LoginComponent implements OnInit
             }
         };
     }
-    login(): void {        
+    login(): void {
         this.loaderService.start();
         const user = {email: this.loginForm.get('email').value, password: this.loginForm.get('password').value} as User;
         this.loginService.login(user).then(result => {
           this.loaderService.stop();
-          this.loginService.onUserAuthenticates.next(result);
-          this.router.navigate(['home']);
+          this.appService.getConnectedUser().then( currentUser => {
+            this.appService.onCurentUserChanged.next(currentUser);
+            this.appService.loadNavigationMenu(currentUser);
+            this.router.navigate(['home']);
+          });
+
         },
         err => {
             this.loaderService.stop();

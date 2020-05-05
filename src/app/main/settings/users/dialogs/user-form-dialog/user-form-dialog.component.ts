@@ -129,7 +129,7 @@ export class UserFormDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.appService.getCurrentUser().subscribe(user => {
+    this.appService.onCurentUserChanged.subscribe(user => {
       if (user) {
         this.connectedUser = user;
         if (!this.connectedUser.customClaims.isRoot) {

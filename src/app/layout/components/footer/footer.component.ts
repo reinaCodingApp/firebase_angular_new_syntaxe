@@ -25,7 +25,7 @@ export class FooterComponent {
     private ticketService: TicketService,
     private appService: AppService
   ) {
-    this.appService.getCurrentUser().subscribe(user => {
+    this.appService.onCurentUserChanged.subscribe(user => {
       if (user) {
         this.appService.getHabilitation(user, this.moduleIdentifier).then(habilitation => {
           this.isBackofficeMember = habilitation.isAdmin();

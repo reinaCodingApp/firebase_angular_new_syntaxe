@@ -85,7 +85,7 @@ export class MeetingsService implements Resolve<any>{
       this.router.navigateByUrl('/home');
     }
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {

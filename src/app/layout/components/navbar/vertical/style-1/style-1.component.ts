@@ -94,15 +94,15 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
-        this.appService.getCurrentUser().subscribe(data => {
+        this.appService.onCurentUserChanged.subscribe(data => {
           if (data) {
             this.currentUser = data;
-          }          
-        });        
+          }
+        });
         this.loginService.onProfilePictureUploaded
         .pipe(takeUntil(this.unsubscribeAll))
         .subscribe( response => {
-            if (response) {                                
+            if (response) {
                 const profilData = { photoURL: response.url };
                 this.loginService.updateProfile(profilData).then(() => {
                   this.currentUser.photoURL = response.url;

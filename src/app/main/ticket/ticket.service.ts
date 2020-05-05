@@ -102,7 +102,7 @@ export class TicketService implements Resolve<any>{
     this.routeParams = route.params;
     this.routePath = route.routeConfig.path;
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {

@@ -81,7 +81,7 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.appService.getCurrentUser().subscribe(user => {
+    this.appService.onCurentUserChanged.subscribe(user => {
       if (user) {
         this.connectedUser = user;
       }

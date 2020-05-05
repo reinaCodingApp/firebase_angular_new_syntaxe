@@ -35,7 +35,7 @@ export class AccessRightsService implements Resolve<any> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           if (user.customClaims.isRoot || user.customClaims.isTechAdmin) {
             if (route.params.userId) {

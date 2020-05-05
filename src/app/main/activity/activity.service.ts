@@ -102,7 +102,7 @@ export class ActivityService implements Resolve<any>{
         this.interim = false;
         this.moduleIdentifier = this.employeeactivity;
       }
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {

@@ -39,21 +39,21 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
   constructor(
     private timelineService: TimelineService,
-    private sharedNotificationService: SharedNotificationService,    
+    private sharedNotificationService: SharedNotificationService,
     private appService: AppService,
     public matDialog: MatDialog,
     private loaderService: NgxUiLoaderService
   ) {
     this._unsubscribeAll = new Subject();
-    this.messageParameter = { content: '', attachments: [], isClosed: false } as PublicMessage;    
-    this.appService.getCurrentUser().
-    pipe(takeUntil(this._unsubscribeAll))
+    this.messageParameter = { content: '', attachments: [], isClosed: false } as PublicMessage;
+    this.appService.onCurentUserChanged
+    .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(data => {
       if (data) {
         this.connectedUser = { uid: data.uid, email: data.email, displayName: data.displayName, avatar: data.photoURL };
       }
     });
-    
+
   }
   openNewsDetailsPopup(news: News): void {
     this.timelineService.getNewsDetail(news.uid).then((detail) => {

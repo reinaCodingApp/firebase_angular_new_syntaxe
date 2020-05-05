@@ -19,7 +19,7 @@ export class SettingsService implements Resolve<any> {
 
   resolve(): Observable<any> | Promise<any> {
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           if (user.customClaims.isRoot || user.customClaims.isTechAdmin) {
             this.usersService.listUsers().then(response => {

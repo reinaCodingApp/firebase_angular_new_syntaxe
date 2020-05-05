@@ -44,11 +44,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
-        this.appService.getCurrentUser().subscribe(data => {
+        this.appService.onCurentUserChanged.subscribe(data => {
           if (data) {
             this.currentUser = data;
           }
-        });        
+        });
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((settings) => {

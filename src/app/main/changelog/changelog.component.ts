@@ -24,7 +24,7 @@ export class ChangelogComponent implements OnInit, OnDestroy {
   constructor(private appService: AppService,
               private changelogService: ChangelogService,
               private _matDialog: MatDialog) {
-    this.appService.getCurrentUser()
+    this.appService.onCurentUserChanged
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(result => {
       if (result) {

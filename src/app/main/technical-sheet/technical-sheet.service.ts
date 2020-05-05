@@ -60,7 +60,7 @@ export class TechnicalSheetService implements Resolve<any>
   resolve(route: ActivatedRouteSnapshot): Observable<any> | Promise<any> | any {
     this.routePath = route.routeConfig.path;
     return new Promise((resolve, reject) => {
-      this.appService.getCurrentUser().subscribe(user => {
+      this.appService.getConnectedUser().then(user => {
         if (user) {
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {

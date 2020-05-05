@@ -1,3 +1,4 @@
+import { AppService } from 'app/app.service';
 import { User } from '../settings/models/user';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
@@ -13,27 +14,27 @@ import { finalize } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoginService implements Resolve<any>{
-  onUserAuthenticates: BehaviorSubject<firebase.auth.UserCredential>;
   onUserLogout: BehaviorSubject<any>;
   onProfilePictureUploaded: BehaviorSubject<any>;
 
   constructor(
     private angularFireAuth: AngularFireAuth,
     private angularFireStorage: AngularFireStorage,
-    private router: Router    
+    private router: Router,
+    private appService: AppService
   ) {
-    this.onUserAuthenticates = new BehaviorSubject(null);
     this.onUserLogout = new BehaviorSubject({});
-    this.onProfilePictureUploaded = new BehaviorSubject(null);    
+    this.onProfilePictureUploaded = new BehaviorSubject(null);
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return new Promise((resolve, reject) => {
+
       this.angularFireAuth.authState.subscribe(currentState => {
         if (currentState && currentState.uid) {
           this.router.navigate(['home']);
           resolve();
-        }        
+        }
         resolve();
       });
     });
@@ -46,8 +47,9 @@ export class LoginService implements Resolve<any>{
   logout() {
     this.angularFireAuth.auth.signOut();
     this.onUserLogout.next(null);
+    this.appService.onCurentUserChanged.next(null);
   }
-    
+
   sendPasswordResetEmail(email: string) {
     return this.angularFireAuth.auth.sendPasswordResetEmail(email);
   }

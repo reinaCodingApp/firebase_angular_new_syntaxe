@@ -61,19 +61,16 @@ export class AppComponent implements OnInit, OnDestroy {
       this.document.body.classList.add('is-mobile');
     }
     this._unsubscribeAll = new Subject();
-    this.angularFireAuth.authState.subscribe(async (result) => {
-      if (result) {
-        const user = { uid: result.uid, email: result.email, displayName: result.displayName, photoURL: result.photoURL } as User;
-        const tokenResult = await result.getIdTokenResult();
-        if (tokenResult) {
-          user.customClaims = tokenResult.claims;
-        }
-        this.appService.currentUser = user;
+    this.appService.getConnectedUser().then(user => {
+      if (user) {
         this.appService.onCurentUserChanged.next(user);
         this.appService.loadNavigationMenu(user);
       } else {
         this.appService.loadNavigationMenu(null);
       }
+    }, err => console.log(err));
+    this.appService.onCurentUserChanged.subscribe(currentUser => {
+      this.appService.currentUser = currentUser;
     });
     this.appService.getLastAppVersion().subscribe( result => {
       if (result && result.length > 0) {
