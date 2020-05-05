@@ -65,8 +65,10 @@ export class AddActivityDialogComponent implements OnInit {
     };
     this._activityService.addAtivity(activityToAdd).subscribe((response) => {
       this._loaderService.stop();
-      if (response) {
-        this._notificationService.showSuccess('Activité crée avec succés');
+      if (response.id !== -1) {
+        this._notificationService.showSuccess('Insertion enregistrée');
+      } else {
+        this._notificationService.showError(`Opération refusée en raison d'incohérence des données`);
       }
     }, (err) => {
       console.log(err);
@@ -83,9 +85,12 @@ export class AddActivityDialogComponent implements OnInit {
     activityToUpdate.endTime = this.activity.endTime != null ? moment(this.activity.endTime).format('LT') : '',
       this._activityService.updateActivity(activityToUpdate).subscribe((updatedActivity) => {
         this._loaderService.stop();
-        this.matDialogRef.close({ success: true, data: updatedActivity });
-        this._notificationService.showSuccess('Activité modifiée avec succés');
-
+        if (updatedActivity.id !== -1) {
+          this._notificationService.showSuccess('Modification enregistrée');
+          this.matDialogRef.close({ success: true, data: updatedActivity });
+        } else {
+          this._notificationService.showError(`Opération refusée en raison d'incohérence des données`);
+        }
       }, (err) => {
         console.log(err);
         this._loaderService.stop();
