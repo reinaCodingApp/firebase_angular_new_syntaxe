@@ -111,10 +111,10 @@ export class TicketService implements Resolve<any>{
                 resolve();
               } else if (this.routePath.indexOf('employee-tickets') !== -1 && habilitation.isAdmin()) {
                 this.router.navigateByUrl('/admin-tickets');
-                reject();
+                resolve();
               } else if (this.routePath.indexOf('admin-tickets') !== -1 && !habilitation.isAdmin()) {
                 this.router.navigateByUrl('/employee-tickets');
-                reject();
+                resolve();
               }
               else {
                 if (route.routeConfig.path.indexOf('employee-tickets') !== -1) {

@@ -10,6 +10,8 @@ import { TicketViewModel } from '../../models/ticketViewModel';
 import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { UsersService } from 'app/main/settings/users/users.service';
+import { AppService } from 'app/app.service';
+import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 
 @Component({
   selector: 'app-add-ticket-dialog',
@@ -25,6 +27,7 @@ export class AddTicketDialogComponent implements OnInit {
   currentDepartmentId: number;
   filesToUpload = [];
   ticketViewModel: TicketViewModel;
+  private moduleIdentifier = ModuleIdentifiers.ticket;
 
   constructor(
     public matDialogRef: MatDialogRef<AddTicketDialogComponent>,
@@ -34,10 +37,15 @@ export class AddTicketDialogComponent implements OnInit {
     private _notificationService: SharedNotificationService,
     private _commonService: CommonService,
     private usersService: UsersService,
-    private router: Router
+    private router: Router,
+    private appService: AppService
   ) {
-    this.usersService.checkUserPrivilege().then((claims) => {
-      this.isBackofficeMember = claims.isTechAdmin;
+    this.appService.onCurentUserChanged.subscribe(user => {
+      if (user) {
+        this.appService.getHabilitation(user, this.moduleIdentifier).then(habilitation => {
+          this.isBackofficeMember = habilitation.isAdmin();
+        });
+      }
     });
     this.newTicket = new Ticket();
     this.emergencyLevels = [
@@ -51,7 +59,6 @@ export class AddTicketDialogComponent implements OnInit {
     this._ticketService.onTicketViewModelChanged.subscribe((ticketViewModel) => {
       if (ticketViewModel) {
         this.ticketViewModel = ticketViewModel;
-        this.isBackofficeMember = this._ticketService.isBackofficeMember;
         this.services = ticketViewModel.vm.services;
         this.currentDepartmentId = ticketViewModel.vm.currentDepartment.id;
       } else {
