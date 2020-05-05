@@ -10,5 +10,6 @@ export class Module {
   grantedAccess?: number;
   exactMatch?: boolean;
   displayInMenu: boolean;
+  aclDescription?: string;
 }
 

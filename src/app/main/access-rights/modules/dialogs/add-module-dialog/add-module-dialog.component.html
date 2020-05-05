@@ -118,6 +118,12 @@
         Aficher sur le menu ?
       </mat-checkbox>
 
+      <mat-form-field appearance="outline" class="mt-12">
+        <mat-label>ACL Description</mat-label>
+        <textarea matInput name="new" [(ngModel)]="module.aclDescription" rows="6">
+        </textarea>
+      </mat-form-field>
+
       <div
         mat-dialog-actions
         class="m-0 p-16"

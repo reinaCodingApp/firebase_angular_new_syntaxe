@@ -12,6 +12,8 @@ import { FuseSidebarModule, FuseWidgetModule } from '@fuse/components';
 import { AddModuleDialogComponent } from './modules/dialogs/add-module-dialog/add-module-dialog.component';
 import { ClonePermissionsDialogComponent } from './dialogs/clone-permissions-dialog/clone-permissions-dialog.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { SatPopoverModule } from '@ncstate/sat-popover';
+import { SharedPipesModule } from 'app/pipes/shared-pipes.module';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes = [
@@ -56,6 +58,8 @@ const routes = [
     MatTableModule,
     MatMenuModule,
     NgxMatSelectSearchModule,
+    SatPopoverModule,
+    SharedPipesModule,
 
     FuseSharedModule,
     FuseSidebarModule,

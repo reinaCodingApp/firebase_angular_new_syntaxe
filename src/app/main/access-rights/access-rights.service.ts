@@ -253,7 +253,7 @@ export class AccessRightsService implements Resolve<any> {
         parentModule.children[index] = currentModule;
       }
     });
-    this.angularFirestore.collection(firestoreCollections.modules).doc(parentModule.id).set(JSON.parse(JSON.stringify(currentModule)));
+    this.angularFirestore.collection(firestoreCollections.modules).doc(parentModule.id).set(JSON.parse(JSON.stringify(parentModule)));
     this.matDialog.closeAll();
   }
 
