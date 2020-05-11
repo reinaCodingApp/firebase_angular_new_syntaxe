@@ -5,6 +5,14 @@
 >
   Clients
 </h2>
+<mat-checkbox
+  class="ml-12"
+  (change)="getClients()"
+  [(ngModel)]="includeDisabledClients"
+  name="includeDisabledClients"
+>
+Inclure les clients désactivés
+</mat-checkbox>
 <hr />
 <div
   *ngIf="clients.length === 0"

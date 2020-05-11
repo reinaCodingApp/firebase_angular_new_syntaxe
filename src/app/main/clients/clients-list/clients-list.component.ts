@@ -15,6 +15,7 @@ import { Client } from 'app/main/clients/models/client';
 export class ClientsListComponent implements OnInit {
   clients: Client[] = [];
   currentClient: Client;
+  includeDisabledClients: boolean;
 
   constructor(
     private _clientsService: ClientsService,
@@ -24,6 +25,19 @@ export class ClientsListComponent implements OnInit {
     this._clientsService.onClientsChanged
       .subscribe(clients => {
         this.clients = clients;
+      });
+  }
+
+  getClients(): void {
+    this._loaderService.start();
+    this._clientsService.getClients(this.includeDisabledClients)
+      .subscribe((clients) => {
+        this._loaderService.stop();
+        this._clientsService.onCurrentClientChanged.next(null);
+        this._clientsService.onClientsChanged.next(clients);
+      }, err => {
+        this._loaderService.stop();
+        console.log(err);
       });
   }
 

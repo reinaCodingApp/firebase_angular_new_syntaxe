@@ -21,6 +21,7 @@ export class ClientsService implements Resolve<any>
   private UPDATE_CLIENT_URI = 'clients/update';
   private ADD_SITE_TO_CLIENT_URI = 'clients/add_site';
   private REMOVE_SITE_FROM_CLIENT_URI = 'clients/remove_site';
+  private GET_CLIENTS_URI = 'clients/get';
 
   onClientsChanged: BehaviorSubject<Client[]>;
   onSitesChanged: BehaviorSubject<Site[]>;
@@ -98,6 +99,11 @@ export class ClientsService implements Resolve<any>
   removeSiteFromClient(clientSiteViewModel: ClientSiteViewModel): Observable<Client> {
     const url = `${BASE_URL}${this.REMOVE_SITE_FROM_CLIENT_URI}`;
     return this._httpClient.post<Client>(url, clientSiteViewModel);
+  }
+
+  getClients(includeDisabledClients: boolean): Observable<Client[]> {
+    const url = `${BASE_URL}${this.GET_CLIENTS_URI}?includeDisabledClients=${includeDisabledClients}`;
+    return this._httpClient.get<Client[]>(url);
   }
 
   refreshClient(client: Client): void {
