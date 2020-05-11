@@ -7,6 +7,7 @@ import { AbsencesMainViewModel } from 'app/main/activity/models/absencesMainView
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'activity-absence-sidebar',
@@ -46,7 +47,10 @@ export class ActivityAbsenceSidebarComponent implements OnInit, OnDestroy {
 
   getAbsencesByDepartementForDate(): void {
     this._loaderService.start();
-    this._activityAbsenceService.getAbsencesByDepartementForDate(this.absencesMainViewModel)
+    const requestParams = JSON.parse(JSON.stringify(this.absencesMainViewModel));
+    requestParams.startDate = moment(requestParams.startDate).format('YYYY-MM-DD');
+    requestParams.endDate = moment(requestParams.endDate).format('YYYY-MM-DD');
+    this._activityAbsenceService.getAbsencesByDepartementForDate(requestParams)
       .pipe(take(1))
       .subscribe((absences) => {
         this._activityAbsenceService.onAbsencesChanged.next(absences);
