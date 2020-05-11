@@ -47,7 +47,7 @@
           >
             <div
               class="buttons-row"
-              fxLayout="row wrap"
+              fxLayout="row"
               fxLayoutAlign="space-between center"
             >
               <button
@@ -58,6 +58,15 @@
                 (click)="updateForeignMission(row)"
               >
                 <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                *ngIf="habilitation.isAdmin()"
+                mat-icon-button
+                color="warn"
+                class="mat-elevation-z1"
+                (click)="deleteForeignMission(row)"
+              >
+                <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
           </ng-template>

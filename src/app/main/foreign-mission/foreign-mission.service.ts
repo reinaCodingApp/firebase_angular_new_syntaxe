@@ -21,6 +21,7 @@ export class ForeignMissionService implements Resolve<any>{
   private GET_FOREIGN_MISSIONS_URI = 'foreignmission/get';
   private ADD_FOREIGN_MISSION_URI = 'foreignmission/add';
   private UPDATE_FOREIGN_MISSION_URI = 'foreignmission/update';
+  private DELETE_FOREIGN_MISSION_URI = 'foreignmission/delete';
 
   onForeignMissionsChanged: BehaviorSubject<any>;
   onEmployeesChanged: BehaviorSubject<Employee[]>;
@@ -111,6 +112,11 @@ export class ForeignMissionService implements Resolve<any>{
   updateForeignMission(foreignMission: ForeignMissionActivity): Observable<ForeignMissionActivity> {
     const url = `${BASE_URL}${this.UPDATE_FOREIGN_MISSION_URI}`;
     return this._httpClient.post<ForeignMissionActivity>(url, foreignMission);
+  }
+
+  deleteForeignMission(id: number): Observable<boolean> {
+    const url = `${BASE_URL}${this.DELETE_FOREIGN_MISSION_URI}`;
+    return this._httpClient.post<boolean>(url, id);
   }
 
   refreshData(): void {

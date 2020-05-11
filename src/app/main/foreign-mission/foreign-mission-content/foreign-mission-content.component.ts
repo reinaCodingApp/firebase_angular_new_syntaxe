@@ -7,6 +7,7 @@ import { ForeignMissionActivity } from 'app/main/foreign-mission/models/foreignM
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
+import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 
 @Component({
   selector: 'foreign-mission-content',
@@ -68,6 +69,35 @@ export class ForeignMissionContentComponent implements OnInit {
     });
     this.dialogRef.afterClosed()
       .subscribe(() => {
+      });
+  }
+
+  deleteForeignMission(foreinMission: ForeignMissionActivity): void {
+    this.dialogRef = this._matDialog.open(CustomConfirmDialogComponent, {
+      panelClass: 'confirm-dialog',
+      data: {
+        title: 'Suppression mission',
+        message: 'Etes-vous sûr de vouloir de supprimer cette mission ?'
+      }
+    });
+    this.dialogRef.afterClosed()
+      .subscribe(response => {
+        if (!response) {
+          return;
+        } else {
+          this._loaderService.start();
+          this._foreignMissionService.deleteForeignMission(foreinMission.id).subscribe((result) => {
+            this._loaderService.stop();
+            if (result){
+              const deletedAdvanceSalaryIndex = this.rows.findIndex(x => x.id === foreinMission.id);
+              this.rows.splice(deletedAdvanceSalaryIndex, 1);
+              this._foreignMissionService.onForeignMissionsChanged.next(JSON.parse(JSON.stringify(this.rows)));
+            }
+          }, (err) => {
+            console.log(err);
+            this._loaderService.stop();
+          });
+        }
       });
   }
 
