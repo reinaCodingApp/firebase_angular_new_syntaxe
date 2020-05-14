@@ -19,9 +19,9 @@ import { PostsListComponent } from './posts-list/posts-list.component';
 import { ContactsMainSidebarComponent } from './sidebars/main/main.component';
 import { AddPostDialogComponent } from './dialogs/add-post-dialog/add-post-dialog.component';
 import { PostsService } from './posts.service';
-import { AngularEditorModule } from '@kolkov/angular-editor';
 import { MatSelectModule } from '@angular/material';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
@@ -55,7 +55,7 @@ const routes: Routes = [
     FuseConfirmDialogModule,
     FuseSidebarModule,
 
-    AngularEditorModule,
+    CKEditorModule,
     CustomConfirmDialogModule
   ],
   providers: [],

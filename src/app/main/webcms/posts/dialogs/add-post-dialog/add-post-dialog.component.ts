@@ -6,6 +6,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { NgForm } from '@angular/forms';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import * as moment from 'moment';
+import * as DocumentEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 
 @Component({
   selector: 'add-post-dialog-dialog',
@@ -17,23 +18,16 @@ export class AddPostDialogComponent implements OnInit {
   post: Post;
   file: File = null;
   categories: any[];
-  config: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: '21rem',
-    minHeight: '5rem',
-    placeholder: 'Contenu',
-    translate: 'no',
-    defaultParagraphSeparator: 'p',
-    defaultFontSize: '4',
-    sanitize: false,
-    defaultFontName: 'Raleway',
-    fonts: [
-      { class: 'raleway', name: 'Raleway' }
-    ],
-    toolbarHiddenButtons: [
-      ['backgroundColor', 'insertVideo', 'insertImage']
-    ],
+  editor = DocumentEditor;
+  config = {
+    fontFamily: {
+      options: [
+        'Raleway, sans-serif'
+      ]
+    },
+    mediaEmbed: {
+      previewsInData: true
+    }
   };
 
   constructor(
@@ -46,6 +40,7 @@ export class AddPostDialogComponent implements OnInit {
       this.post.editionDate = moment(this.post.timestamp);
     } else {
       this.post = new Post();
+      this.post.content = '';
       this.post.editionDate = moment(new Date());
     }
   }
@@ -113,4 +108,12 @@ export class AddPostDialogComponent implements OnInit {
       }
     }
   }
+
+  onEditorReady(editor): void {
+    editor.ui.getEditableElement().parentElement.insertBefore(
+      editor.ui.view.toolbar.element,
+      editor.ui.getEditableElement()
+    );
+  }
+
 }
