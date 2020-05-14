@@ -27,6 +27,7 @@ import { MailMainSidebarComponent } from './sidebars/main/main-sidebar.component
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+import { MatProgressSpinnerModule } from '@angular/material';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
@@ -112,13 +113,14 @@ const routes: Routes = [
     MatBadgeModule,
     MatSnackBarModule,
     InfiniteScrollModule,
+    MatProgressSpinnerModule,
 
     TranslateModule,
     CustomConfirmDialogModule,
 
     FuseSharedModule,
     FuseSidebarModule
-  ]  
+  ]
 })
 export class WebcmsModule {
 }

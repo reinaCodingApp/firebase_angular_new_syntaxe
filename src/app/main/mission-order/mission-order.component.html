@@ -24,8 +24,6 @@
       fxLayout="row"
       fxLayoutAlign="space-between center"
     >
-
-
       <div class="logo" fxLayout="row" fxLayoutAlign="start center">
         <button
           mat-icon-button
@@ -83,16 +81,19 @@
       <!-- / CONTENT TOOLBAR -->
       <!-- CONTENT -->
       <div class="content" fxLayout="row">
-        <mission-order-list
-          id="non-printable"
-          fxFlex="1 1 0%"
-          infiniteScroll
-          [infiniteScrollDistance]="3"
-          [infiniteScrollThrottle]="50"
-          (scrolled)="onScroll()"
-          [scrollWindow]="false"
-          fusePerfectScrollbar
-        ></mission-order-list>
+          <mission-order-list
+            fusePerfectScrollbar
+            id="non-printable"
+            fxFlex="1 1 0%"
+            infiniteScroll
+            [infiniteScrollDistance]="3"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onScroll()"
+            [scrollWindow]="false"
+            [isScrolling]="isScrolling"
+            [completed]="paginatedMissionOrders.missionOrders.length >= paginatedMissionOrders.total"
+            (getMore)="onScroll()"
+          ></mission-order-list>
         <mission-order-details
           fusePerfectScrollbar
           fxFlex="2 1 0%"

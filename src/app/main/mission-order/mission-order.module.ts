@@ -13,7 +13,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule, MatDatepickerModule } from '@angular/material';
+import { MatStepperModule, MatDatepickerModule, MatProgressSpinnerModule } from '@angular/material';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -74,6 +74,7 @@ const routes: Routes = [
     NgxMatSelectSearchModule,
     InfiniteScrollModule,
     TranslateModule,
+    MatProgressSpinnerModule,
 
     FuseSharedModule,
     FuseSidebarModule,

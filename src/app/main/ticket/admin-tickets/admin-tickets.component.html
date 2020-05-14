@@ -35,8 +35,15 @@
 
         <div class="search" fxLayout="row" fxLayoutAlign="start center">
           <mat-icon class="secondary-text">search</mat-icon>
-          <input [(ngModel)]="searchInput" placeholder="Rechercher" fxFlex (keyup.enter)="searchDiscussions($event)"/>
-          <mat-icon (click)="searchDiscussions(null);" style="cursor: pointer;" >close</mat-icon>
+          <input
+            [(ngModel)]="searchInput"
+            placeholder="Rechercher"
+            fxFlex
+            (keyup.enter)="searchDiscussions($event)"
+          />
+          <mat-icon (click)="searchDiscussions(null)" style="cursor: pointer;"
+            >close</mat-icon
+          >
         </div>
       </div>
     </div>
@@ -59,12 +66,21 @@
       <!-- CONTENT -->
       <div class="content" fxLayout="row">
         <tickets-list
-        infiniteScroll
-        [infiniteScrollDistance]="3"
-        [infiniteScrollThrottle]="50"
-        (scrolled)="onScroll()"
-        [scrollWindow]="false"
-        fusePerfectScrollbar fxFlex></tickets-list>
+          infiniteScroll
+          [infiniteScrollDistance]="3"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="onScroll()"
+          [scrollWindow]="false"
+          fusePerfectScrollbar
+          fxFlex
+          [isScrolling]="isScrolling"
+          [completed]="
+            paginatedTickets.tickets.length >=
+            paginatedTickets.total
+          "
+          (getMore)="onScroll()"
+        >
+        </tickets-list>
         <ticket-details fusePerfectScrollbar fxFlex></ticket-details>
       </div>
       <!-- / CONTENT -->

@@ -24,7 +24,7 @@ export class WebcmsComponent implements OnInit, OnDestroy {
   currentUrl: string;
   maxLength = 20;
   paginatedDiscussions: PaginatedDiscussions;
-
+  isScrolling: boolean;
   private _unsubscribeAll: Subject<any>;
 
   constructor(
@@ -87,9 +87,13 @@ export class WebcmsComponent implements OnInit, OnDestroy {
   }
 
   onScroll(): void {
-    if (this.paginatedDiscussions.discussions.length < this.paginatedDiscussions.total) {
+    if (!(this.paginatedDiscussions.discussions.length >= this.paginatedDiscussions.total)) {
+      this.isScrolling = true;
       this.paginatedDiscussions.start += this.maxLength;
-      this._mailService.loadMessages(this.paginatedDiscussions.start);
+      this._mailService.loadMessages(this.paginatedDiscussions.start)
+        .then(() => {
+          this.isScrolling = false;
+        });
     }
   }
 

@@ -20,6 +20,7 @@ export class MissionOrderComponent implements OnInit {
   length = 20;
   paginatedMissionOrders: PaginatedMissionOrders;
   habilitation: Habilitation = new Habilitation(0);
+  isScrolling: boolean;
 
   constructor(
     private _missionOrderService: MissionOrderService,
@@ -56,17 +57,18 @@ export class MissionOrderComponent implements OnInit {
   }
 
   onScroll(): void {
-    console.log('scroll');
-    console.log(this.paginatedMissionOrders);
-    if (this.paginatedMissionOrders.missionOrders.length < this.paginatedMissionOrders.total) {
+    if (!(this.paginatedMissionOrders.missionOrders.length >= this.paginatedMissionOrders.total)) {
+      this.isScrolling = true;
       this.paginatedMissionOrders.start += this.length;
       this._missionOrderService.getMoreMissionOrders(this.paginatedMissionOrders.start, 20)
         .subscribe((paginatedMissionOrders) => {
+          this.isScrolling = false;
           const newMissionOrders = this._missionOrderService.onMissionOrdersChanged.getValue().missionOrders;
           newMissionOrders.push(...paginatedMissionOrders.missionOrders);
           paginatedMissionOrders.missionOrders = newMissionOrders;
           this._missionOrderService.onMissionOrdersChanged.next(paginatedMissionOrders);
         }, err => {
+          this.isScrolling = false;
           console.log(err);
         });
     }

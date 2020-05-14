@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, EventEmitter, Output, Input} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
 
@@ -17,6 +17,9 @@ import { TicketService } from '../../ticket.service';
   animations: fuseAnimations
 })
 export class TicketsListComponent implements OnInit, OnDestroy {
+  @Input() isScrolling: boolean;
+  @Input() completed: boolean;
+  @Output() getMore: EventEmitter<any> = new EventEmitter();
   tickets: AdminTicket[] = [];
   currentTicket: AdminTicket;
   private _unsubscribeAll: Subject<any>;

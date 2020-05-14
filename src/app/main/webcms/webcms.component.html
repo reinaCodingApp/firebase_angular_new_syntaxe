@@ -73,6 +73,9 @@
           [scrollWindow]="false"
           fusePerfectScrollbar
           fxFlex
+          [isScrolling]="isScrolling"
+          [completed]="paginatedDiscussions.discussions.length >= paginatedDiscussions.total"
+          (getMore)="onScroll()"
         ></mail-list>
         <mail-details fusePerfectScrollbar fxFlex></mail-details>
       </div>

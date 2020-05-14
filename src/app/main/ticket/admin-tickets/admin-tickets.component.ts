@@ -21,6 +21,7 @@ export class AdminTicketsComponent implements OnInit, OnDestroy {
   maxLength = 10;
   currentTicket: AdminTicket;
   paginatedTickets: PaginatedTickets;
+  isScrolling: boolean;
   private _unsubscribeAll: Subject<any>;
 
   constructor(
@@ -82,9 +83,13 @@ export class AdminTicketsComponent implements OnInit, OnDestroy {
   }
 
   onScroll(): void {
-    if (this.paginatedTickets.tickets.length < this.paginatedTickets.total) {
+    if (!(this.paginatedTickets.tickets.length >= this.paginatedTickets.total)) {
+      this.isScrolling = true;
       this.paginatedTickets.start += this.maxLength;
-      this.ticketService.loadTickets(this.paginatedTickets.start);
+      this.ticketService.loadTickets(this.paginatedTickets.start)
+        .then(() => {
+          this.isScrolling = false;
+        });
     }
   }
 

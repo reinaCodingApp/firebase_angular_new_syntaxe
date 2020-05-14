@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, EventEmitter, Output, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -17,6 +17,9 @@ import { Location } from '@angular/common';
   animations: fuseAnimations
 })
 export class MailListComponent implements OnInit, OnDestroy {
+  @Input() isScrolling: boolean;
+  @Input() completed: boolean;
+  @Output() getMore: EventEmitter<any> = new EventEmitter();
   discussions: Discussion[];
   counters: any;
   currentDiscussion: Discussion;

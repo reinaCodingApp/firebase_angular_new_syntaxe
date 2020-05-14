@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, EventEmitter, Output } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { MissionOrderService } from '../mission-order.service';
 import { MissionOrder } from 'app/main/mission-order/models/missionOrder';
@@ -12,6 +12,9 @@ import { MissionOrder } from 'app/main/mission-order/models/missionOrder';
   animations: fuseAnimations
 })
 export class MissionOrderListComponent implements OnInit {
+  @Input() isScrolling: boolean;
+  @Input() completed: boolean;
+  @Output() getMore: EventEmitter<any> = new EventEmitter();
   missionOrders: MissionOrder[] = [];
   currentMissionOrder: MissionOrder;
 

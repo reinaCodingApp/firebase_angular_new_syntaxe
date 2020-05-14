@@ -25,7 +25,7 @@ import { AddTicketDialogComponent } from './dialogs/add-ticket-dialog/add-ticket
 import { AssignTicketDialogComponent } from './dialogs/assign-ticket-dialog/assign-ticket-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EmployeeTicketsComponent } from './employee-tickets/employee-tickets.component';
-import { MatTableModule, MatMenuModule, MatTooltipModule } from '@angular/material';
+import { MatTableModule, MatMenuModule, MatTooltipModule, MatProgressSpinnerModule } from '@angular/material';
 import { EmployeeTicketDetailsComponent } from './employee-tickets/employee-ticket-details/employee-ticket-details.component';
 import { AdminTicketsComponent } from './admin-tickets/admin-tickets.component';
 import { AdminTicketsSidebarComponent } from './admin-tickets/admin-tickets-sidebar/admin-tickets-sidebar.component';
@@ -136,6 +136,7 @@ const routes: Routes = [
     MatMenuModule,
     SharedPipesModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
 
     FuseSidebarModule,
     FuseSharedModule,
