@@ -50,7 +50,7 @@
         <span>Supprimer</span>
       </button>
       <button
-        *ngIf="habilitation.canCreate() && !tonnage.isValidated"
+        *ngIf="habilitation.canEdit() && !tonnage.isValidated"
         mat-menu-item
         aria-label="Valider"
         (click)="

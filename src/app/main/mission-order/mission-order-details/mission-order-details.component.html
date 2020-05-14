@@ -119,7 +119,7 @@
     id="non-printable"
     fxLayout="column"
     fxLayoutAlign="start center"
-    *ngIf="habilitation.canEdit()"
+    *ngIf="habilitation.isAdmin()"
   >
     <h2 fxLayout="row">Traitement</h2>
     <div fxLayout="row" fxLayoutAlign="center center" class="status-width">

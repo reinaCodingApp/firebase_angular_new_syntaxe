@@ -62,7 +62,7 @@
               fxLayoutAlign="space-between center"
             >
               <button
-                *ngIf="habilitation.canEdit()"
+                *ngIf="habilitation.isAdmin()"
                 mat-icon-button
                 color="accent"
                 class="mat-elevation-z1"
@@ -71,7 +71,7 @@
                 <mat-icon>edit</mat-icon>
               </button>
               <button
-                *ngIf="habilitation.canDelete()"
+                *ngIf="habilitation.isAdmin()"
                 mat-icon-button
                 color="warn"
                 class="mat-elevation-z1"
