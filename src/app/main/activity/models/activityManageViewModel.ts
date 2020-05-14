@@ -7,6 +7,7 @@ import { Employee } from '../../../common/models/employee';
 import { Provider } from './provider';
 import { CompleteEmployee } from './completeEmployee';
 import { ActivityPerEmployee } from './activityPerEmployee';
+import { Month } from 'app/main/foreign-mission/models/month';
 
 export class ActivityManageViewModel {
   departments: Department[];
@@ -25,4 +26,7 @@ export class ActivityManageViewModel {
   providers: Provider[];
   absenceTypes: AbsenceType[];
   years: number[];
+
+  possibleYears: number[];
+  months: Month[];
 }

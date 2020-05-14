@@ -21,6 +21,8 @@ import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CommonService } from 'app/common/services/common.service';
 import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 import { AppService } from 'app/app.service';
+import { Month } from '../foreign-mission/models/month';
+import { RequestParameter } from '../activity-statistics/models/requestParameter';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +48,7 @@ export class ActivityService implements Resolve<any>{
   private DELETE_TEMPORARY_WORKER_URI = 'activity/temporary_workers/delete';
   private UPDATE_TEMPORARY_WORKER_STATE_URI = 'activity/temporary_workers/state/update';
   private ADD_FOREIGN_MISSION_TEMPORARY_WORKER_URI = 'activity/temporary_workers/foreign_mission/add';
+  private GENERATE_TEMPORARY_WORKERS_STATISTICS_URI = 'activity/temporary_workers/generate_stats';
 
   onIsTemporaryWorker: BehaviorSubject<boolean>;
   onDisplaySimpleList: BehaviorSubject<boolean>;
@@ -62,6 +65,8 @@ export class ActivityService implements Resolve<any>{
   // Temporary Workers
   onProvidersChanged: BehaviorSubject<Provider[]>;
   onAbsenceTypesChanged: BehaviorSubject<AbsenceType[]>;
+  onPossibleYearsChanged: BehaviorSubject<number[]>;
+  onMonthsChanged: BehaviorSubject<Month[]>;
 
   interim: boolean;
 
@@ -89,6 +94,9 @@ export class ActivityService implements Resolve<any>{
 
     this.onProvidersChanged = new BehaviorSubject([]);
     this.onAbsenceTypesChanged = new BehaviorSubject([]);
+    this.onPossibleYearsChanged = new BehaviorSubject([]);
+    this.onMonthsChanged = new BehaviorSubject([]);
+
     this.onHabilitationLoaded = new BehaviorSubject(null);
   }
 
@@ -148,6 +156,8 @@ export class ActivityService implements Resolve<any>{
           this.onProvidersChanged.next(activityManageViewModel.providers);
           this.onAbsenceTypesChanged.next(activityManageViewModel.absenceTypes);
 
+          this.onPossibleYearsChanged.next(activityManageViewModel.possibleYears);
+          this.onMonthsChanged.next(activityManageViewModel.months);
           resolve(activityManageViewModel);
         }, reject);
     });
@@ -260,6 +270,11 @@ export class ActivityService implements Resolve<any>{
       });
     });
     this.onAllActivitiesChanged.next(activities);
+  }
+
+  generateTemporaryWorkersStats(requestParameter: RequestParameter): any {
+    const url = `${BASE_URL}${this.GENERATE_TEMPORARY_WORKERS_STATISTICS_URI}`;
+    return this._httpClient.post<any>(url, requestParameter, { responseType: 'blob' as 'json' });
   }
 
 }

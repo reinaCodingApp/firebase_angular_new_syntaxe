@@ -6,6 +6,9 @@ import { Employee } from 'app/main/ticket/models/employee';
 import { NgForm } from '@angular/forms';
 import { ActivityParameters } from 'app/main/activity/models/activityParameters';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
+import { Month } from 'app/main/foreign-mission/models/month';
+import * as moment from 'moment';
+import { RequestParameter } from 'app/main/activity-statistics/models/requestParameter';
 
 @Component({
   selector: 'activity-sidebar',
@@ -21,6 +24,10 @@ export class ActivitySidebarComponent implements OnInit {
   activityParameters: ActivityParameters;
   isTemporaryWorker: boolean;
   displaySimpleList: boolean;
+  months: Month[];
+  years: number[];
+  statsYear: number;
+  statsMonth: number;
   habilitation: Habilitation = new Habilitation(0);
 
   constructor(
@@ -42,6 +49,14 @@ export class ActivitySidebarComponent implements OnInit {
     });
     this._activityService.onIsTemporaryWorker.subscribe((isTemporaryWorker) => {
       this.isTemporaryWorker = isTemporaryWorker;
+    });
+    this._activityService.onPossibleYearsChanged.subscribe((years) => {
+      this.years = years;
+      this.initYears();
+    });
+    this._activityService.onMonthsChanged.subscribe((months) => {
+      this.months = months;
+      this.initMonths();
     });
     this._activityService.onHabilitationLoaded
       .subscribe(habilitationResult => {
@@ -93,8 +108,36 @@ export class ActivitySidebarComponent implements OnInit {
     this.filtredEmployees = this.employees.filter(d => d.fullName.toLowerCase().indexOf(searchInput) > -1);
   }
 
+  initYears(): void {
+    const currentYear = +moment(Date.now()).year();
+    this.statsYear = currentYear;
+  }
+
+  initMonths(): void {
+    const currentMonth = +moment(Date.now()).month() + 1;
+    this.statsMonth = currentMonth;
+  }
+
+  generateTemporaryWorkersStats(): void {
+    this._loaderService.start();
+    const requestParameter: RequestParameter = {
+      year: this.statsYear,
+      month: this.statsMonth
+    };
+    this._activityService.generateTemporaryWorkersStats(requestParameter)
+      .subscribe((data) => {
+        this._loaderService.stop();
+        const downloadURL = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        const startDate = `${requestParameter.month}/01/${requestParameter.year}`;
+        const fileName = `${moment(startDate).format('MMMMYYYY')}.xlsx`;
+        link.download = fileName;
+        link.click();
+      }, (err) => {
+        this._loaderService.stop();
+        console.log(err);
+      });
+  }
+
 }
-
-
-
-
