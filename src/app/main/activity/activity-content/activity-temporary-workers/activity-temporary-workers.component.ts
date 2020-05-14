@@ -62,9 +62,11 @@ export class ActivityTemporaryWorkersComponent implements OnInit {
     });
     this.dialogRef.afterClosed()
       .subscribe((response) => {
-        if (response.success) {
-          this.getTemporaryWorkers();
-        }
+        if (response){
+          if (response.success) {
+            this.getTemporaryWorkers();
+          }
+        }        
       });
   }
 
@@ -79,8 +81,10 @@ export class ActivityTemporaryWorkersComponent implements OnInit {
     });
     this.dialogRef.afterClosed()
       .subscribe((response) => {
-        if (response.success) {
-          this.getTemporaryWorkers();
+        if (response){ 
+          if (response.success) {
+            this.getTemporaryWorkers();
+          }
         }
       });
   }

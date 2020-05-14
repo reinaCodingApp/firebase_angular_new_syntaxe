@@ -29,8 +29,6 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
   activityParameters: ActivityParameters;
   filterValue: string;
   isTemporaryWorker: boolean;
-  displayCounters: boolean;
-  displayTemporaryWorkers: boolean;
   displaySimpleList: boolean;
   displayedColumns = [
     'day',
@@ -206,14 +204,6 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
           this._loaderService.stop();
         });
     }
-  }
-
-  displayCountersMode(value: boolean): void {
-    this.displayCounters = value;
-  }
-
-  displayTemporaryWorkersMode(value: boolean): void {
-    this.displayTemporaryWorkers = value;
   }
 
   refreshAfterUpdate(updatedAactivity: Activity): void {

@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule, MatTableModule, MatMenuModule, MatSortModule } from '@angular/material';
+import { MatCheckboxModule, MatTableModule, MatMenuModule, MatSortModule, MatTooltipModule } from '@angular/material';
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 
@@ -84,7 +84,7 @@ const routes: Routes = [
     MatMenuModule,
     NgxMatSelectSearchModule,
     MatSortModule,
-
+    MatTooltipModule,
     FuseSidebarModule,
     FuseSharedModule,
 

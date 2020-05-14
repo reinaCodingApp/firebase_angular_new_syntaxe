@@ -91,8 +91,10 @@ export class AddActivityTemporaryWorkerDialogComponent implements OnInit {
         this._loaderService.stop();
         if (response) {
           this._notificationService.showSuccess(`L'insertion a eu lieu avec succès.`);
-        } else {
+        } else if (!response && isAbsence) {
           this._notificationService.showWarning(`L'insertion a échoué, le salarié a-t-il déjà un pointage pendant la plage de dates sélectionnée`);
+        } else if (!response && !isAbsence) {
+          this._notificationService.showWarning(`Opération refusée en raison d'incohérence des données`);
         }
       }, (err) => {
         console.log(err);

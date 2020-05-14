@@ -1,38 +1,14 @@
-<!-- Activities Display -->
-<div class="p-12" [hidden]="displayCounters || displayTemporaryWorkers">
+<!-- Activities Display Templates-->
+<!-- PER EMPLOYEE MODE -->
+<ng-template #searchPanel>
   <div class="content">
     <div
       class="header p-8"
       fxLayout.gt-md="row"
       fxLayout.lt-md="column"
-      fxLayoutAlign="space-between center"
+      fxLayoutAlign="end center"
     >
       <div
-        fxLayoutAlign="space-between center"
-        class="pl-4"
-        *ngIf="habilitation.isAdmin()"
-      >
-        <button
-          *ngIf="!isTemporaryWorker"
-          type="button"
-          mat-raised-button
-          color="accent"
-          (click)="displayCountersMode(true)"
-        >
-          Compteurs
-        </button>
-        <button
-          *ngIf="isTemporaryWorker"
-          type="button"
-          mat-raised-button
-          color="accent"
-          (click)="displayTemporaryWorkersMode(true)"
-        >
-          Intérimaires
-        </button>
-      </div>
-      <div
-        *ngIf="!isTemporaryWorker"
         fxLayoutAlign="space-between center"
         class="search-wrapper mt-16 mt-md-0 pl-4"
       >
@@ -50,8 +26,9 @@
       </div>
     </div>
   </div>
-  <!-- PER EMPLOYEE MODE -->
-  <div *ngIf="!displaySimpleList">
+</ng-template>
+<ng-template #perEmployeeDisplay>
+  <div class="p-md-24" *ngIf="!displaySimpleList">
     <div *ngFor="let activityPerEmployee of activitiesPerEmployee" class="mt-8">
       <div fxLayout="column" fxLayoutAlign="center">
         <div fxLayout="row" fxLayoutAlign="start center" fxFlex class="mb-8">
@@ -354,8 +331,10 @@
       </div>
     </div>
   </div>
-  <!-- LIST MODE -->
-  <div *ngIf="displaySimpleList && !isTemporaryWorker">
+</ng-template>
+<!-- LIST MODE -->
+<ng-template #simpleListDisplay>
+  <div class="p-md-16" *ngIf="displaySimpleList && !isTemporaryWorker">
     <div class="mt-8">
       <div fxFlex>
         <mat-table
@@ -640,59 +619,75 @@
       </div>
     </div>
   </div>
-</div>
+</ng-template>
 
-<!-- Counters Display -->
-<div class="content" *ngIf="displayCounters">
-  <div
-    class="header p-8"
-    fxLayout.gt-md="row"
-    fxLayout.lt-md="column"
-    fxLayoutAlign="space-between center"
-  >
-    <div fxLayoutAlign="space-between center" class="pl-4">
-      <h3>Compteurs de présence et de congés payés pour les cadres</h3>
-    </div>
-    <div fxLayoutAlign="space-between center" class="mt-16 mt-md-0 pl-4">
-      <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-        <button
-          type="button"
-          mat-raised-button
-          color="warn"
-          (click)="displayCountersMode(false)"
-        >
-          Fermer
-          <mat-icon class="s-20">close</mat-icon>
-        </button>
+<!-- Module Dipslay Templates -->
+<!-- Temporary Workers Template -->
+<ng-container *ngIf="isTemporaryWorker">
+  <!-- Admin Display -->
+  <mat-tab-group mat-align-tabs="center" mat-stretch-tabs *ngIf="habilitation.isAdmin()">
+    <!-- Temporary Workers Pointages -->
+    <mat-tab label="Pointage intérimaires">
+      <div class="tab-content mt-8">
+        <ng-container *ngTemplateOutlet="searchPanel"></ng-container>
+        <ng-container *ngTemplateOutlet="perEmployeeDisplay"></ng-container>
       </div>
+    </mat-tab>
+    <!-- Manage Temporary Workers -->
+    <mat-tab label="Gestion des intérimaires">
+      <div class="tab-content mt-8">
+        <div class="p-12 content">
+          <activity-temporary-workers></activity-temporary-workers>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+    <!-- Simple User Display -->
+    <div class="mt-12" *ngIf="!habilitation.isAdmin()">
+      <ng-container *ngTemplateOutlet="searchPanel"></ng-container>
+      <ng-container *ngTemplateOutlet="perEmployeeDisplay"> </ng-container>
     </div>
-  </div>
-  <div>
-    <activity-employees-counters></activity-employees-counters>
-  </div>
-</div>
+</ng-container>
 
-<!-- Temporary Workers Display -->
-<div class="p-12 content" *ngIf="displayTemporaryWorkers">
-  <div
-    class="header p-8"
-    fxLayout.gt-md="row"
-    fxLayout.lt-md="column"
-    fxLayoutAlign="space-between center"
-  >
-    <div fxFlex fxLayoutAlign="end center" class="mt-16 mt-md-0 pl-4">
-      <button
-        type="button"
-        mat-raised-button
-        color="warn"
-        (click)="displayTemporaryWorkersMode(false)"
-      >
-        Fermer
-        <mat-icon class="s-20">close</mat-icon>
-      </button>
-    </div>
+<!-- AVS Workers Template -->
+<ng-container *ngIf="!isTemporaryWorker">
+  <!-- Admin Display -->
+  <mat-tab-group mat-align-tabs="center" mat-stretch-tabs *ngIf="habilitation.isAdmin()">
+    <!-- AVS Workers Pointage -->
+    <mat-tab label="Pointage salariés">
+      <div class="tab-content mt-8">
+        <ng-container *ngTemplateOutlet="searchPanel"></ng-container>
+        <ng-container *ngTemplateOutlet="perEmployeeDisplay"> </ng-container>
+        <ng-container *ngTemplateOutlet="simpleListDisplay"> </ng-container>
+      </div>
+    </mat-tab>
+    <!-- Compteurs -->
+    <mat-tab label="Compteurs">
+      <div class="tab-content mt-8">
+        <div class="content">
+          <div
+            class="header p-24"
+            fxLayout.gt-md="row"
+            fxLayout.lt-md="column"
+            fxLayoutAlign="space-between center"
+          >
+            <div fxLayoutAlign="space-between center" class="pl-4">
+              <h3>
+                Compteurs de présence et de congés payés pour les cadres
+              </h3>
+            </div>
+          </div>
+          <div>
+            <activity-employees-counters></activity-employees-counters>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <!-- Simple User Display -->
+  <div class="mt-12" *ngIf="!habilitation.isAdmin()">
+    <ng-container *ngTemplateOutlet="searchPanel"></ng-container>
+    <ng-container *ngTemplateOutlet="perEmployeeDisplay"> </ng-container>
+    <ng-container *ngTemplateOutlet="simpleListDisplay"> </ng-container>
   </div>
-  <div>
-    <activity-temporary-workers></activity-temporary-workers>
-  </div>
-</div>
+</ng-container>

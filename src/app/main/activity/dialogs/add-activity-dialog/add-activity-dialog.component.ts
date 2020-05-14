@@ -43,13 +43,25 @@ export class AddActivityDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._activityService.getEmployeesAndSites().pipe(take(1))
-      .toPromise().then((data) => {
-        this.employees = data.employees;
-        this.filtredEmployees = data.employees;
-        this.sites = data.sites;
-        this.filtredSites = data.sites;
+    if (!this.activity.isTemporaryWorker) {
+      this._activityService.getEmployeesAndSites().pipe(take(1))
+        .toPromise().then((data) => {
+          this.employees = data.employees;
+          this.filtredEmployees = data.employees;
+          this.sites = data.sites;
+          this.filtredSites = data.sites;
+        });
+    } else {
+      this._activityService.onAllEmployeesChanged.subscribe((allEmployyes) => {
+        this.employees = allEmployyes;
+        this.filtredEmployees = allEmployyes;
       });
+      this._activityService.onSitesChanged.subscribe((sites) => {
+        this.sites = sites;
+        this.filtredSites = sites;
+      });
+    }
+
   }
 
   addActivity(): void {

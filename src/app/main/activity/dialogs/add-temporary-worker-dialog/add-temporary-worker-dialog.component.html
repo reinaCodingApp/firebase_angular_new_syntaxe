@@ -5,7 +5,7 @@
         >{{
           data.mode == "edit"
             ? "Modifier un intérimaire"
-            : "Ajouter un intérimaire"
+            : "Créer un intérimaire"
         }}
       </span>
       <button
@@ -30,6 +30,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Prénom</mat-label>
         <input
+          [readonly]="data.mode === 'edit'"
           #firstName="ngModel"
           [(ngModel)]="temporaryWorker.firstName"
           placeholder="Prénom"
@@ -47,6 +48,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Nom</mat-label>
         <input
+          [readonly]="data.mode === 'edit'"
           #lastName="ngModel"
           [(ngModel)]="temporaryWorker.lastName"
           placeholder="Nom"
