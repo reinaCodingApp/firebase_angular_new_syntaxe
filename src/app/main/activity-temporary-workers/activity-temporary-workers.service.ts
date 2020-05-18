@@ -11,60 +11,74 @@ import { Site } from 'app/common/models/site';
 import { Activity } from 'app/main/activity/models/activity';
 import { ExecutiveEmployee } from 'app/main/activity/models/executiveEmployee';
 import { BonusCategory } from 'app/main/activity/models/bonusCategory';
-import { ReplacementBonusCategory } from 'app/main/activity/models/replacementBonusCategory';
 import { CompleteEmployee } from 'app/main/activity/models/completeEmployee';
 import { ActivityPerEmployee } from 'app/main/activity/models/activityPerEmployee';
+import { Provider } from 'app/main/activity/models/provider';
+import { ForeignMissionActivity } from 'app/main/foreign-mission/models/foreignMissionActivity';
+import { AbsenceType } from 'app/main/activity/models/absenceType';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
+import { CommonService } from 'app/common/services/common.service';
 import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 import { AppService } from 'app/app.service';
+import { Month } from '../foreign-mission/models/month';
+import { RequestParameter } from '../activity-statistics/models/requestParameter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ActivityService implements Resolve<any>{
-  private GET_ACTIVITY_VIEWMODEL_URI = 'activity/index';
-  private ADD_ACTIVITY_URI = 'activity/add';
-  private UPDATE_ACTIVITY_URI = 'activity/hours/update';
-  private DELETE_ACTIVITY_URI = 'activity/delete';
-  private UPDATE_BONUS_ACTIVITY_URI = 'activity/bonus/update';
-  private UPDATE_REPLACEMNT_BONUS_ACTIVITY_URI = 'activity/replacement_bonus/update';
-  private UPDATE_BREAKS_ACTIVITY_URI = 'activity/breaks/update';
-  private GET_EMPLOYEES_URI = 'activity/employees';
-  private GET_ALL_EMPLOYEES_URI = 'activity/all_employees';
-  private GET_ACTIVITIES_URI = 'activity/activities';
-  private GET_EXECUTIVE_EMPLOYEE_COUNTERS_URI = 'activity/executive_employees/counters';
-  private GET_EMPLOYEES_SITES_URI = 'activity/employees_sites';
+export class ActivityTemporaryWorkerService implements Resolve<any>{
+  private GET_ACTIVITY_VIEWMODEL_URI = 'activityTemporaryWorker/index';
+  private GET_EMPLOYEES_URI = 'activityTemporaryWorker/employees';
 
-  onDisplaySimpleList: BehaviorSubject<boolean>;
+  // Activities
+  private GET_ACTIVITIES_URI = 'activityTemporaryWorker/activities';
+  private ADD_ACTIVITY_URI = 'activityTemporaryWorker/add';
+  private UPDATE_ACTIVITY_URI = 'activityTemporaryWorker/hours/update';
+  private DELETE_ACTIVITY_URI = 'activityTemporaryWorker/delete';
+  private UPDATE_BONUS_ACTIVITY_URI = 'activityTemporaryWorker/bonus/update';
+  private UPDATE_BREAKS_ACTIVITY_URI = 'activityTemporaryWorker/breaks/update';
+
+  // Temporary Workers
+  private GET_TEMPORARY_WORKERS_URI = 'activityTemporaryWorker/temporary_workers';
+  private ADD_TEMPORARY_WORKER_URI = 'activityTemporaryWorker/temporary_workers/add';
+  private UPDATE_TEMPORARY_WORKER_URI = 'activityTemporaryWorker/temporary_workers/update';
+  private DELETE_TEMPORARY_WORKER_URI = 'activityTemporaryWorker/temporary_workers/delete';
+  private UPDATE_TEMPORARY_WORKER_STATE_URI = 'activityTemporaryWorker/temporary_workers/state/update';
+  private ADD_FOREIGN_MISSION_TEMPORARY_WORKER_URI = 'activityTemporaryWorker/temporary_workers/foreign_mission/add';
+  private GENERATE_TEMPORARY_WORKERS_STATISTICS_URI = 'activityTemporaryWorker/temporary_workers/generate_stats';
+
   onActivityParametersChanged: BehaviorSubject<ActivityParameters>;
   onActivitiesPerEmployeeChanged: BehaviorSubject<ActivityPerEmployee[]>;
-  onAllActivitiesChanged: BehaviorSubject<Activity[]>;
   onDepartmentsChanged: BehaviorSubject<Department[]>;
   onAllEmployeesChanged: BehaviorSubject<CompleteEmployee[]>;
   onSitesChanged: BehaviorSubject<Site[]>;
   onExecutiveEmployeesChanged: BehaviorSubject<ExecutiveEmployee[]>;
   onYearsChanged: BehaviorSubject<number[]>;
   onBonusCategoriesChanged: BehaviorSubject<BonusCategory[]>;
-  onReplacementBonusCategoriesChanged: BehaviorSubject<ReplacementBonusCategory[]>;
+  onProvidersChanged: BehaviorSubject<Provider[]>;
+  onAbsenceTypesChanged: BehaviorSubject<AbsenceType[]>;
+  onPossibleYearsChanged: BehaviorSubject<number[]>;
+  onMonthsChanged: BehaviorSubject<Month[]>;
 
   onHabilitationLoaded: BehaviorSubject<Habilitation>;
-  private readonly moduleIdentifier = ModuleIdentifiers.employeeactivity;
+  private readonly moduleIdentifier = ModuleIdentifiers.interimactivity;
 
   constructor(
     private _httpClient: HttpClient,
     private appService: AppService,
     private router: Router) {
-    this.onDisplaySimpleList = new BehaviorSubject(false);
     this.onActivityParametersChanged = new BehaviorSubject(new ActivityParameters());
     this.onActivitiesPerEmployeeChanged = new BehaviorSubject([]);
-    this.onAllActivitiesChanged = new BehaviorSubject([]);
     this.onDepartmentsChanged = new BehaviorSubject([]);
     this.onAllEmployeesChanged = new BehaviorSubject([]);
     this.onSitesChanged = new BehaviorSubject([]);
     this.onExecutiveEmployeesChanged = new BehaviorSubject([]);
     this.onYearsChanged = new BehaviorSubject([]);
     this.onBonusCategoriesChanged = new BehaviorSubject([]);
-    this.onReplacementBonusCategoriesChanged = new BehaviorSubject([]);
+    this.onProvidersChanged = new BehaviorSubject([]);
+    this.onAbsenceTypesChanged = new BehaviorSubject([]);
+    this.onPossibleYearsChanged = new BehaviorSubject([]);
+    this.onMonthsChanged = new BehaviorSubject([]);
     this.onHabilitationLoaded = new BehaviorSubject(null);
   }
 
@@ -108,10 +122,12 @@ export class ActivityService implements Resolve<any>{
           this.onSitesChanged.next(activityManageViewModel.sites);
           this.onYearsChanged.next(activityManageViewModel.years);
           this.onBonusCategoriesChanged.next(activityManageViewModel.bonusCategories);
-          this.onReplacementBonusCategoriesChanged.next(activityManageViewModel.replacementBonusCategories);
           this.initActivityParams(activityManageViewModel.defaultStartDate, activityManageViewModel.defaultEndDate);
           this.onActivitiesPerEmployeeChanged.next([]);
-          this.onAllActivitiesChanged.next([]);
+          this.onProvidersChanged.next(activityManageViewModel.providers);
+          this.onAbsenceTypesChanged.next(activityManageViewModel.absenceTypes);
+          this.onPossibleYearsChanged.next(activityManageViewModel.possibleYears);
+          this.onMonthsChanged.next(activityManageViewModel.months);
           resolve(activityManageViewModel);
         }, reject);
     });
@@ -119,11 +135,6 @@ export class ActivityService implements Resolve<any>{
 
   getEmployeesForDepartment(department: Department): Observable<Employee[]> {
     const url = `${BASE_URL}${this.GET_EMPLOYEES_URI}`;
-    return this._httpClient.post<Employee[]>(url, department);
-  }
-
-  getAllEmployeesForDepartment(department: Department): Observable<Employee[]> {
-    const url = `${BASE_URL}${this.GET_ALL_EMPLOYEES_URI}`;
     return this._httpClient.post<Employee[]>(url, department);
   }
 
@@ -152,19 +163,9 @@ export class ActivityService implements Resolve<any>{
     return this._httpClient.post<Activity | any>(url, activity);
   }
 
-  updateReplacementBonusCategory(activity: Activity): Observable<Activity> {
-    const url = `${BASE_URL}${this.UPDATE_REPLACEMNT_BONUS_ACTIVITY_URI}`;
-    return this._httpClient.post<Activity | any>(url, activity);
-  }
-
   updateBreaksActivity(activity: Activity): Observable<Activity> {
     const url = `${BASE_URL}${this.UPDATE_BREAKS_ACTIVITY_URI}`;
     return this._httpClient.post<Activity | any>(url, activity);
-  }
-
-  getExecutiveEmployeeCounters(year: number): Observable<ExecutiveEmployee[]> {
-    const url = `${BASE_URL}${this.GET_EXECUTIVE_EMPLOYEE_COUNTERS_URI}?year=${year}`;
-    return this._httpClient.get<ExecutiveEmployee[]>(url);
   }
 
   initActivityParams(startDate: string, endDate: string): void {
@@ -172,28 +173,47 @@ export class ActivityService implements Resolve<any>{
       startDate: startDate,
       endDate: endDate,
       employees: [],
-      isTemporaryWorker: false,
+      isTemporaryWorker: true,
       activitiesFilter: ''
     };
     this.onActivityParametersChanged.next(activityParams);
   }
 
-  getEmployeesAndSites(): Observable<any> {
-    const url = `${BASE_URL}${this.GET_EMPLOYEES_SITES_URI}`;
-    return this._httpClient.get<any>(url);
+  getTemporaryWorkers(department: Department): Observable<CompleteEmployee[]> {
+    const url = `${BASE_URL}${this.GET_TEMPORARY_WORKERS_URI}`;
+    return this._httpClient.post<CompleteEmployee[]>(url, department);
   }
 
-  generateAllActivities(activitiesPerEmployee: ActivityPerEmployee[]): void {
-    const activities: Activity[] = [];
-    activitiesPerEmployee.forEach(activityPerEmployee => {
-      activityPerEmployee.activitiesPerWeek.forEach(activitiesPerWeek => {
-        activitiesPerWeek.activities.forEach(activity => {
-          activities.push(activity);
-        });
-      });
-    });
-    this.onAllActivitiesChanged.next(activities);
+  addTemporaryWorker(temporaryWorker: CompleteEmployee): Observable<CompleteEmployee> {
+    const url = `${BASE_URL}${this.ADD_TEMPORARY_WORKER_URI}`;
+    return this._httpClient.post<CompleteEmployee>(url, temporaryWorker);
   }
+
+  updateTemporaryWorker(temporaryWorker: CompleteEmployee): Observable<CompleteEmployee> {
+    const url = `${BASE_URL}${this.UPDATE_TEMPORARY_WORKER_URI}`;
+    return this._httpClient.post<CompleteEmployee>(url, temporaryWorker);
+  }
+
+  deleteTemporaryWorker(temporaryWorker: CompleteEmployee): Observable<boolean> {
+    const url = `${BASE_URL}${this.DELETE_TEMPORARY_WORKER_URI}`;
+    return this._httpClient.post<boolean>(url, temporaryWorker);
+  }
+
+  addForeignMission(foreignMission: ForeignMissionActivity): Observable<ForeignMissionActivity> {
+    const url = `${BASE_URL}${this.ADD_FOREIGN_MISSION_TEMPORARY_WORKER_URI}`;
+    return this._httpClient.post<ForeignMissionActivity>(url, foreignMission);
+  }
+
+  updateTemporaryWorkerState(temporaryWorker: CompleteEmployee): Observable<CompleteEmployee> {
+    const url = `${BASE_URL}${this.UPDATE_TEMPORARY_WORKER_STATE_URI}`;
+    return this._httpClient.post<CompleteEmployee>(url, temporaryWorker);
+  }
+
+  generateTemporaryWorkersStats(requestParameter: RequestParameter): any {
+    const url = `${BASE_URL}${this.GENERATE_TEMPORARY_WORKERS_STATISTICS_URI}`;
+    return this._httpClient.post<any>(url, requestParameter, { responseType: 'blob' as 'json' });
+  }
+
 }
 
 

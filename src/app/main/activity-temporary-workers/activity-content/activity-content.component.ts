@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { ActivityService } from '../activity.service';
-import { AddActivityDialogComponent } from '../dialogs/add-activity-dialog/add-activity-dialog.component';
+import { ActivityTemporaryWorkerService } from '../activity-temporary-workers.service';
 import { Activity } from 'app/main/activity/models/activity';
 import { BonusActivityDialogComponent } from '../dialogs/bonus-activity-dialog/bonus-activity-dialog.component';
 import { BreaksActivityDialogComponent } from '../dialogs/breaks-activity-dialog/breaks-activity-dialog.component';
@@ -15,6 +14,7 @@ import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { AppService } from 'app/app.service';
 import { Sort } from '@angular/material/sort';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
+import { UpdateActivityDialogComponent } from '../dialogs/update-activity-dialog/update-activity-dialog.component';
 
 @Component({
   selector: 'activity-content',
@@ -25,10 +25,8 @@ import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/c
 })
 export class ActivityContentComponent implements OnInit, OnDestroy {
   activitiesPerEmployee: ActivityPerEmployee[] = [];
-  activities: Activity[] = [];
   activityParameters: ActivityParameters;
   filterValue: string;
-  displaySimpleList: boolean;
   displayedColumns = [
     'day',
     'startTime',
@@ -37,22 +35,8 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
     'totalWorkedTimeString',
     'site',
     'bonusString',
+    'provider',
     'manuallyCreated',
-    'dayCounter',
-    'title',
-    'actions'
-  ];
-  displayedColumns2 = [
-    'fullName',
-    'day',
-    'startTime',
-    'totalBreakTimeString',
-    'endTime',
-    'totalWorkedTimeString',
-    'site',
-    'bonusString',
-    'manuallyCreated',
-    'dayCounter',
     'title',
     'actions'
   ];
@@ -63,7 +47,7 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
 
   constructor(
     public _matDialog: MatDialog,
-    private _activityService: ActivityService,
+    private _activityService: ActivityTemporaryWorkerService,
     private _loaderService: NgxUiLoaderService,
     private appService: AppService
   ) {
@@ -71,20 +55,10 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._activityService.onDisplaySimpleList
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((displaySimpleList) => {
-        this.displaySimpleList = displaySimpleList;
-      });
     this._activityService.onActivitiesPerEmployeeChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(activitiesPerEmployee => {
         this.activitiesPerEmployee = [...activitiesPerEmployee];
-      });
-    this._activityService.onAllActivitiesChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(activities => {
-        this.activities = [...activities];
       });
     this._activityService.onActivityParametersChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -105,7 +79,7 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
 
   updateActivity(row: Activity): void {
     const currentActivity = JSON.parse(JSON.stringify(row));
-    this.dialogRef = this._matDialog.open(AddActivityDialogComponent, {
+    this.dialogRef = this._matDialog.open(UpdateActivityDialogComponent, {
       panelClass: 'mail-compose-dialog',
       data: {
         mode: 'edit',
@@ -190,7 +164,6 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
         .subscribe((activitiesPerEmployee) => {
           this._loaderService.stop();
           this._activityService.onActivitiesPerEmployeeChanged.next(activitiesPerEmployee);
-          this._activityService.generateAllActivities(activitiesPerEmployee);
         }, (err) => {
           console.log(err);
           this._loaderService.stop();
@@ -210,7 +183,6 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
       });
     });
     this._activityService.onActivitiesPerEmployeeChanged.next(temp);
-    this._activityService.generateAllActivities(temp);
   }
 
   refreshAfterDelete(currentActivity: Activity): void {
@@ -226,28 +198,6 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
       });
     });
     this._activityService.onActivitiesPerEmployeeChanged.next(temp);
-    this._activityService.generateAllActivities(temp);
-  }
-
-  sortActivities(sort: Sort): void {
-    const data = this.activities.slice();
-    this.activities = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      switch (sort.active) {
-        case 'fullName': return this.compare(a.employee.fullName, b.employee.fullName, isAsc);
-        case 'day': return this.compare(a.dayLong, b.dayLong, isAsc);
-        case 'startTime': return this.compare(a.startTimeLong, b.startTimeLong, isAsc);
-        case 'totalBreakTime': return this.compare(a.totalBreakTimeMinutes, b.totalBreakTimeMinutes, isAsc);
-        case 'endTime': return this.compare(a.endTimeLong, b.endTimeLong, isAsc);
-        case 'totalWorkedTime': return this.compare(a.totalWorkedTimeMinutes, b.totalWorkedTimeMinutes, isAsc);
-        case 'site': return this.compare(a.site.name, b.site.name, isAsc);
-        default: return 0;
-      }
-    });
-  }
-
-  compare(a: any, b: any, isAsc: boolean) {
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
   ngOnDestroy(): void {

@@ -19,37 +19,40 @@ import { FuseSidebarModule } from '@fuse/components';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
-import { ActivityComponent } from './activity.component';
+import { ActivityTemporaryWorkerComponent } from './activity-temporary-workers.component';
 import { ActivitySidebarComponent } from './activity-sidebar/activity-sidebar.component';
 import { ActivityContentComponent } from './activity-content/activity-content.component';
-import { AddActivityDialogComponent } from './dialogs/add-activity-dialog/add-activity-dialog.component';
-import { ActivityEmployeesCountersComponent } from './activity-content/activity-employees-counters/activity-employees-counters.component';
-
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
-import { ActivityService } from './activity.service';
+import { ActivityTemporaryWorkerService } from './activity-temporary-workers.service';
 import { BonusActivityDialogComponent } from './dialogs/bonus-activity-dialog/bonus-activity-dialog.component';
 import { BreaksActivityDialogComponent } from './dialogs/breaks-activity-dialog/breaks-activity-dialog.component';
+import { ActivityTemporaryWorkersComponent } from './activity-content/activity-temporary-workers/activity-temporary-workers.component';
+import { AddTemporaryWorkerDialogComponent } from './dialogs/add-temporary-worker-dialog/add-temporary-worker-dialog.component';
+import { AddActivityTemporaryWorkerDialogComponent } from './dialogs/add-activity-temporary-worker-dialog/add-activity-temporary-worker-dialog.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+import { UpdateActivityDialogComponent } from './dialogs/update-activity-dialog/update-activity-dialog.component';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
-    path: 'activity',
-    component: ActivityComponent, ...canActivate(redirectUnauthorizedToLoginPage),
-    resolve: { resolve: ActivityService }
+    path: 'activity/interim',
+    component: ActivityTemporaryWorkerComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    resolve: { resolve: ActivityTemporaryWorkerService }
   }
 ];
 
 @NgModule({
   declarations: [
-    ActivityComponent,
+    ActivityTemporaryWorkerComponent,
     ActivitySidebarComponent,
     ActivityContentComponent,
-    AddActivityDialogComponent,
-    ActivityEmployeesCountersComponent,
     BonusActivityDialogComponent,
-    BreaksActivityDialogComponent
+    BreaksActivityDialogComponent,
+    ActivityTemporaryWorkersComponent,
+    AddTemporaryWorkerDialogComponent,
+    AddActivityTemporaryWorkerDialogComponent,
+    UpdateActivityDialogComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -79,10 +82,12 @@ const routes: Routes = [
     CustomConfirmDialogModule
   ],
   entryComponents: [
-    AddActivityDialogComponent,
     BonusActivityDialogComponent,
     BreaksActivityDialogComponent,
+    AddTemporaryWorkerDialogComponent,
+    AddActivityTemporaryWorkerDialogComponent,
+    UpdateActivityDialogComponent
   ]
 })
-export class ActivityModule {
+export class ActivityTemporaryWorkerModule {
 }

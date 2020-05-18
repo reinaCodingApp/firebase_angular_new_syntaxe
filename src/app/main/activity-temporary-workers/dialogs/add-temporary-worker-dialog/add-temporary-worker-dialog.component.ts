@@ -4,7 +4,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgForm } from '@angular/forms';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';
-import { ActivityService } from '../../activity.service';
+import { ActivityTemporaryWorkerService } from '../../activity-temporary-workers.service';
 import { CompleteEmployee } from 'app/main/activity/models/completeEmployee';
 import { Department } from 'app/common/models/department';
 import { Provider } from 'app/main/activity/models/provider';
@@ -26,7 +26,7 @@ export class AddTemporaryWorkerDialogComponent implements OnInit {
     public matDialogRef: MatDialogRef<AddTemporaryWorkerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _loaderService: NgxUiLoaderService,
-    private _activityService: ActivityService,
+    private _activityService: ActivityTemporaryWorkerService,
     private _notificationService: SharedNotificationService,
     private _commonService: CommonService
   ) {

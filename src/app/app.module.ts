@@ -60,10 +60,10 @@ import { FollowupSheetModule } from './main/followup-sheet/followup-sheet.module
 import { AccessRightsModule } from './main/access-rights/access-rights.module';
 import { MeetingsModule } from './main/meetings/meetings.module';
 import { MonthlyMeetingModule } from './main/monthly-meeting/monthly-meeting.module';
+import { ActivityTemporaryWorkerModule } from './main/activity-temporary-workers/activity-temporary-workers.module';
 
 import { TokenInterceptor } from './main/login/token.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
-
 
 const appRoutes: Routes = [
   {
@@ -137,6 +137,7 @@ const appRoutes: Routes = [
     MeetingsModule,
     MonthlyMeetingModule,
     ChangelogModule,
+    ActivityTemporaryWorkerModule,
 
     // 3rd party modules
     NgxUiLoaderModule

@@ -6,19 +6,19 @@ import { SharedNotificationService } from 'app/common/services/shared-notificati
 import { CommonService } from 'app/common/services/common.service';
 import { Activity } from 'app/main/activity/models/activity';
 import { Site } from 'app/common/models/site';
-import { ActivityService } from '../../activity.service';
 import * as moment from 'moment';
 import { CompleteEmployee } from 'app/main/activity/models/completeEmployee';
 import { take } from 'rxjs/operators';
 import { MainTools } from 'app/common/tools/main-tools';
+import { ActivityTemporaryWorkerService } from '../../activity-temporary-workers.service';
 
 @Component({
-  selector: 'app-add-activity-dialog',
-  templateUrl: './add-activity-dialog.component.html',
-  styleUrls: ['./add-activity-dialog.component.scss'],
+  selector: 'app-update-activity-dialog',
+  templateUrl: './update-activity-dialog.component.html',
+  styleUrls: ['./update-activity-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AddActivityDialogComponent implements OnInit {
+export class UpdateActivityDialogComponent implements OnInit {
   activity: Activity;
   employees: CompleteEmployee[];
   filtredEmployees: CompleteEmployee[];
@@ -26,10 +26,10 @@ export class AddActivityDialogComponent implements OnInit {
   filtredSites: Site[];
 
   constructor(
-    public matDialogRef: MatDialogRef<AddActivityDialogComponent>,
+    public matDialogRef: MatDialogRef<UpdateActivityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _loaderService: NgxUiLoaderService,
-    private _activityService: ActivityService,
+    private _activityService: ActivityTemporaryWorkerService,
     private _notificationService: SharedNotificationService,
     private _commonService: CommonService
   ) {
@@ -43,13 +43,14 @@ export class AddActivityDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._activityService.getEmployeesAndSites().pipe(take(1))
-      .toPromise().then((data) => {
-        this.employees = data.employees;
-        this.filtredEmployees = data.employees;
-        this.sites = data.sites;
-        this.filtredSites = data.sites;
-      });
+    this._activityService.onAllEmployeesChanged.subscribe((allEmployyes) => {
+      this.employees = allEmployyes;
+      this.filtredEmployees = allEmployyes;
+    });
+    this._activityService.onSitesChanged.subscribe((sites) => {
+      this.sites = sites;
+      this.filtredSites = sites;
+    });
   }
 
   addActivity(): void {

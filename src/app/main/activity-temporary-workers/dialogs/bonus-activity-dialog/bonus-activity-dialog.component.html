@@ -62,56 +62,6 @@
           </div>
         </form>
       </mat-tab>
-
-      <mat-tab label="Prime Remplacement">
-        <form
-          #f2="ngForm"
-          (ngSubmit)="updateReplacementBonusCategory(f2)"
-          name="composeForm"
-          class="compose-form mt-8"
-          fxLayout="column"
-          fxFlex
-        >
-          <mat-form-field appearance="outline">
-            <mat-label>Prime Remplacement</mat-label>
-            <mat-select
-              #replacementBonusCategory="ngModel"
-              name="replacementBonusCategory"
-              [(ngModel)]="activity.replacementBonusCategory.id"
-              required
-            >
-              <mat-option
-                *ngFor="
-                  let replacementBonusCategory of replacementBonusCategories
-                "
-                [value]="replacementBonusCategory.id"
-              >
-                {{ replacementBonusCategory.fullTitle }}
-              </mat-option>
-            </mat-select>
-            <mat-error
-              *ngIf="
-                replacementBonusCategory.invalid &&
-                (replacementBonusCategory.dirty ||
-                  replacementBonusCategory.touched)
-              "
-            >
-              Veuillez choisir une prime !
-            </mat-error>
-          </mat-form-field>
-          <div
-            mat-dialog-actions
-            class="m-0 p-16"
-            fxLayout="row"
-            fxLayoutAlign="end end"
-          >
-            <button mat-raised-button color="accent" type="submit">
-              Valider
-              <mat-icon>check</mat-icon>
-            </button>
-          </div>
-        </form>
-      </mat-tab>
     </mat-tab-group>
   </div>
 </div>

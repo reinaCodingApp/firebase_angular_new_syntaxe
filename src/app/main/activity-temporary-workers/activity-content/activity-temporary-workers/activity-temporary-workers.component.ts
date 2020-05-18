@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivityService } from '../../activity.service';
+import { ActivityTemporaryWorkerService } from '../../activity-temporary-workers.service';
 import { CompleteEmployee } from 'app/main/activity/models/completeEmployee';
 import { fuseAnimations } from '@fuse/animations';
 import { MatDialog } from '@angular/material';
@@ -7,7 +7,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { Department } from 'app/common/models/department';
 import { AddTemporaryWorkerDialogComponent } from '../../dialogs/add-temporary-worker-dialog/add-temporary-worker-dialog.component';
-import { DeleteTemporaryWorkerDialogComponent } from '../../dialogs/delete-temporary-worker-dialog/delete-temporary-worker-dialog.component';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 
 @Component({
@@ -28,7 +27,7 @@ export class ActivityTemporaryWorkersComponent implements OnInit {
 
   constructor(
     public _matDialog: MatDialog,
-    private _activityService: ActivityService,
+    private _activityService: ActivityTemporaryWorkerService,
     private _loaderService: NgxUiLoaderService,
     private _notificationsService: SharedNotificationService) { }
 
@@ -66,7 +65,7 @@ export class ActivityTemporaryWorkersComponent implements OnInit {
           if (response.success) {
             this.getTemporaryWorkers();
           }
-        }        
+        }
       });
   }
 
@@ -81,7 +80,7 @@ export class ActivityTemporaryWorkersComponent implements OnInit {
     });
     this.dialogRef.afterClosed()
       .subscribe((response) => {
-        if (response){ 
+        if (response){
           if (response.success) {
             this.getTemporaryWorkers();
           }

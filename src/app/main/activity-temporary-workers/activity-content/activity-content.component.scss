@@ -1,0 +1,140 @@
+@import "src/@fuse/scss/fuse";
+
+activity-content {
+  .employee-row {
+    color: #7a0145 !important;
+    font-size: 1.7em;
+    font-weight: bold !important;
+    padding: 16px;
+    background-color: white !important;
+  }
+
+  .week-number-column {
+    background-color: #52374a;
+    color: #91dc5b;
+    border: none;
+    border-top: 10px solid #6b5464;
+    border-bottom: 10px solid #6b5464;
+    text-align: center;
+  }
+
+  .week-number-label {
+    text-transform: uppercase;
+    font-size: 0.9em;
+  }
+
+  .week-number {
+    font-size: 2em;
+  }
+
+  .total-worktime {
+    color: #ab94a4;
+    padding-top: 25px;
+  }
+
+  .actions-cell {
+    color: white !important;
+    padding: 0px !important;
+  }
+
+  .actions-header {
+    padding: 0px !important;
+  }
+
+  .header {
+    .search-wrapper {
+      background-color: white;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 28px;
+      overflow: hidden;
+      @include mat-elevation(1);
+
+      .search {
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+
+        input {
+          width: 100%;
+          height: 48px;
+          min-height: 48px;
+          max-height: 48px;
+          padding: 0 16px;
+          border: none;
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .mat-header-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+
+  .mat-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+
+  .mat-column-day {
+    min-width: 130px !important;
+    @include media-breakpoint("lt-md") {
+      min-width: 100px !important;
+    }
+  }
+
+  .mat-column-fullName {
+    min-width: 200px !important;
+    @include media-breakpoint("lt-md") {
+      min-width: 100px !important;
+    }
+  }
+
+  .mat-column-title {
+    min-width: 110px !important;
+  }
+
+  .mat-column-bonusString {
+    min-width: 110px !important;
+  }
+
+  .mat-column-site {
+    min-width: 90px !important;
+  }
+
+  .mat-column-dayCounter {
+    max-width: 30px !important;
+  }
+
+  .mat-column-manuallyCreated {
+    max-width: 30px !important;
+  }
+
+  .mat-column-startTime {
+    max-width: 70px !important;
+    min-width: 40px !important;
+  }
+
+  .mat-column-endTime {
+    max-width: 70px !important;
+    min-width: 40px !important;
+  }
+
+  .mat-column-totalBreakTimeString {
+    max-width: 70px !important;
+    min-width: 40px !important;
+  }
+
+  .mat-column-totalWorkedTimeString {
+    max-width: 70px !important;
+    min-width: 40px !important;
+  }
+
+  .mat-column-actions {
+    max-width: 70px !important;
+  }
+}

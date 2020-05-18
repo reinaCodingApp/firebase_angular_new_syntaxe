@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { ActivityService } from '../../activity.service';
+import { ActivityTemporaryWorkerService } from '../../activity-temporary-workers.service';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';
 import { Activity } from 'app/main/activity/models/activity';
@@ -35,7 +35,7 @@ export class AddActivityTemporaryWorkerDialogComponent implements OnInit {
     public matDialogRef: MatDialogRef<AddActivityTemporaryWorkerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _loaderService: NgxUiLoaderService,
-    private _activityService: ActivityService,
+    private _activityService: ActivityTemporaryWorkerService,
     private _activityAbsenceService: ActivityAbsenceService,
     private _notificationService: SharedNotificationService,
     private _commonService: CommonService
