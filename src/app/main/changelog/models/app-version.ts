@@ -1,4 +1,5 @@
 export class AppVersion {
+  id: string;
   major: number;
   minor: number;
   patch: number;
@@ -7,6 +8,7 @@ export class AppVersion {
   versionName: string;
   vName: string;
   details: VersionDetail;
+  published: boolean;
 }
 
 export class VersionDetail {

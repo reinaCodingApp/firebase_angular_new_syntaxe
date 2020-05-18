@@ -129,12 +129,12 @@ service cloud.firestore {
         allow delete: if never();
     }
   /***************************************************************************
-    ************************** Modules and keys ********************************
+    *************************** App versions *********************************
     ****************************************************************************/
     match /appVersions/{document} {
-        allow get, list;
-        allow create : if isLoggedin();
-        allow update : if never();
+        allow get, list : if isLoggedin() ;
+        allow create : if isRoot();
+        allow update : if isRoot();
         allow delete : if never();
     }
   }

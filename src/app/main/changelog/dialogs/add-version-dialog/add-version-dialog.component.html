@@ -11,8 +11,8 @@
   </mat-toolbar>
   <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
     <form #f="ngForm" name="changelogForm" class="compose-form" fxLayout="column">
-      <mat-form-field appearance="outline">
-        <mat-label>Type de mise à jour</mat-label>
+      <mat-form-field appearance="outline" *ngIf="mode != 'edit'">
+        <mat-label>Type de la mise à jour</mat-label>
         <mat-select name="version_type" [(ngModel)]="versionType">
           <mat-option value="major">
             Majeure
@@ -50,7 +50,11 @@
           </mat-form-field>
         </div>
         <div fxLayoutAlign="end">
-          <button [disabled]="!versionType || (new.trim().length === 0 && improvments.trim().length === 0 && fixes.trim().length === 0)" mat-raised-button color="accent" type="submit" (click)="validate()">
+          <button [disabled]="(mode != 'edit' && !versionType) || (new.trim().length === 0 && improvments.trim().length === 0 && fixes.trim().length === 0)"
+          mat-raised-button
+          color="accent"
+          type="submit"
+          (click)="save()">
             Sauvegarder <mat-icon>add</mat-icon>
           </button>
         </div>

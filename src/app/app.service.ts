@@ -79,8 +79,9 @@ export class AppService {
   }
   getLastAppVersion(): Observable<DocumentChangeAction<unknown>[]>{
     return this.angularFirestore.collection(firestoreCollections.appVersions,
-                                            query => query.orderBy('versionCode', 'desc')
-                                                         .limit(1)).snapshotChanges();
+                                            query => query.where('published', '==', true)
+                                                          .orderBy('versionCode', 'desc')
+                                                          .limit(1)).snapshotChanges();
   }
   getCurrentUser(): Observable<User> {
     if (this.currentUser) {
