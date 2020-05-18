@@ -114,19 +114,20 @@ export class AddMissionOrderComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSubmit(form: NgForm): void {
+  onSubmit(form: NgForm, isDraft: boolean): void {
     if (form.valid) {
       if (this.data.mode === 'new') {
-        this.addMissionOrder();
+        this.addMissionOrder(isDraft);
       } else {
-        this.updateMissionOrder();
+        this.updateMissionOrder(isDraft);
       }
     }
   }
 
-  addMissionOrder(): void {
+  addMissionOrder(isDraft: boolean): void {
     console.log('### call addMissionOrder from component');
     const missionOrder = JSON.parse(JSON.stringify(this.newMissionOrder));
+    missionOrder.isDraft = isDraft;
     missionOrder.missionStart = moment(missionOrder.missionStart).format('MM/DD/YYYY');
     missionOrder.missionEnd = moment(missionOrder.missionEnd).format('MM/DD/YYYY');
     missionOrder.owner.id = this.connectedEmployeeId;
@@ -149,8 +150,9 @@ export class AddMissionOrderComponent implements OnInit, OnDestroy {
       });
   }
 
-  updateMissionOrder(): void {
+  updateMissionOrder(isDraft: boolean): void {
     const missionOrder = JSON.parse(JSON.stringify(this.newMissionOrder));
+    missionOrder.isDraft = isDraft;
     missionOrder.missionStart = moment(missionOrder.missionStart).format('MM/DD/YYYY');
     missionOrder.missionEnd = moment(missionOrder.missionEnd).format('MM/DD/YYYY');
     this._loaderService.start();
@@ -202,10 +204,16 @@ export class AddMissionOrderComponent implements OnInit, OnDestroy {
     this.newMissionOrder.clients[clientIndex].sites.splice(siteIndex, 1);
   }
 
-  addMissionOrderEmployee(form: NgForm): void {
+  addMissionOrderEmployee(): void {
+    const isValid = (this.missionOrderEmployee && this.missionOrderEmployee.employee
+      && this.missionOrderEmployee && this.missionOrderEmployee.start
+      && this.missionOrderEmployee && this.missionOrderEmployee.end
+      && this.missionOrderEmployee && this.missionOrderEmployee.daysWork != null && this.missionOrderEmployee.daysWork !== undefined);
     const newMissionOrderEmployee = { ...this.missionOrderEmployee };
-    if (form.valid) {
+    if (isValid) {
       this.newMissionOrder.missionOrderEmployees.push(newMissionOrderEmployee);
+    } else {
+      this._notificationService.showWarning('Veuillez renseigner tous les champs !');
     }
   }
 
@@ -214,7 +222,9 @@ export class AddMissionOrderComponent implements OnInit, OnDestroy {
   }
 
   addMissionOrderCost(form: NgForm): void {
-    if (form.valid && this.missionOrderCost.cost > 0) {
+    const isValid = (this.missionOrderCost && this.missionOrderCost.costType
+                    && this.missionOrderCost && this.missionOrderCost.cost > 0);
+    if (isValid) {
       const cost = this.newMissionOrder.costs
         .find((c) => {
           return c.costType.id === this.missionOrderCost.costType.id;
@@ -226,6 +236,8 @@ export class AddMissionOrderComponent implements OnInit, OnDestroy {
         const index = this.newMissionOrder.costs.indexOf(cost);
         this.newMissionOrder.costs[index].cost += this.missionOrderCost.cost;
       }
+    } else {
+      this._notificationService.showWarning('Veuillez renseigner tous les champs !');
     }
   }
 
