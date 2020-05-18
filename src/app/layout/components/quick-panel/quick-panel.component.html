@@ -1,4 +1,4 @@
-<div fxLayout="column" fxFlex fusePerfectScrollbar>
+<!-- <div fxLayout="column" fxFlex fusePerfectScrollbar>
   <mat-divider cdkFocusRegionEnd></mat-divider>
 
   <div *ngIf="hours" class="pb-16">
@@ -33,14 +33,38 @@
       </tbody>
     </table>
   </div>
-  <button
-    *ngIf="showSettingsButton"
-    mat-flat-button
-    class="settings-btn"
-    [routerLink]="'/settings'"
-    (click)="commonService.closeSidebar('quickPanel')"
+
+</div> -->
+<div fxLayout="column" fxLayoutAlign="space-between">
+  <div
+    class="content p-16"
+    fxLayout="column"
+    fusePerfectScrollbar
+    style="max-height: 92vh;"
   >
-    Paramètres
-    <mat-icon>settings</mat-icon>
-  </button>
+    <h1 class="mt-0">Mes tâches</h1>
+    <div class="fuse-card mb-8" *ngFor="let task of pendingTasks">
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <div fxLayout="column" fxFlex>
+          <div class="p-8" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="h4">{{ task.folderName }}</div>
+          </div>
+          <div class="p-8" fxLayout="row wrap" fxLayoutAlign="start">
+            <div class="h4">{{ task.content }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" class="settings-btn">
+    <button
+      *ngIf="showSettingsButton"
+      mat-raised-button
+      [routerLink]="'/settings'"
+      (click)="commonService.closeSidebar('quickPanel')"
+    >
+      Paramètres
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
 </div>

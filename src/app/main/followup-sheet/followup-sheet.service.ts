@@ -25,6 +25,7 @@ import { AppService } from 'app/app.service';
 export class FollowupSheetService implements Resolve<any>{
   private GET_FOLLOWUPSHEET_VIEWMODEL_URI = 'followupSheet/index';
   private GET_DEADLINES_URI = 'followupSheet/deadlines';
+  private GET_PENDING_TASKS_URI = 'followupSheet/pending_tasks';
   private GET_FOLLOWUPSHEET_URI = 'followupSheet/get';
   private SUBMIT_FOLLOWUPSHEET_URI = 'followupSheet/submit';
   private CLOSE_FOLLOWUPSHEET_URI = 'followupSheet/close';
@@ -171,6 +172,11 @@ export class FollowupSheetService implements Resolve<any>{
           resolve(deadlines);
         }, reject);
     });
+  }
+
+  getPendingTasks(): Observable<Deadline[]> {
+    const url = `${BASE_URL}${this.GET_PENDING_TASKS_URI}`;
+    return this._httpClient.get<Deadline[]>(url);
   }
 
   getFollowupSheet(sheetId: number): Observable<any> {

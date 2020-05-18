@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { CommonService } from 'app/common/services/common.service';
 import { AppService } from 'app/app.service';
+import { FollowupSheetService } from 'app/main/followup-sheet/followup-sheet.service';
+import { Deadline } from 'app/main/followup-sheet/models/deadline';
 
 @Component({
   selector: 'quick-panel',
@@ -11,10 +13,12 @@ import { AppService } from 'app/app.service';
 export class QuickPanelComponent implements OnInit {
   hours: any[];
   showSettingsButton: boolean;
+  pendingTasks: Deadline[];
 
   constructor(
     public commonService: CommonService,
-    private appService: AppService) { }
+    private appService: AppService,
+    private followupSheetService: FollowupSheetService) { }
 
   ngOnInit(): void {
     this.commonService.getPrayerHours().subscribe(response => {
@@ -30,6 +34,10 @@ export class QuickPanelComponent implements OnInit {
       if (user) {
         this.showSettingsButton = user.customClaims.isRoot || user.customClaims.isTechAdmin;
       }
+    });
+
+    this.followupSheetService.getPendingTasks().subscribe((pendingTasks) => {
+      this.pendingTasks = pendingTasks;
     });
   }
 }
