@@ -285,7 +285,7 @@
       <mat-tab label="Décisions">
         <meetings-decisions></meetings-decisions>
       </mat-tab>
-      <mat-tab label="Connexions" *ngIf="habilitation.isAdmin()">
+      <mat-tab label="Connexions" *ngIf="habilitation.isAdmin() && !smallScreen">
         <meetings-logs *ngIf="selectedTab == 4"></meetings-logs>
       </mat-tab>
     </mat-tab-group>

@@ -1,8 +1,8 @@
-<div class="dialog-content-wrapper" style="margin: -24px; width: 520px;">
+<div class="dialog-content-wrapper">
   <mat-toolbar class="mat-accent m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
       <span class="title dialog-title">
-        Créer une fiche d'audit
+        {{ action === "new-audit" ? "Créer une fiche d'audit" : "Créer un modèle"}}
       </span>
       <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
         <mat-icon>close</mat-icon>
@@ -10,9 +10,10 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <div mat-dialog-content class="p-24 m-0" *ngIf="action==='new-audit'" fusePerfectScrollbar>
+  <div mat-dialog-content class="p-16 p-md-24 m-0" *ngIf="action==='new-audit'" fusePerfectScrollbar>
     <form #f="ngForm" name="newAuditForm" class="compose-form" fxLayout="column">
-      <mat-horizontal-stepper labelPosition="bottom" [linear]="true">
+      <!-- WEB VIEW -->
+      <mat-horizontal-stepper *ngIf="!smallScreen" labelPosition="bottom" [linear]="true">
         <!-- site and date-->
         <mat-step label="Site" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
           <div class="mt-4" fxLayout="column">
@@ -67,6 +68,62 @@
           </div>
         </mat-step>
       </mat-horizontal-stepper>
+      <!-- MOBILE VIEW -->
+      <mat-vertical-stepper *ngIf="smallScreen"  labelPosition="bottom" [linear]="true">
+        <!-- site and date-->
+        <mat-step label="Site" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
+          <div class="mt-4" fxLayout="column">
+            <mat-form-field class="w-100-p" appearance="outline">
+              <mat-label>Choix du site</mat-label>
+              <mat-select required name="audit_site" [(ngModel)]="audit.site"
+                (selectionChange)="checkTempaltesToDispaly($event)">
+                <mat-option *ngFor="let site of sites" [value]="site">
+                  {{ site.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="w-100-p" appearance="outline">
+              <mat-label>Date de l'audit</mat-label>
+              <input #start="ngModel" matInput [matDatepicker]="startPicker" placeholder="Date de l'audit"
+                [(ngModel)]="dateParam" name="startPicker" required />
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+              <mat-error *ngIf="start.invalid && (start.dirty || start.touched)">
+                Veuillez renseigner une date correcte
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end center" class="mt-32">
+            <button mat-raised-button matStepperNext type="button" [disabled]="!audit.site || !dateParam"
+              color="accent">
+              Suivant
+            </button>
+          </div>
+        </mat-step>
+        <!-- Audit template -->
+        <mat-step label="Modèle">
+          <div class="mt-4">
+            <div fxLayout="column" fxLayoutAlign="space-between none">
+              <mat-form-field appearance="outline">
+                <mat-label>Choisir un modèle d'audit</mat-label>
+                <mat-select required name="site_types" [(ngModel)]="selectedTemplate">
+                  <mat-option *ngFor="let template of filtredTemplates" [value]="template">
+                    {{ template.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-between" class="mt-32">
+            <button mat-raised-button matStepperPrevious type="button" color="accent">
+              Précédent
+            </button>
+            <button [disabled]="!selectedTemplate" mat-raised-button color="accent" type="submit"
+              (click)="submitNewAudit()"> Créer l'audit <mat-icon class="ml-8">arrow_forward</mat-icon>
+            </button>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
     </form>
   </div>
   <div mat-dialog-content class="p-24 m-0" *ngIf="action==='new-template'" fusePerfectScrollbar>

@@ -1,8 +1,10 @@
 <div
   class="p-sm-16 pb-0"
   fxLayout="row"
-  style="background-color: rgb(244, 244, 244) !important;
-  min-height: 100vh !important;"
+  style="
+    background-color: rgb(244, 244, 244) !important;
+    min-height: 100vh !important;
+  "
 >
   <div fxLayout="row" fxLayoutAlign="space-around" fxFlex>
     <!-- Weeks & Sectors -->
@@ -115,6 +117,7 @@
         </div>
       </div>
       <div
+        fxHide.lt-md
         class="header p-8"
         fxLayout="row wrap"
         fxLayoutAlign="space-around center"
@@ -151,6 +154,25 @@
         >
           Non clôturées
         </button>
+      </div>
+      <div fxHide.gt-sm class="header p-8"  fxLayoutAlign="center center">
+        <button mat-raised-button [matMenuTriggerFor]="actionsMenu">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="getRecentlyOutdatedTasks()">
+            Échéances de la semaine
+          </button>
+          <button mat-menu-item (click)="getOutdatedTasks()">
+            Deadlines dépassées
+          </button>
+          <button mat-menu-item (click)="displayClosedGeneratedTasks()">
+            Clôturées
+          </button>
+          <button mat-menu-item (click)="displayNotClosedGeneratedTasks()">
+            Non clôturées
+          </button>
+        </mat-menu>
       </div>
       <div class="ml-16 mr-16">
         <div class="fuse-card mb-8" *ngFor="let task of tasks; index as i">
@@ -217,7 +239,7 @@
           <mat-accordion>
             <mat-expansion-panel>
               <mat-expansion-panel-header
-                style="background-color: #f4f4f4 !important"
+                style="background-color: #f4f4f4 !important;"
               >
                 <mat-panel-title>
                   <button mat-icon-button>
@@ -257,7 +279,11 @@
                 </div>
               </div>
               <!-- COMMENT FORM -->
-              <div fxLayout="column" fxLayoutAlign="space-between" *ngIf="habilitation.canCreate()">
+              <div
+                fxLayout="column"
+                fxLayoutAlign="space-between"
+                *ngIf="habilitation.canCreate()"
+              >
                 <div fxLayout="row">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Commentaire</mat-label>

@@ -56,7 +56,7 @@
             [dataSource]="monthlyMeeting.monthlyMeetingPresences"
           >
             <ng-container matColumnDef="employee">
-              <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>Employé</mat-header-cell>
               <mat-cell *matCellDef="let monthlyMeetingPresence">
                 {{ monthlyMeetingPresence.employee.fullName }}
               </mat-cell>
@@ -70,38 +70,38 @@
             </ng-container>
 
             <ng-container matColumnDef="endTimeStr">
-              <mat-header-cell *matHeaderCellDef>Heure départ</mat-header-cell>
-              <mat-cell *matCellDef="let monthlyMeetingPresence">
+              <mat-header-cell fxHide.lt-sm *matHeaderCellDef>Heure départ</mat-header-cell>
+              <mat-cell fxHide.lt-sm *matCellDef="let monthlyMeetingPresence">
                 {{ monthlyMeetingPresence.endTimeStr }}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="defaultDepartment">
-              <mat-header-cell *matHeaderCellDef>Région</mat-header-cell>
-              <mat-cell *matCellDef="let monthlyMeetingPresence">
+              <mat-header-cell fxHide.lt-sm *matHeaderCellDef>Région</mat-header-cell>
+              <mat-cell fxHide.lt-sm *matCellDef="let monthlyMeetingPresence">
                 {{ monthlyMeetingPresence.defaultDepartment }}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="startDateStr">
-              <mat-header-cell *matHeaderCellDef>Date d'entrée</mat-header-cell>
-              <mat-cell *matCellDef="let monthlyMeetingPresence">
+              <mat-header-cell fxHide.lt-sm *matHeaderCellDef>Date d'entrée</mat-header-cell>
+              <mat-cell fxHide.lt-sm *matCellDef="let monthlyMeetingPresence">
                 {{ monthlyMeetingPresence.startDateStr }}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="endDateStr">
-              <mat-header-cell *matHeaderCellDef
+              <mat-header-cell fxHide.lt-sm *matHeaderCellDef
                 >Date de sortie</mat-header-cell
               >
-              <mat-cell *matCellDef="let monthlyMeetingPresence">
+              <mat-cell fxHide.lt-sm *matCellDef="let monthlyMeetingPresence">
                 {{ monthlyMeetingPresence.endDateStr }}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="observations">
-              <mat-header-cell *matHeaderCellDef>Observations</mat-header-cell>
-              <mat-cell *matCellDef="let monthlyMeetingPresence">
+              <mat-header-cell fxHide.lt-sm *matHeaderCellDef>Observations</mat-header-cell>
+              <mat-cell fxHide.lt-sm *matCellDef="let monthlyMeetingPresence">
                 {{ monthlyMeetingPresence.observations }}
               </mat-cell>
             </ng-container>

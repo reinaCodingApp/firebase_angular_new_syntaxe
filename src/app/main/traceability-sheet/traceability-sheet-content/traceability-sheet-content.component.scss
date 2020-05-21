@@ -67,4 +67,25 @@ traceability-sheet-content {
       padding: 0px 0px 16px !important;
     }
   }
+
+  .mat-column-reference{
+    min-width: 80px;
+  }
+
+  .mat-header-reference{
+    min-width: 80px;
+  }
+
+  .mat-header-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+
+  .mat-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+
 }

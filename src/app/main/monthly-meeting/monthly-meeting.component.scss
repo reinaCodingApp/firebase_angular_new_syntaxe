@@ -1,0 +1,13 @@
+@import "src/@fuse/scss/fuse";
+
+.mat-header-cell {
+  @include media-breakpoint("lt-md") {
+    padding: 4px !important;
+  }
+}
+
+.mat-cell {
+  @include media-breakpoint("lt-md") {
+    padding: 4px !important;
+  }
+}

@@ -3,6 +3,7 @@ import { ManageTraceabilityCodesService } from './manage-traceability-codes.serv
 import { fuseAnimations } from '@fuse/animations';
 import { RequestParameter } from 'app/main/manage-traceability-codes/models/tequestParameter';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 @Component({
   selector: 'manage-traceability-codes',
@@ -22,7 +23,11 @@ export class ManageTraceabilityCodesComponent implements OnInit {
 
   loadingIndicator: boolean;
   reorderable: boolean;
-  constructor(private _manageTraceabilityCodes: ManageTraceabilityCodesService) {
+  smallScreen: boolean;
+
+  constructor(
+    private _manageTraceabilityCodes: ManageTraceabilityCodesService,
+    private breakpointObserver: BreakpointObserver) {
     this.loadingIndicator = true;
     this.reorderable = false;
   }
@@ -38,6 +43,15 @@ export class ManageTraceabilityCodesComponent implements OnInit {
       this.totalElements = results.queryRecords;
       this.total = results.totalRecords;
       this.codes = results.data;
+    });
+    this.breakpointObserver
+    .observe(['(min-width: 600px)'])
+    .subscribe((state: BreakpointState) => {
+      if (state.matches) {
+        this.smallScreen = false;
+      } else {
+        this.smallScreen = true;
+      }
     });
   }
 

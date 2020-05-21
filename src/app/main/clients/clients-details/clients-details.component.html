@@ -14,7 +14,7 @@
     </div>
     <mat-tab-group mat-align-tabs="center">
       <mat-tab label="Details">
-        <div class="tab-content p-24">
+        <div class="tab-content p-8 p-md-24">
           <table class="client-detail">
             <tr>
               <td>Nom</td>
@@ -78,7 +78,7 @@
       </mat-tab>
 
       <mat-tab label="Sites associés">
-        <div class="tab-content p-24">
+        <div class="tab-content p-8 p-md-24">
           <div fxLayout="column" fxLayoutAlign="space-around" *ngIf="habilitation.canEdit()">
             <form
               #f="ngForm"
@@ -118,10 +118,10 @@
               </mat-cell>
             </ng-container>
             <ng-container matColumnDef="city">
-              <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
+              <mat-header-cell fxHide.lt-sm fxLayoutAlign="center center" *matHeaderCellDef
                 >Ville</mat-header-cell
               >
-              <mat-cell fxLayoutAlign="center center" *matCellDef="let site">
+              <mat-cell fxHide.lt-sm fxLayoutAlign="center center" *matCellDef="let site">
                 <span class="job-title">
                   {{ site.city }}
                 </span>
@@ -129,7 +129,7 @@
             </ng-container>
             <ng-container matColumnDef="zipCode">
               <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-                >Ville</mat-header-cell
+                >Code postal</mat-header-cell
               >
               <mat-cell fxLayoutAlign="center center" *matCellDef="let site">
                 <span class="job-title">

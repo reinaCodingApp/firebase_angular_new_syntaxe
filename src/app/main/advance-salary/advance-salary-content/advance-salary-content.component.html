@@ -30,7 +30,7 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="ACCORDÉ" prop="requestAwarded">
+        <ngx-datatable-column name="ACCORDÉ" prop="requestAwarded" *ngIf="!smallScreen">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.requestAwarded + " €" }}
           </ng-template>
@@ -41,6 +41,7 @@
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column
+          *ngIf="!smallScreen"
           name="ETAT"
           prop="advanceSalaryStatus.name"
         ></ngx-datatable-column>

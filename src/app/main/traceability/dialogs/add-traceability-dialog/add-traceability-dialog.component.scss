@@ -3,6 +3,7 @@
 .mail-compose-dialog {
   @include media-breakpoint("xs") {
     width: 100%;
+    max-width: 90vw !important;
   }
 
   @include media-breakpoint("gt-xs") {

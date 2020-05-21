@@ -211,8 +211,8 @@
               <div class="h2 pr-16">{{ folder.title }}</div>
             </div>
             <div class="card-divider full-width"></div>
-            <div class="p-16 pb-12" fxLayout="row" *ngFor="let point of folder.points; index as i">
-              <div fxFlex="15">
+            <div class="p-16 pb-12" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="center" *ngFor="let point of folder.points; index as i">
+              <div fxFlex="15" fxFlex.lt-sm="100" class="pb-4">
                 <span class="px-8 py-4 fuse-white-500-fg" [ngClass]="point.note > 3 ? 'warn-700-bg' : 'amber-800-bg'" >{{ getNoteTitle(point.note) }}</span>
               </div>
               <div class="font-size-16 justify-content" fxLayout="row" fxLayoutAlign="start">

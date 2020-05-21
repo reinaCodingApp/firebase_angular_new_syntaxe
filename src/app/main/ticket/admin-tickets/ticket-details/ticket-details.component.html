@@ -86,17 +86,9 @@
           fxLayoutAlign="start start"
         >
           <div fxLayout="column">
-            <span class="title">Émis par :</span>
-            <span class="title">Date d'émission :</span>
-            <span class="title">Deadline :</span>
-          </div>
-
-          <div fxLayout="column">
-            <span class="detail"
-              >{{ ticket.ownerLastName }} {{ ticket.ownerFirstName }}</span
-            >
-            <span class="detail">{{ ticket.date }} à {{ ticket.time }}</span>
-            <span class="detail">{{ ticket.deadline }}</span>
+            <div>Émis par : {{ ticket.ownerLastName }} {{ ticket.ownerFirstName }}</div>
+            <div>Date d'émission : {{ ticket.date }} à {{ ticket.time }}</div>
+            <div>Deadline : {{ ticket.deadline }}</div>
           </div>
         </div>
       </div>

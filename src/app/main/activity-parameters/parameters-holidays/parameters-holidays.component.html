@@ -1,5 +1,9 @@
 <div class="mat-card mat-elevation-z4 p-8">
-  <div fxLayout="row" fxLayoutAlign="start center" *ngIf="habilitation.isAdmin()">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    *ngIf="habilitation.isAdmin()"
+  >
     <button
       type="submit"
       mat-raised-button
@@ -11,16 +15,6 @@
     </button>
   </div>
   <mat-table [dataSource]="acitvityHolidays">
-    <ng-container matColumnDef="id">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-        >#</mat-header-cell
-      >
-      <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
-        <span class="job-title">
-          {{ holiday.id }}
-        </span>
-      </mat-cell>
-    </ng-container>
     <ng-container matColumnDef="title">
       <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
         >Titre</mat-header-cell
@@ -37,7 +31,7 @@
       >
       <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
         <span class="job-title">
-          {{ holiday.date | date: 'dd/MM/yyyy' }}
+          {{ holiday.date | date: "dd/MM/yyyy" }}
         </span>
       </mat-cell>
     </ng-container>
@@ -57,7 +51,7 @@
         *matHeaderCellDef
       ></mat-header-cell>
       <mat-cell fxLayoutAlign="center center" *matCellDef="let holiday">
-        <span class="job-title" *ngIf="habilitation.isAdmin()">
+        <span fxHide.lt-md class="job-title" *ngIf="habilitation.isAdmin()">
           <div
             class="buttons-row"
             fxLayout="row"
@@ -81,6 +75,25 @@
             </button>
           </div>
         </span>
+        <div fxHide.gt-sm *ngIf="habilitation.isAdmin()">
+          <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+
+          <mat-menu #actionsMenu="matMenu">
+            <button
+              mat-menu-item
+              (click)="addOrUpdateActivityHoliday('edit', holiday)"
+            >
+              <span><mat-icon color="accent">edit</mat-icon>Modifier</span>
+            </button>
+            <button mat-menu-item (click)="deleteActivityHoliday(holiday)">
+              <span
+                ><mat-icon color="warn">delete_outline</mat-icon>Supprimer</span
+              >
+            </button>
+          </mat-menu>
+        </div>
       </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

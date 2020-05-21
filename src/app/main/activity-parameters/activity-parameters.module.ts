@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule, MatCheckboxModule, MatAutocompleteModule, MatChipsModule } from '@angular/material';
+import { MatTableModule, MatCheckboxModule, MatAutocompleteModule, MatChipsModule, MatMenuModule } from '@angular/material';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { FuseSharedModule } from '@fuse/shared.module';
@@ -22,7 +22,6 @@ import { ActivityParametersService } from './activity-parameters.service';
 import { ParametersSettingsComponent } from './parameters-settings/parameters-settings.component';
 import { ParametersHolidaysComponent } from './parameters-holidays/parameters-holidays.component';
 import { AddHolidayDialogComponent } from './parameters-holidays/dialogs/add-holiday-dialog/add-holiday-dialog.component';
-import { DeleteHolidayDialogComponent } from './parameters-holidays/dialogs/delete-holiday-dialog/delete-holiday-dialog.component';
 import { ParametersEmployeesComponent } from './parameters-employees/parameters-employees.component';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
@@ -36,7 +35,6 @@ const routes: Routes = [
     ParametersSettingsComponent,
     ParametersHolidaysComponent,
     AddHolidayDialogComponent,
-    DeleteHolidayDialogComponent,
     ParametersEmployeesComponent
   ],
   imports: [
@@ -58,13 +56,12 @@ const routes: Routes = [
     MatChipsModule,
     MatAutocompleteModule,
     NgxMatSelectSearchModule,
-
+    MatMenuModule,
     FuseSidebarModule,
     FuseSharedModule
   ],
   entryComponents: [
-    AddHolidayDialogComponent,
-    DeleteHolidayDialogComponent
+    AddHolidayDialogComponent
   ]
 })
 export class ActivityParametersModule {

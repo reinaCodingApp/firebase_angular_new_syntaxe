@@ -1,3 +1,5 @@
+@import "src/@fuse/scss/fuse";
+
 .popover-info {
   font-size: 1.0em;
   padding: 16px;
@@ -6,3 +8,16 @@
   border-radius: 5px;
   font-weight: 600;
 }
+
+.mat-header-cell {
+  @include media-breakpoint("lt-md") {
+    padding: 4px !important;
+  }
+}
+
+.mat-cell {
+  @include media-breakpoint("lt-md") {
+    padding: 4px !important;
+  }
+}
+

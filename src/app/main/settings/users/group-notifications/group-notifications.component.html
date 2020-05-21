@@ -1,10 +1,9 @@
-<div fxLayout="row" fxLayoutAlign="space-between start">
+<div fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="space-between start">
   <div fxFlex class="mr-12">
-    <div class="fuse-card" style="max-width:100%; min-width:100%;height:100vh;">
+    <div style="max-width:100%; min-width:100%;">
       <div
         class="pr-16 pl-16"
         fxLayout="row"
-        fxLayoutAlign="space-between center"
       >
         <mat-form-field appearance="outline" fxFLex class="mr-12">
           <mat-label>Nouveau groupe</mat-label>
@@ -52,7 +51,7 @@
     <div
       class="fuse-card"
       fxLayout="column"
-      style="max-width:100%; min-width:100%;height:100vh;"
+      style="max-width:100%; min-width:100%;"
     >
       <div class="p-16" fxLayout="row" fxLayoutAlign="space-between center">
         <h2 class="m-0">{{ selectedGroup.name }}</h2>

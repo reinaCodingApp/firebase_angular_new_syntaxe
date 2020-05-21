@@ -1,3 +1,5 @@
+@import "src/@fuse/scss/fuse";
+
 clients-details {
   .client-detail {
     width: 100%;
@@ -15,5 +17,16 @@ clients-details {
   table.client-detail tr td:first-child {
     font-weight: bold;
     font-style: initial;
+  }
+
+  .mat-header-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+  .mat-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
   }
 }

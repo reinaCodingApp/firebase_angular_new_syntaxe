@@ -22,7 +22,6 @@
       name="composeForm"
       class="compose-form"
       fxLayout="column"
-      fxFlex
     >
       <!-- Stepper Horizontal -->
       <mat-horizontal-stepper
@@ -688,9 +687,8 @@
               </div>
               <div
                 *ngIf="newMissionOrder.clients.length != 0"
-                fxLayout="row"
+                fxLayout="column"
                 fxLayoutAlign="space-between center"
-                fxFlex
               >
                 <mat-form-field appearance="outline" class="pr-4">
                   <mat-label>Site</mat-label>
@@ -729,7 +727,6 @@
                 *ngIf="newMissionOrder.clients.length != 0"
                 fxLayout="row"
                 fxLayoutAlign="start center"
-                fxFlex
               >
                 <div class="details">
                   <table width="100%">

@@ -17,8 +17,11 @@
         fxLayout="row wrap"
         fxLayoutAlign="space-between center"
       >
-        <span class="title dialog-title">
+        <span fxHide.lt-md class="title dialog-title">
           Associer un employé à un département
+        </span>
+        <span fxHide.gt-sm class="title dialog-title">
+          Employé - Département
         </span>
       </mat-toolbar-row>
     </mat-toolbar>

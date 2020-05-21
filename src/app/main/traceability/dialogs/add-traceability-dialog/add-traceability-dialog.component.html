@@ -24,7 +24,8 @@
             color="accent"
             type="button"
             (click)="addTraceabilityForPreviousWeekSites()">
-            Génération des sites de la semaine précédente
+            <span fxHide.lt-md>Génération des sites de la semaine précédente</span>
+            <span fxHide.gt-sm>Génération semaine précédente</span>
           </button>
           <blockquote>
               <p>

@@ -1,11 +1,18 @@
 @import "src/@fuse/scss/fuse";
 
 .add-audit-dialog {
-  @include media-breakpoint('xs') {
+  @include media-breakpoint("xs") {
     width: 100%;
+    max-width: 90vw !important;
+    .mat-vertical-content-container {
+      margin-left: 0px !important;
+    }
+    .mat-vertical-content {
+      padding: 0px !important;
+    }
   }
-  @include media-breakpoint('gt-xs') {
-    width: 45%;
+  @include media-breakpoint("gt-xs") {
+    width: 640px;
   }
   .mat-dialog-container {
     padding: 0;

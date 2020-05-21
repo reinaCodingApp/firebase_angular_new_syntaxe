@@ -140,4 +140,19 @@ tonnage-details {
   .add-panel {
     background-color: #f4f4f4;
   }
+
+  .mat-header-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+
+  .mat-cell {
+    @include media-breakpoint("lt-md") {
+      padding: 4px !important;
+    }
+  }
+
 }
+
+

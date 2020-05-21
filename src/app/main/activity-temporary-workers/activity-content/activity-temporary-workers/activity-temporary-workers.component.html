@@ -1,6 +1,6 @@
 <div class="content">
-  <div class="header" fxLayout="row" fxLayoutAlign="start center">
-    <div fxFlex="30" >
+  <div class="header" fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="center" fxLayoutAlign="start center">
+    <div fxFlex="30" fxFlex.lt-sm="100">
       <mat-form-field class="w-100-p">
         <mat-label>Filter par secteur</mat-label>
         <mat-select (selectionChange)="getTemporaryWorkers()" [(ngModel)]="selectedDepartment" name="department">
@@ -9,17 +9,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-    </div>    
-    <div fxFlex="40" class="mx-8">
-      <mat-form-field floatLabel="never">
+    </div>
+    <div fxFlex="40" fxFlex.lt-sm="100" class="mx-md-8">
+      <mat-form-field floatLabel="never" class="w-100-p">
         <input matInput placeholder="FILTRE PAR NOM, PRÉNOM, VILLE OU AGENCE" name="search"
           (keyup)="filterTemporaryWorkers($event)" />
       </mat-form-field>
     </div>
-    <div fxFlex="18" fxLayoutAlign="end center">
-      <button type="button" mat-stroked-button color="warn" (click)="addTemporaryWorker()"
+    <div fxFlex="18" fxFlex.lt-sm="100" fxLayoutAlign.lt-sm="center" fxLayoutAlign="end center">
+      <button type="button" mat-mini-fab color="warn" (click)="addTemporaryWorker()"
         matTooltip="Créer nouvel intérimaire">
-        <span fxHide.xs >Nouveau</span> 
         <mat-icon class="s-20">add</mat-icon>
       </button>
     </div>
@@ -27,49 +26,41 @@
 </div>
 <div class="mt-12">
   <mat-table [dataSource]="temporaryWorkers">
-    <ng-container matColumnDef="firstName">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Prénom</mat-header-cell>
-      <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
-        <span class="job-title">
-          {{ temporaryWorker.firstName }}
-        </span>
-      </mat-cell>
-    </ng-container>
     <ng-container matColumnDef="lastName">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Nom</mat-header-cell>
+      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Nom et prénom</mat-header-cell>
       <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
         <span class="job-title">
-          {{ temporaryWorker.lastName }}
+          {{ temporaryWorker.lastName }} {{ temporaryWorker.firstName }}
         </span>
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="city">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Ville</mat-header-cell>
-      <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
+      <mat-header-cell fxHide.lt-sm fxLayoutAlign="center center" *matHeaderCellDef>Ville</mat-header-cell>
+      <mat-cell fxHide.lt-sm fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
         <span class="job-title">
           {{ temporaryWorker.city }}
         </span>
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="birthdate">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Naissance</mat-header-cell>
-      <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
+      <mat-header-cell fxHide.lt-sm fxLayoutAlign="center center" *matHeaderCellDef>Naissance</mat-header-cell>
+      <mat-cell fxHide.lt-sm fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
         <span class="job-title">
           {{ temporaryWorker.birthdate }}
         </span>
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="provider">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Agence</mat-header-cell>
-      <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
+      <mat-header-cell fxHide.lt-sm fxLayoutAlign="center center" *matHeaderCellDef>Agence</mat-header-cell>
+      <mat-cell fxHide.lt-sm fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
         <span class="job-title">
           {{ temporaryWorker.provider ? temporaryWorker.provider.name : "" }}
         </span>
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="country">
-      <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Secteurs</mat-header-cell>
-      <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
+      <mat-header-cell fxHide.lt-sm fxLayoutAlign="center center" *matHeaderCellDef>Secteurs</mat-header-cell>
+      <mat-cell fxHide.lt-sm fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
         <span class="job-title" *ngIf="temporaryWorker.departments.length != 0">
           <ul>
             <li *ngFor="let department of temporaryWorker.departments">
@@ -93,7 +84,7 @@
     <ng-container matColumnDef="edition">
       <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef>Édition</mat-header-cell>
       <mat-cell fxLayoutAlign="center center" *matCellDef="let temporaryWorker">
-        <span class="job-title">
+        <span fxHide.lt-md class="job-title">
           <div class="buttons-row" fxLayout="row" fxLayoutAlign="space-between center">
             <button mat-icon-button color="accent" class="mat-elevation-z1"
               (click)="updateTemporaryWorker(temporaryWorker)">
@@ -105,6 +96,26 @@
             </button>
           </div>
         </span>
+        <div fxHide.gt-sm>
+          <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+
+          <mat-menu #actionsMenu="matMenu">
+            <button
+              mat-menu-item
+              (click)="updateTemporaryWorker(temporaryWorker)"
+            >
+              <span><mat-icon color="accent">edit</mat-icon>Modifier</span>
+            </button>
+            <button
+              mat-menu-item
+              (click)="deleteTemporaryWorker(temporaryWorker)"
+            >
+              <span><mat-icon color="warn">delete_outline</mat-icon>Supprimer</span>
+            </button>
+          </mat-menu>
+        </div>
       </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

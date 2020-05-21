@@ -2,7 +2,15 @@
   <div class="top-bg accent"></div>
 
   <div class="center">
-    <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+    <div class="header accent" fxLayout="row" fxLayoutAlign="start center">
+      <button
+        matTooltip="Retour à pointages salariés"
+        mat-icon-button
+        class="back mr-16"
+        [routerLink]="'/activity'"
+      >
+        <mat-icon class="fuse-white-500-fg">arrow_back</mat-icon>
+      </button>
       <h2 class="m-0">PARAMÉTRAGES</h2>
     </div>
 
@@ -10,18 +18,18 @@
       <div class="content">
         <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
           <mat-tab label="Secteurs salariés">
-            <div class="tab-content p-24" fusePerfectScrollbar>
+            <div class="tab-content" fusePerfectScrollbar>
               <parameters-settings></parameters-settings>
             </div>
           </mat-tab>
 
           <mat-tab label="Paramétrage jours feriés">
-            <div class="tab-content p-24" fusePerfectScrollbar>
+            <div class="tab-content" fusePerfectScrollbar>
               <parameters-holidays></parameters-holidays>
             </div>
           </mat-tab>
           <mat-tab label="Paramétrage employés">
-            <div class="tab-content p-24" fusePerfectScrollbar>
+            <div class="tab-content" fusePerfectScrollbar>
               <parameters-employees></parameters-employees>
             </div>
           </mat-tab>

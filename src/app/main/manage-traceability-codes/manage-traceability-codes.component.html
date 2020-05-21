@@ -70,11 +70,11 @@
           totalMessage: 'Totale'
         }"
       >
-        <ngx-datatable-column name="Date" prop="date"> </ngx-datatable-column>
+        <ngx-datatable-column name="Date" prop="date" *ngIf="!smallScreen"> </ngx-datatable-column>
 
         <ngx-datatable-column name="Code" prop="code"> </ngx-datatable-column>
 
-        <ngx-datatable-column name="Code exceptionnel?">
+        <ngx-datatable-column name="Code exceptionnel?" *ngIf="!smallScreen">
           <ng-template
             let-row="row"
             let-value="value"
@@ -96,10 +96,15 @@
             let-offset="offset"
             let-isVisible="isVisible"
           >
-            <div class="page-count" fxFlex.gt-sm="1 1 60%" fxFlex>
+            <div fxHide.lt-md class="page-count" fxFlex.gt-sm="1 1 60%" fxFlex>
               Affichage de l'élément {{ curPage * pageSize - pageSize + 1 }} à
               {{ curPage * pageSize }} sur {{ totalElements }} éléments (filtré
               de {{ total }} éléments au total)
+            </div>
+            <div fxHide.gt-sm class="page-count" fxFlex.gt-sm="1 1 60%" fxFlex>
+              {{ curPage * pageSize - pageSize + 1 }} à
+              {{ curPage * pageSize }} sur {{ totalElements }}  (filtré
+              de {{ total }})
             </div>
             <datatable-pager
               fxFlex.gt-sm="1 1 40%"

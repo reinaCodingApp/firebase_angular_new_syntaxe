@@ -23,6 +23,7 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="end center">
         <a
+          fxHide.lt-sm
           *ngIf="connectedUser.customClaims.isRoot"
           class="pr-12 mat-title"
           [routerLink]="'/settings/modules'"
@@ -84,10 +85,10 @@
 
                 <!-- Title Column -->
                 <ng-container matColumnDef="email">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <th fxHide.lt-sm mat-header-cell *matHeaderCellDef mat-sort-header>
                     Émail
                   </th>
-                  <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+                  <td fxHide.lt-sm mat-cell *matCellDef="let u">{{ u.email }}</td>
                 </ng-container>
 
                 <!-- Value Column -->
@@ -96,7 +97,7 @@
                     Privilèges
                   </th>
                   <td mat-cell *matCellDef="let u">
-                    <div class="claims-list" *ngIf="u.customClaims">
+                    <div fxLayout="row" fxLayout.lt-sm="column" class="claims-list" *ngIf="u.customClaims">
                       <span *ngIf="u.customClaims.isRoot">root</span>
                       <span *ngIf="u.customClaims.isTechAdmin">techAdmin</span>
                       <span *ngIf="u.customClaims.isGuest">guest</span>

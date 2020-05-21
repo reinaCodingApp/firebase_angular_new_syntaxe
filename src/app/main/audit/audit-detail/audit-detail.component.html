@@ -59,8 +59,8 @@
                         <div  class="audit-item p-16 mb-24" *ngFor="let item of section.items"
                             [class.mat-elevation-z2]="true">
                           <p [innerHTML]="item.title"></p>
-                          <div fxLayout="row" fxLayoutAlign="end end" >
-                            <button (click)="updateEffectiveValue(item,v)" mat-raised-button class="mx-4" color="{{item.effectiveValue==v ? 'accent' :''}}" *ngFor="let v of item.possibleValues.values" >{{v}}</button>
+                          <div fxLayout="row wrap" fxLayoutAlign="end end" >
+                            <button (click)="updateEffectiveValue(item,v)" mat-raised-button class="m-4" color="{{item.effectiveValue==v ? 'accent' :''}}" *ngFor="let v of item.possibleValues.values" >{{v}}</button>
                           </div>
                         </div>
                       </div>

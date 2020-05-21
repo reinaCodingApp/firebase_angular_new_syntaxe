@@ -102,10 +102,11 @@
       </mat-form-field>
       <div
         fxLayout="row"
+        fxLayout.lt-sm="column"
         fxLayoutAlign="space-between center"
         fxFlex="1 0 auto"
       >
-        <mat-form-field fxFlex="45" class="pr-4">
+        <mat-form-field fxFlex="45" fxFlex.lt-sm="100" class="pr-sm-4">
           <mat-label>Heure de début</mat-label>
           <input
             #startTime="ngModel"
@@ -131,7 +132,7 @@
             Veuillez renseigner l'heure de début!
           </mat-error>
         </mat-form-field>
-        <mat-form-field fxFlex="45" class="pr-4">
+        <mat-form-field fxFlex="45" fxFlex.lt-sm="100" class="pr-sm-4">
           <mat-label>Heure de fin</mat-label>
           <input
             #endTime="ngModel"

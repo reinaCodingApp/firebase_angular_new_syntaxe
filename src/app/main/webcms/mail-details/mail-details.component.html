@@ -57,15 +57,9 @@
 
         <div *ngIf="showDetails" class="details" fxLayout="row" fxLayoutAlign="start start">
           <div fxLayout="column">
-            <span class="title">De :</span>
-            <span class="title">A :</span>
-            <span class="title">Le :</span>
-          </div>
-
-          <div fxLayout="column">
-            <span class="detail">{{ discussion.email }}</span>
-            <span class="detail">contact@avs.fr</span>
-            <span class="detail">{{ discussion.date | date:'dd/MM/yyyy hh:mm' }}</span>
+            <div>De : {{ discussion.email }}</div>
+            <div>A : contact@avs.fr</div>
+            <div>Le : {{ discussion.date | date:'dd/MM/yyyy hh:mm' }}</div>
           </div>
         </div>
       </div>

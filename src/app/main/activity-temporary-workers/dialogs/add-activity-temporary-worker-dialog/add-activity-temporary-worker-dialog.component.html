@@ -14,7 +14,7 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+  <div mat-dialog-content class="p-0 m-0" fusePerfectScrollbar>
     <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
       <mat-tab label="Présence">
         <div class="dialog-content-wrapper">
@@ -25,7 +25,6 @@
               name="composeForm"
               class="compose-form"
               fxLayout="column"
-              fxFlex
             >
               <mat-form-field appearance="outline">
                 <mat-label>Séléction salarié</mat-label>
@@ -107,10 +106,11 @@
               </mat-form-field>
               <div
                 fxLayout="row"
+                fxLayout.lt-sm="column"
                 fxLayoutAlign="space-between center"
                 fxFlex="1 0 auto"
               >
-                <mat-form-field fxFlex="45" class="pr-4">
+                <mat-form-field fxFlex="45" fxFlex.lt-sm="100" class="pr-sm-4">
                   <mat-label>Heure de début</mat-label>
                   <input
                     #startTime="ngModel"
@@ -139,7 +139,7 @@
                     Veuillez renseigner l'heure de début!
                   </mat-error>
                 </mat-form-field>
-                <mat-form-field fxFlex="45" class="pr-4">
+                <mat-form-field fxFlex="45" fxFlex.lt-sm="100" class="pr-sm-4">
                   <mat-label>Heure de fin</mat-label>
                   <input
                     #endTime="ngModel"

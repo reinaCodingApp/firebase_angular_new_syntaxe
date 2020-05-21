@@ -21,7 +21,7 @@ export class ActivityTemporaryWorkersComponent implements OnInit {
   temp: CompleteEmployee[];
   departments: Department[];
   selectedDepartment: Department;
-  displayedColumns = ['firstName', 'lastName', 'city', 'birthdate', 'provider', 'country', 'isEnable', 'edition'];
+  displayedColumns = ['lastName', 'city', 'birthdate', 'provider', 'country', 'isEnable', 'edition'];
 
   private dialogRef: any;
 

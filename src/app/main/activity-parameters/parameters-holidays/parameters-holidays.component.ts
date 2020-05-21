@@ -5,8 +5,8 @@ import { SharedNotificationService } from 'app/common/services/shared-notificati
 import { Holiday } from 'app/main/activity-parameters/models/holiday';
 import { MatDialog } from '@angular/material';
 import { AddHolidayDialogComponent } from './dialogs/add-holiday-dialog/add-holiday-dialog.component';
-import { DeleteHolidayDialogComponent } from './dialogs/delete-holiday-dialog/delete-holiday-dialog.component';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
+import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 
 @Component({
   selector: 'parameters-holidays',
@@ -15,7 +15,7 @@ import { Habilitation } from 'app/main/access-rights/models/habilitation';
 })
 export class ParametersHolidaysComponent implements OnInit {
   acitvityHolidays: Holiday[];
-  displayedColumns = ['id', 'title', 'date', 'static', 'actions'];
+  displayedColumns = ['title', 'date', 'static', 'actions'];
   private dialogRef: any;
   habilitation: Habilitation = new Habilitation(0);
 
@@ -71,7 +71,12 @@ export class ParametersHolidaysComponent implements OnInit {
   }
 
   deleteActivityHoliday(currentActivityHoliday: Holiday): void {
-    this.dialogRef = this._matDialog.open(DeleteHolidayDialogComponent, {
+    this.dialogRef = this._matDialog.open(CustomConfirmDialogComponent, {
+      panelClass: 'confirm-dialog',
+      data: {
+        title: 'Supprimer jour férié',
+        message: 'Confirmez-vous la suppression de ce jour férié ?'
+      }
     });
     this.dialogRef.afterClosed()
       .subscribe(response => {
@@ -88,6 +93,7 @@ export class ParametersHolidaysComponent implements OnInit {
         }
       });
   }
+
 
 }
 

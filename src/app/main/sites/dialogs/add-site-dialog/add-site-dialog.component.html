@@ -106,9 +106,10 @@
             name="siteCoordonate"
             readonly
             required
-            style="padding-left: 12px;"
           />
           <button
+            fxShow.gt-sm
+            fxHide
             style="bottom: 10px;"
             type="button"
             mat-raised-button
@@ -116,6 +117,16 @@
             (click)="getCoordinateFromAddress()"
           >
             Obtenir
+          </button>
+          <button
+            fxShow.lt-md
+            fxHide
+            mat-icon-button
+            type="button"
+            matPrefix
+            (click)="getCoordinateFromAddress()"
+          >
+            <mat-icon>location_on</mat-icon>
           </button>
           <button
             fxShow.gt-sm
@@ -163,6 +174,8 @@
             required
           />
           <button
+            fxShow.gt-sm
+            fxHide
             style="bottom: 10px;"
             type="button"
             mat-raised-button
@@ -170,6 +183,16 @@
             (click)="generateAgreementNumber()"
           >
             Générer N°
+          </button>
+          <button
+            fxShow.lt-md
+            fxHide
+            mat-icon-button
+            type="button"
+            matSuffix
+            (click)="generateAgreementNumber()"
+          >
+            <mat-icon>autorenew</mat-icon>
           </button>
         </mat-form-field>
         <mat-form-field appearance="outline">
@@ -193,6 +216,7 @@
         <mat-checkbox
           [(ngModel)]="site.displayInTheWebSite"
           name="displayInTheWebSite"
+          class="pb-20"
           >Afficher sur le site
         </mat-checkbox>
         <mat-form-field appearance="outline">

@@ -13,6 +13,7 @@ import { GenerateTaskDialogComponent } from './dilaogs/generate-task-dialog/gene
 import { CommonService } from 'app/common/services/common.service';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 @Component({
   selector: 'meetings',
@@ -30,6 +31,7 @@ export class MeetingsComponent implements OnInit {
   commentContent: string;
   selectedTab: number;
   dialogRef: any;
+  smallScreen: boolean;
   habilitation: Habilitation = new Habilitation(0);
 
   constructor(
@@ -37,7 +39,8 @@ export class MeetingsComponent implements OnInit {
     private _loaderService: NgxUiLoaderService,
     private _notificationService: SharedNotificationService,
     private _matDialog: MatDialog,
-    public commonService: CommonService) {
+    public commonService: CommonService,
+    private breakpointObserver: BreakpointObserver) {
   }
 
   ngOnInit(): void {
@@ -49,6 +52,15 @@ export class MeetingsComponent implements OnInit {
     });
     this._meetingsService.onHabilitationLoaded.subscribe(habilitationResult => {
       this.habilitation = habilitationResult;
+    });
+    this.breakpointObserver
+    .observe(['(min-width: 600px)'])
+    .subscribe((state: BreakpointState) => {
+      if (state.matches) {
+        this.smallScreen = false;
+      } else {
+        this.smallScreen = true;
+      }
     });
   }
 

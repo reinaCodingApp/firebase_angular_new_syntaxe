@@ -91,7 +91,7 @@
                 >
                   <mat-icon class="mr-4">info</mat-icon>
                 </button>
-                {{ m.title }}
+                <div fxHide.lt-md>{{ m.title }}</div>
                 <sat-popover
                   #popover
                   hasBackdrop
@@ -101,6 +101,7 @@
                   lockAlignment
                 >
                   <div class="popover-info mat-elevation-z8 font-size-14">
+                    <h2 fxHide.gt-sm class="mt-0" fxHide.gt-md>{{ m.title }}</h2>
                     <div [outerHTML]="m.aclDescription | replaceLineBreaks"></div>
                   </div>
                 </sat-popover>
@@ -236,7 +237,7 @@
             <!-- SuperAdmin -->
             <ng-container matColumnDef="superAdmin">
               <mat-header-cell fxLayoutAlign="center center" *matHeaderCellDef
-                >SuperAdmin</mat-header-cell
+                >Super Admin</mat-header-cell
               >
               <mat-cell fxLayoutAlign="center center" *matCellDef="let m">
                 <button mat-flat-button (click)="updategrantedAccess(m, 7)">

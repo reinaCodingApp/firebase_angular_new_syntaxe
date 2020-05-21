@@ -3,16 +3,18 @@ import { AuditsService } from './../../audit.service';
 import { AuditTemplate } from '../../models/audit-template';
 import { Site } from 'app/common/models/site';
 import { Audit } from '../../models/audit';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SiteType } from 'app/main/sites/models/siteType';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
+import { BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'add-audit-dialog',
   templateUrl: './add-audit-dialog.component.html',
-  styleUrls: ['./add-audit-dialog.component.scss']
+  styleUrls: ['./add-audit-dialog.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AddAuditDialogComponent implements OnInit {
   audit: Audit = new Audit();
@@ -23,7 +25,10 @@ export class AddAuditDialogComponent implements OnInit {
   selectedTemplate: AuditTemplate = null;
   action = '';
   siteTypes: SiteType[] = [];
-  constructor(private sharedNotificationService: SharedNotificationService,
+  smallScreen: boolean;
+  constructor(
+    private sharedNotificationService: SharedNotificationService,
+    private breakpointObserver: BreakpointObserver,
     public matDialogRef: MatDialogRef<AddAuditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private auditsService: AuditsService) {
@@ -76,6 +81,15 @@ export class AddAuditDialogComponent implements OnInit {
     });
     this.auditsService.onSiteTypesChanged.subscribe(data => {
       this.siteTypes = data;
+    });
+    this.breakpointObserver
+    .observe(['(min-width: 600px)'])
+    .subscribe((state: BreakpointState) => {
+      if (state.matches) {
+        this.smallScreen = false;
+      } else {
+        this.smallScreen = true;
+      }
     });
   }
 

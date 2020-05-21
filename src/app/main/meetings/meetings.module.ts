@@ -18,7 +18,7 @@ import { FuseSidebarModule } from '@fuse/components';
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
 import { MeetingsComponent } from './meetings.component';
 import { MeetingsService } from './meetings.service';
-import { MatExpansionModule, MatCheckboxModule, MatTableModule } from '@angular/material';
+import { MatExpansionModule, MatCheckboxModule, MatTableModule, MatMenuModule } from '@angular/material';
 import { AddDecisionDialogComponent } from './dilaogs/add-decision-dialog/add-decision-dialog.component';
 import { GenerateTaskDialogComponent } from './dilaogs/generate-task-dialog/generate-task-dialog.component';
 import { DecisionsComponent } from './decisions/decisions.component';
@@ -77,6 +77,7 @@ const routes: Routes = [
     NgxDatatableModule,
     SharedPipesModule,
     CustomConfirmDialogModule,
+    MatMenuModule,
 
     FuseSidebarModule,
     FuseSharedModule
