@@ -18,7 +18,9 @@ export class FooterComponent {
   allUnreadTicketsAndCommentsCount: number;
   versionName = '';
   private moduleIdentifier = ModuleIdentifiers.ticket;
-
+  promptEvent: any;
+  isInStandaloneMode = false;
+  isAlreadyInstalled = true;
 
   constructor(
     private matDialog: MatDialog,
@@ -38,6 +40,35 @@ export class FooterComponent {
         this.versionName = response.versionName;
       }
     });
+    window.addEventListener('beforeinstallprompt', event => {      
+      this.isAlreadyInstalled = false;
+      this.promptEvent = event;
+    });
+    window.addEventListener('appinstalled', (evt) => {      
+      this.isAlreadyInstalled = true;
+    });
+    window.addEventListener('load', () => {
+      const iOSInStandaloneMode = ('standalone' in window.navigator) && (window.navigator['standalone']);
+      if (iOSInStandaloneMode) {        
+        this.isInStandaloneMode = true;
+      } else if (matchMedia('(display-mode: standalone)').matches) {        
+        this.isInStandaloneMode = true;
+      } else {        
+        this.isInStandaloneMode = false;
+      }
+    });
+  }
+  installApp(): void {    
+    if (this.promptEvent) {
+      this.promptEvent.prompt();    
+      this.promptEvent.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Uses accepted to install the  app');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+    });
+    }    
   }
 
   addTicket(): void {

@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
   navigation: any;
   showConfigButton;
   configurationUrl = '';
-  currentAppVersion: AppVersion = null;
+  currentAppVersion: AppVersion = null;  
 
   private _unsubscribeAll: Subject<any>;
   constructor(
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
         this.appService.onAppVersionChanged.next(lastVersion);
       }
-    });
+    });    
   }
 
   ngOnInit(): void {

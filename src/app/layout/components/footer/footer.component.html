@@ -5,6 +5,8 @@
         <mat-icon class="s-16 mr-sm-4">build</mat-icon>
         <span>{{versionName}}</span>
       </a>
+      <button fxHide.gt-xs class="ml-4" color="warn" *ngIf="isInStandaloneMode === false && isAlreadyInstalled === false"  mat-button (click)="installApp();" >
+        <mat-icon>get_app</mat-icon>Installer</button>
     </div>
 
     <div>

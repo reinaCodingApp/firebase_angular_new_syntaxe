@@ -64,6 +64,8 @@ import { ActivityTemporaryWorkerModule } from './main/activity-temporary-workers
 
 import { TokenInterceptor } from './main/login/token.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 const appRoutes: Routes = [
   {
@@ -140,7 +142,9 @@ const appRoutes: Routes = [
     ActivityTemporaryWorkerModule,
 
     // 3rd party modules
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
 
   ],
   providers: [
