@@ -1,99 +1,109 @@
 <div id="academy-courses" class="page-layout simple">
 
-    <!-- HEADER -->
-    <div class="header accent p-16 p-sm-24" fxLayout="column" fxLayoutAlign="center center">
+  <!-- HEADER -->
+  <div class="header accent p-16 p-sm-24" fxLayout="column" fxLayoutAlign="center center">
 
-        <div class="hero-text">
-            <mat-icon class="hero-icon">school</mat-icon>
-            <h1 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
-                AUDITS
-            </h1>
-            <h3 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
-                Création d'audits multi-critères, personnalisés.
-            </h3>
-        </div>
-        <div class="w-100-p new-audit"  fxLayout="row" *ngIf="habilitation.canCreate()" >
-          <div class="w-100-p" fxLayoutAlign="end">
-              <button mat-fab
-              title="Créer un nouvel audit"
-              color="warn"
-              class=""
-              (click)="popup()"
-              aria-label=""
-              [@animate]="{value:'*', params:{delay:'600ms',scale:'0.2'}}">
-                <mat-icon>add</mat-icon>
-              </button>
-          </div>
+    <div class="hero-text">
+      <mat-icon class="hero-icon">school</mat-icon>
+      <h1 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
+        AUDITS
+      </h1>
+      <h3 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
+        Création d'audits multi-critères, personnalisés.
+      </h3>
+    </div>
+    <div class="w-100-p new-audit" fxLayout="row" *ngIf="habilitation.canCreate()">
+      <div class="w-100-p" fxLayoutAlign="end">
+        <button mat-fab title="Créer un nouvel audit" color="warn" class="" (click)="popup()" aria-label=""
+          [@animate]="{value:'*', params:{delay:'600ms',scale:'0.2'}}">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
-
     </div>
-    <!-- / HEADER -->
 
-    <!-- CONTENT -->
-    <div class="content p-24">
+  </div>
+  <!-- / HEADER -->
 
-        <div fxLayout="column" fxLayoutAlign="center">
+  <!-- CONTENT -->
+  <div class="content p-24">
 
-            <div class="filters" fxLayout="column" fxLayoutAlign="center center"
-                 fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
-
-                <mat-form-field appearance="outline" class="category-selector">
-                    <mat-label>Types de partenaire</mat-label>
-                    <mat-select [(ngModel)]="currentSiteType"
-                                (selectionChange)="filterAuditsBySiteType()">
-                        <mat-option [value]="{id: -1, name: 'Tous'}">
-                            Tous
-                        </mat-option>
-                        <mat-option *ngFor="let t of siteTypes" [value]="t">
-                            {{ t.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
+    <div fxLayout="column" fxLayoutAlign="center">
+      <div class="w-100-p" fxLayoutAlign="start center">
+        <button matTooltip="Retour à la liste des poles" mat-icon-button class="back mr-16"
+          [@animate]="{value:'*', params:{delay:'600ms',scale:'0.2'}}" [routerLink]="'/audit-poles'">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+      <!-- AUDIT DRAFTS -->
+      <div class="courses" fxLayout="row wrap" fxLayoutAlign="center" [@animateStagger]="{value:'50'}">
+        <div class="course" *ngFor="let audit of auditsDrafts" fxFlex="100" fxFlex.gt-xs="50" fxFlex.gt-sm="33"
+          [ngClass]="audit.title" [@animate]="{value:'*',params:{y:'100%'}}">
+          <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
+            <div class="header" fxLayout="row" fxLayoutAlign="center center"
+              [ngClass]="audit.site.types.length > 1 ? 'web-bg' : 'type-' + audit.site.types[0].id">
+              <div class="category fuse-white-500-fg" fxFlex>
+                {{audit.site.name}}
+              </div>
+              <div class="category">
+                <mat-icon class="fuse-white-500-fg">receipt</mat-icon>
+              </div>
             </div>
-            <div class="courses" fxLayout="row wrap" fxLayoutAlign="center" [@animateStagger]="{value:'50'}">
 
-                <div class="course" *ngFor="let audit of filteredAudits" fxFlex="100" fxFlex.gt-xs="50"
-                     fxFlex.gt-sm="33" [ngClass]="audit.title" [@animate]="{value:'*',params:{y:'100%'}}">
-
-                    <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
-
-                        <div class="header" fxLayout="row" fxLayoutAlign="center center"
-
-                             [ngClass]="audit.site.types.length > 1 ? 'web-bg' : 'type-' + audit.site.types[0].id">
-
-                            <div class="category" fxFlex>
-                                {{audit.site.name}}
-                            </div>
-                        </div>
-
-                        <div class="content" fxLayout="column" fxLayoutAlign="center center" fxFlex="1 1 auto">
-                            <div class="h1">{{audit.title}}</div>
-                            <div class="updated">{{'Date ' + (audit.date | date: 'dd/MM/yyyy')}}</div>
-                        </div>
-
-                        <div class="footer" fxLayout="row" fxLayoutAlign="center center">
-                            <button mat-button color="accent"
-                                    [routerLink]="'/audit-detail/'+ audit.id">
-                                OUVRIR
-                            </button>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="no-courses" *ngIf="filteredAudits.length === 0">
-                    <p>
-                      Aucun audit dans la liste
-                    </p>
-                </div>
-
+            <div class="content" fxLayout="column" fxLayoutAlign="center center" fxFlex="1 1 auto">
+              <div class="h1">{{audit.title}}</div>
+              <div class="updated">{{'Date ' + (audit.date | date: 'dd/MM/yyyy')}}</div>
             </div>
+
+            <div class="footer" fxLayout="row" fxLayoutAlign="center center">
+              <button mat-button color="accent" [routerLink]="'/audit-detail/'+ audit.id"
+                [queryParams]="{ isDraft: true}">
+                OUVRIR
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- AUDIT DRAFTS -->
+      <mat-divider *ngIf="auditsDrafts?.length > 0"></mat-divider>
+      <!-- AUDITS -->
+      <div class="courses" fxLayout="row wrap" fxLayoutAlign="center" [@animateStagger]="{value:'50'}">
+
+        <div class="course" *ngFor="let audit of filteredAudits" fxFlex="100" fxFlex.gt-xs="50" fxFlex.gt-sm="33"
+          [ngClass]="audit.title" [@animate]="{value:'*',params:{y:'100%'}}">
+
+          <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
+
+            <div class="header" fxLayout="row" fxLayoutAlign="center center"
+              [ngClass]="audit.site.types.length > 1 ? 'web-bg' : 'type-' + audit.site.types[0].id">
+
+              <div class="category fuse-white-500-fg" fxFlex>
+                {{audit.site.name}}
+              </div>
+            </div>
+
+            <div class="content" fxLayout="column" fxLayoutAlign="center center" fxFlex="1 1 auto">
+              <div class="h1">{{audit.title}}</div>
+              <div class="updated">{{'Date ' + (audit.date | date: 'dd/MM/yyyy')}}</div>
+            </div>
+
+            <div class="footer" fxLayout="row" fxLayoutAlign="center center">
+              <button mat-button color="accent" [routerLink]="'/audit-detail/'+ audit.id"
+                [queryParams]="{ isDraft: false}">
+                OUVRIR
+              </button>
+            </div>
+
+          </div>
 
         </div>
 
+        <div class="no-courses" *ngIf="filteredAudits.length === 0 && auditsDrafts.length === 0">
+          <p>
+            Aucun audit dans la liste
+          </p>
+        </div>
+      </div>
+      <!-- AUDITS -->
     </div>
-    <!-- / CONTENT -->
-
+  </div>
 </div>

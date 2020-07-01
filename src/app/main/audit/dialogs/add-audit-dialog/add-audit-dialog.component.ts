@@ -66,10 +66,6 @@ export class AddAuditDialogComponent implements OnInit {
       this.sharedNotificationService.showError('Veuillez saisir le nom du template');
       return;
     }
-    if (!this.selectedTemplate.siteTypes || this.selectedTemplate.siteTypes.length === 0) {
-      this.sharedNotificationService.showError('Veuillez choisir un ou plusieur type de sites');
-      return;
-    }
     this.matDialogRef.close({ template: this.selectedTemplate });
   }
   ngOnInit() {
@@ -83,28 +79,13 @@ export class AddAuditDialogComponent implements OnInit {
       this.siteTypes = data;
     });
     this.breakpointObserver
-    .observe(['(min-width: 600px)'])
-    .subscribe((state: BreakpointState) => {
-      if (state.matches) {
-        this.smallScreen = false;
-      } else {
-        this.smallScreen = true;
-      }
-    });
-  }
-
-  checkTempaltesToDispaly(selectedSite): void {
-    const filtredTemplates: AuditTemplate[] = [];
-    this.templates.forEach(template => {
-      template.siteTypes.forEach(siteType => {
-        for (const selectedSiteType of selectedSite.value.types) {
-          if (selectedSiteType.id === siteType.id) {
-            filtredTemplates.push(template);
-          }
+      .observe(['(min-width: 600px)'])
+      .subscribe((state: BreakpointState) => {
+        if (state.matches) {
+          this.smallScreen = false;
+        } else {
+          this.smallScreen = true;
         }
       });
-    });
-    this.filtredTemplates = filtredTemplates;
   }
-
 }

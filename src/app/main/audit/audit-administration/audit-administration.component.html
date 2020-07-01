@@ -10,7 +10,7 @@
         matTooltip="Retour à la liste des audits"
         mat-icon-button
         class="back mr-16"
-        [routerLink]="'/audits'"
+        [routerLink]="'/audits/'+ poleId"
       >
         <mat-icon>arrow_back</mat-icon>
       </button>
@@ -26,7 +26,7 @@
           <button mat-menu-item (click)="popupNewTemplate()">
             <span>Ajouter un nouveau modèle</span>
           </button>
-          <button mat-menu-item [routerLink]="'/audits/possibleValues'">
+          <button mat-menu-item [routerLink]="'/audits-possibleValues'">
             <span>Gérer les valeurs possibles</span>
           </button>
         </mat-menu>
@@ -56,8 +56,8 @@
         >
           <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
             <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
-              <mat-icon [routerLink]="'/audits/administration/' + template.id" matTooltip="Une vérification de ce modèle est nécessaire" *ngIf="template.status === 'invalid'" class="yellow-700-fg" >warning</mat-icon>
-              <div class="category" color="accent" [routerLink]="'/audits/administration/' + template.id">
+              <mat-icon [routerLink]="'/audits-templates/' + template.id" matTooltip="Une vérification de ce modèle est nécessaire" *ngIf="template.status === 'invalid'" class="yellow-700-fg" >warning</mat-icon>
+              <div class="category" color="accent" [routerLink]="'/audits-templates/' + template.id">
                 {{ template.name }}
               </div>
               <div>
@@ -70,15 +70,12 @@
               </div>
             </div>
             <div
-              [routerLink]="'/audits/administration/' + template.id"
+              [routerLink]="'/audits-templates/' + template.id"
               class="content"
               fxLayout="column"
               fxLayoutAlign="center center"
               fxFlex="1 1 auto"
             >
-              <div class="h1" *ngFor="let t of template.siteTypes">
-                {{ t.name }}
-              </div>
             </div>
           </div>
         </div>

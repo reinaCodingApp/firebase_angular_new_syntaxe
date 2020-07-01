@@ -19,8 +19,7 @@
           <div class="mt-4" fxLayout="column">
             <mat-form-field class="w-100-p" appearance="outline">
               <mat-label>Choix du site</mat-label>
-              <mat-select required name="audit_site" [(ngModel)]="audit.site"
-                (selectionChange)="checkTempaltesToDispaly($event)">
+              <mat-select required name="audit_site" [(ngModel)]="audit.site">
                 <mat-option *ngFor="let site of sites" [value]="site">
                   {{ site.name }}
                 </mat-option>
@@ -50,8 +49,8 @@
             <div fxLayout="column" fxLayoutAlign="space-between none">
               <mat-form-field appearance="outline">
                 <mat-label>Choisir un modèle d'audit</mat-label>
-                <mat-select required name="site_types" [(ngModel)]="selectedTemplate">
-                  <mat-option *ngFor="let template of filtredTemplates" [value]="template">
+                <mat-select required name="templates" [(ngModel)]="selectedTemplate">
+                  <mat-option *ngFor="let template of templates" [value]="template">
                     {{ template.name }}
                   </mat-option>
                 </mat-select>
@@ -69,14 +68,13 @@
         </mat-step>
       </mat-horizontal-stepper>
       <!-- MOBILE VIEW -->
-      <mat-vertical-stepper *ngIf="smallScreen"  labelPosition="bottom" [linear]="true">
+      <mat-vertical-stepper *ngIf="smallScreen" labelPosition="bottom" [linear]="true">
         <!-- site and date-->
         <mat-step label="Site" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
           <div class="mt-4" fxLayout="column">
             <mat-form-field class="w-100-p" appearance="outline">
               <mat-label>Choix du site</mat-label>
-              <mat-select required name="audit_site" [(ngModel)]="audit.site"
-                (selectionChange)="checkTempaltesToDispaly($event)">
+              <mat-select required name="audit_site" [(ngModel)]="audit.site">
                 <mat-option *ngFor="let site of sites" [value]="site">
                   {{ site.name }}
                 </mat-option>
@@ -107,7 +105,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Choisir un modèle d'audit</mat-label>
                 <mat-select required name="site_types" [(ngModel)]="selectedTemplate">
-                  <mat-option *ngFor="let template of filtredTemplates" [value]="template">
+                  <mat-option *ngFor="let template of templates" [value]="template">
                     {{ template.name }}
                   </mat-option>
                 </mat-select>
@@ -135,19 +133,11 @@
             name="template_name" />
 
         </mat-form-field>
-        <mat-form-field appearance="outline" class="w-100-p">
-          <mat-label>Types de site associés</mat-label>
-          <mat-select required multiple required [(ngModel)]="selectedTemplate.siteTypes" name="site_types">
-            <mat-option *ngFor="let type of siteTypes" [value]="type">
-              {{ type.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
       <div fxLayoutAlign="end">
-          <button mat-raised-button color="accent" type="submit" (click)="submitNewTemplate()" >
-              Sauvegarder <mat-icon>save</mat-icon>
-          </button>
+        <button mat-raised-button color="accent" type="submit" (click)="submitNewTemplate()">
+          Sauvegarder <mat-icon>save</mat-icon>
+        </button>
       </div>
 
     </form>

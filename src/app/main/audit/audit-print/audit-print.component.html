@@ -1,0 +1,66 @@
+<div *ngIf="audit != null" id="invoice" class="modern page-layout blank" fxLayout="row">
+  <div class="invoice-container">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <button fxLayoutAlign="start center" mat-icon-button class="back mr-16"
+        [routerLink]="'/audit-detail/'+ audit.poleId" [queryParams]="{isDraft:false}">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+
+    <!-- INVOICE -->
+    <div class="card">
+      <div class="content">
+        <div fxLayout="column">
+          <h1 fxLayoutAlign="center center" class="font-size-24">
+            <u>{{'Établissement ' + audit.site.name}}</u>
+          </h1>
+          <h1 fxLayoutAlign="center center" class="font-size-24">
+            {{audit.date | date:'dd/MM/yyyy'}}
+          </h1>
+          <ul style="list-style: none; padding: 0px;">
+            <li *ngFor="let item of audit.menus">
+              <div fxLayout="column">
+                <h1>
+                  {{ item.title }}
+                </h1>
+                <ul style="list-style: none; padding: 0px;">
+                  <li *ngFor="let section of item.sections">
+                    <h2 style="color: white; background-color: gray;" class="p-8">
+                      {{ section.title  }}
+                    </h2>
+                    <ul style="list-style: none; padding: 0px;">
+                      <li *ngFor="let folder of section.items">
+                        <div fxLayout="column">
+                          <h2 style="background-color: gainsboro;" class="p-8">
+                            {{ folder.title }}
+                          </h2>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div fxLayout="column">
+                <h1>Rapport</h1>
+                <h2 style="background-color: gainsboro;" class="p-8">
+                  {{ audit.report }}
+                </h2>
+                <mat-divider *ngIf="audit.attachments && audit.attachments.length > 0" class="mt-0"></mat-divider>
+                <div class="attachments p-4" fxLayout="row wrap" *ngIf="true || audit.attachments && audit.attachments.length > 0">
+                    <div class="media" *ngFor="let attachment of audit.attachments">
+                        <img class="preview" [src]="attachment.url" />
+                        <div class="title" [innerHTML]="attachment.fileName"></div>
+                    </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <!-- / INVOICE -->
+  </div>
+</div>

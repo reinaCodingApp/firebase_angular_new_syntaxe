@@ -81,6 +81,16 @@ service cloud.firestore {
         allow create, update, delete : if isLoggedin();
     }
 
+    match /auditPoles/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+
+    match /audits.drafts/{document} {
+        allow get, list : if isLoggedin();
+        allow create, update, delete : if isLoggedin();
+    }
+
     /***************************************************************************
     ************************** Posts and categories ****************************
     ****************************************************************************/

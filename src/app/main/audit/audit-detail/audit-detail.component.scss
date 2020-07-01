@@ -176,3 +176,46 @@
         }
     }
 }
+
+.media {
+  position: relative;
+  margin: 0 16px 16px 0;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .preview {
+    display: block;
+    width: 128px;
+    height: 128px;
+  }
+
+  .title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 0 8px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.54);
+    color: white;
+  }
+
+  .delete {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display:none;
+  }
+  &:hover{
+    .delete
+    {
+      display: block;
+    }
+  }
+}

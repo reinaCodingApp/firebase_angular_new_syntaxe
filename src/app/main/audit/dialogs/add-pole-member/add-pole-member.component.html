@@ -1,0 +1,37 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title"> Gestion des membres</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form name="composeForm" class="compose-form" fxLayout="column" fxFlex>
+      <mat-form-field appearance="outline">
+        <mat-label>Utilisateur</mat-label>
+        <mat-select #user="ngModel" name="user" [(ngModel)]="selectedUser" (selectionChange)="addMember()">
+          <mat-option>
+            <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchUser($event)"
+              placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+          </mat-option>
+          <ng-container *ngFor="let user of filtredUsers">
+            <mat-option [value]="user">
+              {{ user.displayName }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="center center" *ngFor="let member of currentPole.members">
+        <p class="m-8">{{ member.displayName }}</p>
+        <div>
+          <button type="button" mat-icon-button color="warn" (click)="deleteMember(member)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

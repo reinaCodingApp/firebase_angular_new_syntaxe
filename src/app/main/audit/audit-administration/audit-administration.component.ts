@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { Subject } from 'rxjs';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-audit-administration',
@@ -22,12 +23,17 @@ export class AuditAdministrationComponent implements OnInit, OnDestroy {
   selectedTemplate: AuditTemplate;
   possibleValues: PossibleValue[] = [];
   dialogRef: any;
+  poleId: string;
   habilitation: Habilitation = new Habilitation(0);
   private unsubscribeAll: Subject<any>;
   constructor(
     private auditsService: AuditsService,
     private _matDialog: MatDialog,
-    private notificationService: SharedNotificationService) {
+    private notificationService: SharedNotificationService,
+    private route: ActivatedRoute) {
+    this.route.params.subscribe((params) => {
+      this.poleId = params.poleId;
+    })
     this.unsubscribeAll = new Subject();
   }
 
@@ -42,6 +48,7 @@ export class AuditAdministrationComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response && response.template) {
           const template = response.template as AuditTemplate;
+          template.poleId = this.poleId;
           this.auditsService.addTemplate(template).then(result => {
             console.log('tempalte added', result);
           });

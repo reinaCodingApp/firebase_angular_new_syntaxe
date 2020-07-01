@@ -87,11 +87,11 @@ export class AuditEditTemplateComponent implements OnInit, OnDestroy {
     this.latestAffectedValue = values;
     this.updateTemplateDetails();
   }
-  updateTemplateDetails(): void {    
+  updateTemplateDetails(): void {
     const newStatus = this.getTemplateStatus();
-    if (this.templateProperties.status !== newStatus ) {
+    if (this.templateProperties.status !== newStatus) {
       this.templateProperties.status = newStatus;
-      this.auditsService.updateTemplateProperties(this.templateProperties);      
+      this.auditsService.updateTemplateProperties(this.templateProperties);
     }
     this.auditsService.updateTemplateDetails(this.currentTemplate).then(() => {
       console.log('updated');
@@ -162,7 +162,7 @@ export class AuditEditTemplateComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  private getTemplateStatus(): any  {
+  private getTemplateStatus(): any {
     if (!this.currentTemplate || !this.currentTemplate.menus || this.currentTemplate.menus.length === 0) {
       return 'invalid';
     }
@@ -178,7 +178,7 @@ export class AuditEditTemplateComponent implements OnInit, OnDestroy {
           break;
         }
         for (const i of s.items) {
-          if (!i.title || i.title.trim().length === 0 ) {
+          if (!i.title || i.title.trim().length === 0) {
             valid = false;
             break;
           }
@@ -203,7 +203,7 @@ export class AuditEditTemplateComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(result => {
               if (result.exists) {
-                this.templateProperties =  {id: result.id, ...result.data()} as AuditTemplate;
+                this.templateProperties = { id: result.id, ...result.data() } as AuditTemplate;
               }
             });
         }

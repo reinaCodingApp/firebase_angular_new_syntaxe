@@ -3,6 +3,7 @@ export class firestoreCollections {
   public static readonly posts = 'posts';
   public static readonly deletedPosts = 'deleted.posts';
   public static readonly audits = 'audits';
+  public static readonly auditsDrafts = 'audits.drafts';
   public static readonly auditMenus: string = 'auditMenus';
   public static readonly auditSections: string = 'auditSections';
   public static readonly auditItems = 'auditItems';
@@ -12,6 +13,7 @@ export class firestoreCollections {
   public static readonly auditTemplateItems: string = 'auditTemplateItems';
   public static readonly auditPossibleValues: string = 'auditItemPossibleValues';
   public static readonly auditTemplateDetails: string = 'auditTemplateDetails';
+  public static readonly auditPoles: string = 'auditPoles';
 
   public static readonly modules: string = 'modules';
   public static readonly moduleKeys: string = 'moduleKeys';

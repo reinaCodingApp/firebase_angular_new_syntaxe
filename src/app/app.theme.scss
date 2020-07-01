@@ -84,6 +84,7 @@ $typography: mat-typography-config(
 @import "src/app/main/webcms/website/components/posts/contacts.theme";
 @import "src/app/main/webcms/web-messages/mail.theme";
 @import "src/app/main/audit/audit.theme";
+@import "src/app/main/audit/poles.theme";
 @import "src/app/main/login/reset-password-request/reset-password-request.theme";
 @import "src/app/main/login/reset-password-form/reset-password-form.theme";
 @import "src/app/main/login/reset-password-confirm/reset-password-confirm.theme";
@@ -105,6 +106,7 @@ $typography: mat-typography-config(
     @include contacts-theme($theme);
     @include mail-theme($theme);
     @include audit-theme($theme);
+    @include poles-theme($theme);
     @include reset-password-request-theme($theme);
     @include reset-password-form-theme($theme);
     @include reset-password-confirm-theme($theme);

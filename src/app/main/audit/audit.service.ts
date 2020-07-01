@@ -13,24 +13,31 @@ import { AuditSection } from 'app/main/audit/models/audit-section';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { PossibleValue } from 'app/main/audit/models/possible-value';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
-import { take } from 'rxjs/operators';
+import { take, finalize } from 'rxjs/operators';
 import { CommonService } from 'app/common/services/common.service';
 import { SiteWithTypes } from 'app/common/models/siteWithTypes';
 import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 import { AccessRightsService } from '../access-rights/access-rights.service';
 import { AppService } from 'app/app.service';
+import { AuditPole } from './models/audit-pole';
+import { MainTools } from 'app/common/tools/main-tools';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Attachment } from 'app/common/models/attachment';
 
 @Injectable()
 export class AuditsService implements Resolve<any>
 {
   onTemplatesChanged: BehaviorSubject<AuditTemplate[]>;
+  onAuditPolesChanged: BehaviorSubject<AuditPole[]>;
   onCurrentTemplateChanged: BehaviorSubject<AuditTemplate>;
   onAuditsChanged: BehaviorSubject<Audit[]>;
+  onAuditsDraftsChanged: BehaviorSubject<Audit[]>;
   onCurrentAuditChanged: BehaviorSubject<Audit>;
   onSitesChanged: BehaviorSubject<SiteWithTypes[]>;
   onSiteTypesChanged: BehaviorSubject<SiteType[]>;
   onPossibleValuesChanged: BehaviorSubject<PossibleValue[]>;
   onSectionsChanged: BehaviorSubject<AuditSection[]>;
+  onAttachmentUploaded: BehaviorSubject<Attachment>;
   currentAudit: Audit;
   sites: SiteWithTypes[] = [];
   sitesTypes: SiteType[] = [];
@@ -40,20 +47,24 @@ export class AuditsService implements Resolve<any>
 
   constructor(
     private angularFirestore: AngularFirestore,
+    private angularFireStorage: AngularFireStorage,
     private angularFireAuth: AngularFireAuth,
     private router: Router,
     private commonService: CommonService,
     private appService: AppService,
     private accessRightsService: AccessRightsService) {
     this.onTemplatesChanged = new BehaviorSubject([]);
+    this.onAuditPolesChanged = new BehaviorSubject([]);
     this.onCurrentTemplateChanged = new BehaviorSubject(null);
     this.onAuditsChanged = new BehaviorSubject([]);
+    this.onAuditsDraftsChanged = new BehaviorSubject([]);
     this.onCurrentAuditChanged = new BehaviorSubject(null);
     this.onSiteTypesChanged = new BehaviorSubject([]);
     this.onSitesChanged = new BehaviorSubject([]);
     this.onSectionsChanged = new BehaviorSubject(null);
     this.onPossibleValuesChanged = new BehaviorSubject([]);
     this.onHabilitationLoaded = new BehaviorSubject(null);
+    this.onAttachmentUploaded = new BehaviorSubject(null);
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
@@ -68,7 +79,11 @@ export class AuditsService implements Resolve<any>
                 resolve();
               } else {
                 if (route.params.auditId) {
-                  this.getAuditMenus(route.params.auditId);
+                  let isDraft = false;
+                  if (route.queryParams.isDraft) {
+                    isDraft = route.queryParams.isDraft === 'true' ? true : false;
+                  }
+                  this.getAuditMenus(route.params.auditId, isDraft);
                   this.onHabilitationLoaded.next(habilitation);
                   resolve();
                 } else if (route.params.templateId) {
@@ -76,32 +91,40 @@ export class AuditsService implements Resolve<any>
                     this.router.navigateByUrl('/home');
                     resolve();
                   }
-                  this.getSiteTypes();
                   this.getPossibleValues();
                   this.getTemplateDetails(route.params.templateId);
                   this.onHabilitationLoaded.next(habilitation);
                   resolve();
                 } else {
                   const routeURL = route.url.toString();
-                  if (routeURL.indexOf('administration') !== -1) {
+                  if (routeURL.indexOf('audits-administration') !== -1) {
                     if (!habilitation.isAdmin()) {
                       this.router.navigateByUrl('/home');
                       resolve();
                     }
-                    this.getSiteTypes();
                     this.getPossibleValues();
-                    this.getTemplates();
                     this.onHabilitationLoaded.next(habilitation);
                     resolve();
                   }
+                  if (routeURL.indexOf('audit-poles') !== -1) {
+                    this.getAuditPoles(habilitation);
+                    this.onHabilitationLoaded.next(habilitation);
+                    resolve();
+                  }
+
+                  if (routeURL.indexOf('audits') !== -1) {
+                    if (route.params.poleId) {
+                      this.getTemplates(route.params.poleId);
+                      this.getAudits(route.params.poleId);
+                      this.getAuditsDrafts(route.params.poleId);
+                      this.getSites();
+                      this.getPossibleValues();
+                      this.onHabilitationLoaded.next(habilitation);
+                      resolve();
+                    }
+                  }
+                  resolve();
                 }
-                this.getAudits();
-                this.getSiteTypes();
-                this.getSites();
-                this.getTemplates();
-                this.getPossibleValues();
-                this.onHabilitationLoaded.next(habilitation);
-                resolve();
               }
             }, (err) => {
               reject(err);
@@ -116,21 +139,33 @@ export class AuditsService implements Resolve<any>
     });
   }
 
-  getAudits() {
-    this.angularFirestore.collection(firestoreCollections.audits).snapshotChanges().subscribe(data => {
+  getAudits(poleId: string) {
+    this.angularFirestore.collection(firestoreCollections.audits, query => query.where('poleId', '==', poleId)).snapshotChanges().subscribe(data => {
       const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
       this.onAuditsChanged.next(audits);
     });
   }
+  getAuditsDrafts(poleId: string) {
+    console.log('poleId', poleId);
+    console.log('uid', this.connectedUser.uid);
+    this.angularFirestore.collection(firestoreCollections.auditsDrafts,
+      query => query.where('ownerId', '==', this.connectedUser.uid)
+        .where('poleId', '==', poleId))
+      .snapshotChanges()
+      .subscribe(data => {
+        const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
+        this.onAuditsDraftsChanged.next(audits);
+      });
+  }
   getAuditTemplate(uid: string) {
     return this.angularFirestore.collection(firestoreCollections.auditTemplates).doc(uid);
   }
-  getAuditMenus(auditId: string) {
-    this.angularFirestore.collection(firestoreCollections.audits).doc(auditId)
+  getAuditMenus(auditId: string, isDraft = false) {
+    const auditsCollection = isDraft ? firestoreCollections.auditsDrafts : firestoreCollections.audits;
+    this.angularFirestore.collection(auditsCollection).doc(auditId)
       .get()
       .toPromise()
       .then(audit => {
-        console.log('audit ', audit);
         if (audit.exists) {
           this.currentAudit = { id: audit.id, ...audit.data() } as Audit;
           this.angularFirestore.collection(firestoreCollections.auditMenus, query => query.where('auditId', '==', this.currentAudit.id))
@@ -199,27 +234,36 @@ export class AuditsService implements Resolve<any>
       });
   }
 
-  getTemplates() {
-    this.angularFirestore.collection(firestoreCollections.auditTemplates).snapshotChanges().subscribe(templates => {
+  getTemplates(poleId: string) {
+    this.angularFirestore.collection(firestoreCollections.auditTemplates, query => query.where('poleId', '==', poleId)).snapshotChanges().subscribe(templates => {
       const auditTemplates: AuditTemplate[] = templates.map(t => ({ id: t.payload.doc.id, ...t.payload.doc.data() } as AuditTemplate));
       this.onTemplatesChanged.next(auditTemplates);
     });
   }
   getTemplateDetails(templateId: string) {
+    let poleId: string;
     return this.angularFirestore.collection(firestoreCollections.auditTemplateDetails).doc(templateId)
-      .get().subscribe(data => {
+      .get().subscribe(async data => {
         if (data.exists) {
-          const template = data.data() as AuditTemplate;
-          template.id = templateId;
-          this.onCurrentTemplateChanged.next(template);
+          await this.angularFirestore.collection(firestoreCollections.auditTemplates).doc(templateId)
+            .get().subscribe(dataTemplates => {
+              if (dataTemplates.exists) {
+                const auditTemplates = dataTemplates.data() as AuditTemplate;
+                poleId = auditTemplates.poleId;
+                const template = data.data() as AuditTemplate;
+                template.id = templateId;
+                template.poleId = poleId;
+                this.onCurrentTemplateChanged.next(template);
+              } else {
+                this.onCurrentTemplateChanged.next(null);
+              }
+            });
         } else {
           this.onCurrentTemplateChanged.next(null);
         }
-
       });
   }
   addAudit(auditProperties: Audit, template: AuditTemplate) {
-
     return this.angularFirestore.collection(firestoreCollections.auditTemplateDetails).doc(template.id)
       .get().subscribe(data => {
         if (data.exists) {
@@ -266,7 +310,7 @@ export class AuditsService implements Resolve<any>
       });
   }
   updateAuditPrperties(auditProperties: Audit) {
-    return this.angularFirestore.collection(firestoreCollections.audits).doc(auditProperties.id).set(auditProperties);
+    return this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(auditProperties.id).set(auditProperties);
   }
   addTemplate(template: AuditTemplate): Promise<void> {
     const writeBatch: firebase.firestore.WriteBatch = this.angularFirestore.firestore.batch();
@@ -294,6 +338,140 @@ export class AuditsService implements Resolve<any>
 
   getTemplateMenu(template: AuditTemplate): Observable<any> {
     return this.angularFirestore.collection(firestoreCollections.auditTemplateDetails).doc(template.id).get();
+  }
+
+  getAuditPoles(habilitation: Habilitation): void {
+    this.angularFirestore.collection(firestoreCollections.auditPoles)
+      .get()
+      .subscribe(data => {
+        const poles = data.docs.map(item => ({ uid: item.id, ...item.data() } as AuditPole));
+        if (habilitation.isSuperAdmin()) {
+          this.onAuditPolesChanged.next(poles);
+        } else {
+          const polesToDisplay = poles.filter(p => p.members.some(member => member.uid === this.connectedUser.uid));
+          this.onAuditPolesChanged.next(polesToDisplay);
+        }
+      });
+  }
+
+  addAuditAsDraft(auditProperties: Audit, template: AuditTemplate): any {
+    return this.angularFirestore.collection(firestoreCollections.auditTemplateDetails).doc(template.id)
+      .get().subscribe(data => {
+        console.log('data', data);
+        if (data.exists) {
+          const templateDetails = data.data() as AuditTemplate;
+          const writeBatch: firebase.firestore.WriteBatch = this.angularFirestore.firestore.batch();
+          const newAudit: Audit = {} as Audit;
+          newAudit.date = auditProperties.date;
+          newAudit.title = auditProperties.title;
+          newAudit.site = auditProperties.site;
+          newAudit.isSealed = false,
+            newAudit.templateId = template.id,
+            newAudit.report = '';
+          newAudit.responsible = {
+            displayName: this.connectedUser.displayName,
+            email: this.connectedUser.email,
+            uid: this.connectedUser.uid
+          };
+          newAudit.poleId = auditProperties.poleId;
+          newAudit.ownerId = this.connectedUser.uid;
+          newAudit.attachments = auditProperties.attachments;
+          const auditDocument = this.angularFirestore.collection(firestoreCollections.auditsDrafts).ref.doc();
+          console.log(auditDocument);
+          writeBatch.set(auditDocument, newAudit);
+          templateDetails.menus.forEach(m => {
+            const newMenu = { title: m.title, auditId: auditDocument.id, displayOrder: m.displayOrder };
+            const menuDoc = this.angularFirestore.collection(firestoreCollections.auditMenus).ref.doc();
+            writeBatch.set(menuDoc, newMenu);
+            m.sections.forEach(s => {
+              const newSection = { title: s.title, menuId: menuDoc.id, auditId: auditDocument.id, displayOrder: s.displayOrder };
+              const sectionDoc = this.angularFirestore.collection(firestoreCollections.auditSections).ref.doc();
+              writeBatch.set(sectionDoc, newSection);
+              if (s.items) {
+                s.items.forEach(i => {
+                  // effectiveValue not set
+                  const newItem = {
+                    title: i.title, displayOrder: i.displayOrder, sectionId: sectionDoc.id,
+                    auditId: auditDocument.id, menuId: menuDoc.id, possibleValues: i.possibleValues
+                  };
+                  const itemDocument = this.angularFirestore.collection(firestoreCollections.auditItems).ref.doc();
+                  writeBatch.set(itemDocument, newItem);
+                });
+              }
+            });
+          });
+          writeBatch.commit();
+
+        }
+      });
+  }
+
+  saveAudit(audit: Audit) {
+    return this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(audit.id)
+      .get().subscribe(data => {
+        if (data.exists) {
+          const auditToAdd = data.data() as Audit;
+          const writeBatch: firebase.firestore.WriteBatch = this.angularFirestore.firestore.batch();
+          const doc = this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(audit.id);
+          writeBatch.delete(doc.ref);
+          const auditDocument = this.angularFirestore.collection(firestoreCollections.audits).ref.doc(audit.id);
+          writeBatch.set(auditDocument, auditToAdd);
+          writeBatch.commit();
+          this.router.navigateByUrl(`/audits/${audit.poleId}`);
+        }
+      });
+
+  }
+
+  storeAttachment(file: File): Observable<number> {
+    const filePath = file.name;
+    const size = MainTools.getFileSizeToString(file.size);
+    const storageRef = this.angularFireStorage.ref(filePath);
+    const uploadTask = this.angularFireStorage.upload(filePath, file);
+    uploadTask.snapshotChanges().pipe(
+      finalize(() => {
+        storageRef.getDownloadURL().subscribe(downloadURL => {
+          const attachemnt = { url: downloadURL, fileName: file.name, size: size } as Attachment;
+          this.onAttachmentUploaded.next(attachemnt);
+        });
+      })
+    ).subscribe();
+    return uploadTask.percentageChanges();
+  }
+
+  getAllAuditSectionsAndItems(audit: Audit) {
+    for (let index = 0; index < audit.menus.length; index++) {
+      const menu = audit.menus[index];
+      this.angularFirestore.collection(firestoreCollections.auditSections, query => query.where('menuId', '==', menu.id))
+        .get()
+        .subscribe(result => {
+          const sections = result.docs.map(d => ({ id: d.id, ...d.data() } as AuditSection))
+            .sort((a, b) => a.displayOrder - b.displayOrder);
+          this.angularFirestore.collection(firestoreCollections.auditItems, query => query.where('menuId', '==', menu.id))
+            .get()
+            .subscribe(items => {
+              const menuItems = items.docs.map(d => ({ id: d.id, ...d.data() } as AuditItem));
+              sections.forEach(s => {
+                menuItems.forEach(i => {
+                  if (s.id === i.sectionId) {
+                    if (!s.items) {
+                      s.items = [];
+                    }
+                    s.items.push(i);
+                  }
+                });
+                s.items = s.items.sort((a, b) => a.displayOrder - b.displayOrder);
+              });
+              menu.sections = sections;
+            });
+        });
+    }
+    return audit;
+  }
+
+  updateAuditPoleMembers(pole: AuditPole) {
+    const updatedPole = { members: pole.members } as AuditPole;
+    return this.angularFirestore.collection(firestoreCollections.auditPoles).doc(pole.uid).update(updatedPole);
   }
 
   // possible values

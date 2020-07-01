@@ -1,0 +1,27 @@
+<!-- BOARDS -->
+<div id="boards" class="fuse-navy" fxLayout="column" fxLayoutAlign="start center" fxFlex fusePerfectScrollbar>
+
+  <div class="header pt-44 pt-md-88" fxLayout="row" fxLayoutAlign="center center" fxFlex="0 0 auto"
+    [@animate]="{value:'*',params:{delay:'100ms'}}">
+    <h1>Poles</h1>
+  </div>
+
+  <!-- BOARD LIST -->
+  <div class="board-list" fxFlex="0 0 auto" fxLayout="row wrap" fxLayoutAlign="center center"
+    [@animateStagger]="{value:'50'}">
+
+    <!-- BOARD -->
+    <div class="board-list-item" *ngFor="let pole of poles" fxLayout="column"
+      [@animate]="{value:'*',params:{y:'100%'}}">
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <mat-icon *ngIf="habilitation.isAdmin()" (click)="manageMembers(pole)" class="mr-12">people</mat-icon>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" [routerLink]="'/audits/'+ pole.uid">
+        <mat-icon class="s-56">assessment</mat-icon>
+        <div class="board-name">{{pole.name}}</div>
+      </div>
+    </div>
+  </div>
+  <!-- / BOARD LIST -->
+</div>
+<!-- / BOARDS -->

@@ -35,12 +35,13 @@
                     (click)="toggleSidebar('academy-course-left-sidebar-1')">
                 <mat-icon>menu</mat-icon>
             </button>
-            <button mat-icon-button class="mr-16" [routerLink]="'/audits'">
+            <button mat-icon-button class="mr-16" [routerLink]="'/audits/'+ currentAudit?.poleId">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <div>
                 <h2 *ngIf="currentAudit" >{{'Établissement ' + currentAudit.site.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
             </div>
+            <button *ngIf="!isDraft"  fxLayoutAlign="end center" mat-icon-button [routerLink]="'/audit-print/' + currentAudit?.id"><mat-icon>print</mat-icon></button>
         </div>
         <!-- / HEADER -->
 
@@ -68,10 +69,25 @@
                     <div id="course-step-content" *ngIf="currentMenu && currentMenu.id.length === 0" class="course-step-content">
                         <mat-form-field appearance="outline" class="w-100-p">
                             <mat-label>Rapport général</mat-label>
-                            <textarea [readonly]="!habilitation.canEdit()" matInput name="title" [(ngModel)]="currentAudit.report" (change)="updateAuditPrperties()" rows="18">
+                            <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="title" [(ngModel)]="currentAudit.report" (change)="updateAuditPrperties()" rows="18">
                             </textarea>
                         </mat-form-field>
+                        <mat-divider *ngIf="currentAudit.attachments && currentAudit.attachments.length > 0" class="mt-0"></mat-divider>
+                        <div class="attachments p-4" fxLayout="row wrap" *ngIf="true || currentAudit.attachments && currentAudit.attachments.length > 0">
+                            <div class="media" *ngFor="let attachment of currentAudit.attachments">
+                                <img class="preview" [src]="attachment.url" />
+                                <div class="title" [innerHTML]="attachment.fileName"></div>
+                                <button *ngIf="isDraft" matTooltip="Retirer l'image" mat-button class="delete" (click)="removeAttachment(attachment)"><mat-icon color="warn">delete</mat-icon></button>
+                            </div>
+                        </div>
+                        <div fxLayout="row" class="w-100-p" fxLayoutAlign="space-between center" *ngIf="isDraft">
+                          <button (click)="filepicker.click()" mat-icon-button aria-label="Add photo" matTooltip="Inclure une image">
+                            <mat-icon>photo</mat-icon>
+                          </button>
+                          <input hidden type="file" #filepicker (change)="attachmentPicked($event)" accept="image/x-png,image/gif,image/jpeg" >
+                        </div>
                     </div>
+
               </div>
             </ng-container>
         </div>
@@ -94,7 +110,8 @@
             </button>
 
             <button mat-fab class="done green-600"
-                    routerLink="/audits"
+                    *ngIf="isDraft"
+                    (click)="saveAudit()"
                     [disabled]="currentStep !== totalMenusCount - 1"
                     [fxShow]="currentStep === totalMenusCount - 1">
                 <mat-icon>check</mat-icon>
