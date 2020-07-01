@@ -3,9 +3,12 @@ export class TotalTonnageByType {
   realWeight: string;
   averageWeight: string;
   total: string;
-  pr30: string;
-  pr50: string;
-  pr100: string;
+  weightPercentage30: number;
+  weightPercentage50: number;
+  weightPercentage100: number;
+  quantityPercentage30: number;
+  quantityPercentage50: number;
+  quantityPercentage100: number;
 
   totalCarcassWeight: number;
   totalCarcassQuantity: number;

@@ -33,6 +33,7 @@ import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
 import { AddTonnageDetailsDialogComponent } from './dialogs/add-tonnage-details-dialog/add-tonnage-details-dialog.component';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
@@ -78,6 +79,7 @@ const routes: Routes = [
     MatTooltipModule,
     CustomConfirmDialogModule,
     FuseWidgetModule,
+    SatPopoverModule,
 
     TranslateModule,
 
