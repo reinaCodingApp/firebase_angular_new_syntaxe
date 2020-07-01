@@ -1,5 +1,5 @@
 import { Employee } from '../../../common/models/employee';
-import { Department } from '../../webcms/models/department';
+import { Department } from '../../webcms/web-messages/models/department';
 import { AdvanceSalaryStatus } from './advanceSalaryStatus';
 import { Advance } from './advance';
 

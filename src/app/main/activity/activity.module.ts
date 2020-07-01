@@ -31,6 +31,7 @@ import { BonusActivityDialogComponent } from './dialogs/bonus-activity-dialog/bo
 import { BreaksActivityDialogComponent } from './dialogs/breaks-activity-dialog/breaks-activity-dialog.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
@@ -74,6 +75,7 @@ const routes: Routes = [
     MatTooltipModule,
     FuseSidebarModule,
     FuseSharedModule,
+    SatPopoverModule,
 
     NgxDatatableModule,
     CustomConfirmDialogModule

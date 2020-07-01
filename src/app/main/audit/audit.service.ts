@@ -60,6 +60,7 @@ export class AuditsService implements Resolve<any>
     return new Promise((resolve, reject) => {
       this.appService.getConnectedUser().then(user => {
         if (user) {
+          this.connectedUser = user;
           this.appService.getHabilitation(user, this.moduleIdentifier)
             .then(habilitation => {
               if (habilitation.unauthorized()) {
@@ -231,7 +232,11 @@ export class AuditsService implements Resolve<any>
           newAudit.isSealed = false,
             newAudit.templateId = template.id,
             newAudit.report = '';
-          newAudit.responsible = this.connectedUser;
+          newAudit.responsible = {
+            displayName: this.connectedUser.displayName,
+            email: this.connectedUser.email,
+            uid: this.connectedUser.uid
+          };
           const auditDocument = this.angularFirestore.collection(firestoreCollections.audits).ref.doc();
           writeBatch.set(auditDocument, newAudit);
           templateDetails.menus.forEach(m => {

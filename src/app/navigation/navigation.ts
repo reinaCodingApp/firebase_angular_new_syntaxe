@@ -12,10 +12,10 @@ export const navigation: any[] = [
         children: [
           {
             id: 'posts',
-            title: 'Articles',
+            title: 'Gestion de contenu',
             type: 'item',
             icon: 'art_track',
-            url: '/posts',
+            url: '/website',
             displayInMenu: true
           },
           {
@@ -24,6 +24,14 @@ export const navigation: any[] = [
             type: 'item',
             icon: 'email',
             url: '/webcms',
+            displayInMenu: true
+          },
+          {
+            id: 'marksProducts',
+            title: 'Marques & Products',
+            type: 'item',
+            icon: 'dashboard',
+            url: '/marks-products',
             displayInMenu: true
           }
         ],

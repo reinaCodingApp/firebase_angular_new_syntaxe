@@ -1,0 +1,76 @@
+<div fxFlex fxLayout="column" fxLayoutAlign="space-between" class="p-md-24" *ngIf="post">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <button matTooltip="Gestion de contenu" mat-icon-button class="back mr-16" [routerLink]="'/website'">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2 *ngIf="mode == 'new'" class="pl-12">{{ isNews ? "Nouvelle actualité" : "Nouveau article"}}</h2>
+    <h2 *ngIf="mode == 'edit'" class="pl-12">{{ isNews ? "Modifier actualité" : "Modifier article"}}</h2>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between" fxFlex>
+    <fuse-widget fxFlex="70" [@animate]="{ value: '*', params: { y: '100%' } }" class="pb-0">
+      <div class="fuse-widget-front p-16">
+        <form fxLayout="column" #f="ngForm" name="addPostForm" (ngSubmit)="onSubmit(f)">
+          <mat-form-field appearance="outline">
+            <mat-label>Titre</mat-label>
+            <input #title="ngModel" [(ngModel)]="post.title" name="title" matInput required minlength="10" />
+            <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">
+              Veuillez renseigner le titre (10 caractères minimum) !
+            </mat-error>
+          </mat-form-field>
+          <ckeditor [editor]="editor" [config]="config" [(ngModel)]="post.content" name="editor"
+            (ready)="onEditorReady($event)">
+          </ckeditor>
+        </form>
+      </div>
+    </fuse-widget>
+    <div fxFlex="30" class="pt-16">
+      <div class="pt-0 p-16" fxLayoutAlign="center">
+        <button mat-raised-button (click)="onSubmit(f)" color="accent" aria-label="SAVE" type="submit">
+          {{ mode === "new" ? "Créer" : "Modifier" }}
+        </button>
+      </div>
+      <fuse-widget *ngIf="!isNews" [@animate]="{ value: '*', params: { y: '100%' } }" fxLayout="column">
+        <div class="fuse-widget-front">
+          <div class="pb-0 p-16" fxLayout="row">
+            <div class="h2">Catégories</div>
+          </div>
+          <mat-form-field class="p-16">
+            <mat-select name="catégories" [(ngModel)]="post.categoryId">
+              <mat-option *ngFor="let category of categories" [value]="category.id">
+                {{ category.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </fuse-widget>
+      <fuse-widget [@animate]="{ value: '*', params: { y: '100%' } }" class="pb-0">
+        <div class="fuse-widget-front" fxFlex>
+          <div class="pb-0 p-16" fxLayout="row">
+            <div class="h2">Image</div>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="center center" class="p-16" fxFlex>
+            <div class="message-box mb-12" fxLayout="row">
+              Ajouter une image avec cette résolution : 320x380
+            </div>
+            <div class="image">
+              <img *ngIf="post.src && post.src.length > 0" [src]="post.src" class="huge m-0" />
+            </div>
+            <div fxLayoutAlign="center center">
+              <button fxLayoutAlign="center" mat-fab color="warn" type="button" class="upload" (click)="file.click()">
+                <mat-icon>{{
+                    post.src && post.src.length > 0 ? "edit" : "add_photo_alternatet"
+                  }}</mat-icon>
+              </button>
+              <input (change)="filePicked($event)" type="file" #file hidden accept="image/*" />
+            </div>
+          </div>
+        </div>
+      </fuse-widget>
+      <div class="p-16" fxLayoutAlign="center" *ngIf="mode == 'edit'">
+        <button mat-raised-button (click)="disablePost()" color="warn" aria-label="SAVE" type="submit">
+          Désactiver
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

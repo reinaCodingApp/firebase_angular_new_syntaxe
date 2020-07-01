@@ -18,6 +18,7 @@ import { CommonService } from 'app/common/services/common.service';
 import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 import { PaginationParameter } from './models/paginationParameter';
 import { AppService } from 'app/app.service';
+import { TraceabilityWeekCode } from './models/descending/traceabilityWeekCode';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,9 @@ export class TraceabilityService implements Resolve<any>{
   private DELETE_TRACEABILITY_ITEM_URI = 'traceability/traceability_item/delete';
   private UPDATE_TRACEABILITY_ITEM_MATERIAL_URI = 'traceability/traceability_item/material/update';
   private ADD_EXCEPTION_CODE_URI = 'traceability/exceptional_code/add';
+
+  private ADD_TRACEABILITY_WEEK_CODE_URI = 'traceability/week_code/add';
+  private DELETE_TRACEABILITY_WEEK_CODE_URI = 'traceability/week_code/delete';
 
   onSitesChanged: BehaviorSubject<Site[]>;
   onYearsChanged: BehaviorSubject<number[]>;
@@ -197,6 +201,16 @@ export class TraceabilityService implements Resolve<any>{
   printWeeks(requestParameter: RequestParameter): Observable<TraceabilityPlanification[]> {
     const url = `${BASE_URL}${this.GET_TRACEABILITY_PLANIFICATION_WEEKS_URI}`;
     return this._httpClient.post<TraceabilityPlanification[]>(url, requestParameter);
+  }
+
+  addTraceabilityWeekCode(traceabilityWeekCode: TraceabilityWeekCode): Observable<TraceabilityWeekCode> {
+    const url = `${BASE_URL}${this.ADD_TRACEABILITY_WEEK_CODE_URI}`;
+    return this._httpClient.post<TraceabilityWeekCode>(url, traceabilityWeekCode);
+  }
+
+  deleteTraceabilityWeekCode(traceabilityWeekCode: TraceabilityWeekCode): Observable<TraceabilityWeekCode> {
+    const url = `${BASE_URL}${this.DELETE_TRACEABILITY_WEEK_CODE_URI}`;
+    return this._httpClient.post<TraceabilityWeekCode>(url, traceabilityWeekCode);
   }
 
 }

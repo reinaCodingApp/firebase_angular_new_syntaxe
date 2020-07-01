@@ -81,8 +81,8 @@ $typography: mat-typography-config(
 @import "src/app/layout/components/chat-panel/chat-panel.theme";
 @import "src/app/layout/components/toolbar/toolbar.theme";
 @import "src/app/main/login/login.theme";
-@import "src/app/main/webcms/posts/contacts.theme";
-@import "src/app/main/webcms/mail.theme";
+@import "src/app/main/webcms/website/components/posts/contacts.theme";
+@import "src/app/main/webcms/web-messages/mail.theme";
 @import "src/app/main/audit/audit.theme";
 @import "src/app/main/login/reset-password-request/reset-password-request.theme";
 @import "src/app/main/login/reset-password-form/reset-password-form.theme";

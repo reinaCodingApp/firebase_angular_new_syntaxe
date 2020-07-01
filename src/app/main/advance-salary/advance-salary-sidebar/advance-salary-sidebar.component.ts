@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AdvanceSalaryService } from '../advance-salary.service';
-import { Department } from 'app/main/webcms/models/department';
+import { Department } from 'app/main/webcms/web-messages/models/department';
 import { AdvanceSalaryStatus } from 'app/main/advance-salary/models/advanceSalaryStatus';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { FilterAdvanceSalary } from 'app/main/advance-salary/models/filterAdvanceSalary';

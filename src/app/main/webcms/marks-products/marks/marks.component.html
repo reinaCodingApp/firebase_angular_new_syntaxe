@@ -1,0 +1,151 @@
+<div id="mail" class="page-layout carded fullwidth inner-scroll">
+  <div class="top-bg accent"></div>
+  <div class="center">
+    <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+        <span class="logo-text h2" [@animate]="{
+            value: '*',
+            params: { delay: '100ms', x: '-25px' }
+          }">
+          Gestion des marques de produits
+        </span>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <a class="pr-12 mat-title" [routerLink]="'/marks-products/products'" style="color: white !important;">Gestion
+          des
+          Produits
+        </a>
+        <button mat-fab color="warn" [@animate]="{
+            value: '*',
+            params: { delay: '600ms', scale: '0.2' }
+          }" type="button" class="ml-8" (click)="createNewMark()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="content-card mt-24" [ngClass]="{ 'current-mail-selected': currentMark || newMark }">
+      <div class="toolbar px-24 py-8" fxHide.gt-sm>
+        <div *ngIf="currentMark || newMark" fxHide.gt-sm>
+          <button mat-icon-button (click)="currentMark = null;newMark = null">
+            <mat-icon class="secondary-text">arrow_back</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="content" fxLayout="row">
+        <!-- Marks List -->
+        <div class="marks-list" fusePerfectScrollbar fxFlex="1 1 0%">
+          <h2 fxLayout="row" fxLayoutAlign="center center" class="select-message-text hint-text">
+            Marques
+          </h2>
+          <hr />
+          <div *ngIf="marks.length === 0" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+            <span class="no-messages-text hint-text">Pas de resultats</span>
+          </div>
+          <div class="mail-list" [@animateStagger]="{ value: '50' }">
+            <div class="marks-item" matRipple *ngFor="let mark of marks" (click)="getMarkDetails(mark)"
+              [ngClass]="{ 'current-mail': mark?.uid == currentMark?.uid }"
+              [@animate]="{ value: '*', params: { y: '100%' } }">
+              <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column" fxLayoutAlign="start start">
+                  <div>{{ mark.name }}</div>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="end end">
+                  <div>
+                    <button mat-icon-button color="accent" class="mat-elevation-z1" (click)="
+                      $event.preventDefault();
+                      $event.stopPropagation();
+                      enableEditionMode(mark)
+                    ">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Details -->
+        <div class="marks-details" fusePerfectScrollbar fxFlex="3 1 0%">
+          <div *ngIf="!currentMark && !newMark" fxLayout="column" fxLayoutAlign="center center" fxFlex>
+            <span class="select-message-text hint-text" fxLayoutAlign="center center"
+              [@animate]="{ value: '*', params: { delay: '400ms' } }">
+              <h2>Veuillez sélectionner une marque</h2>
+            </span>
+          </div>
+          <!-- Display & Edition Mark -->
+          <div *ngIf="currentMark" fxFlex>
+            <div class="content" fxFlex>
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <h2 *ngIf="!editionMode" fxLayout="row">{{ currentMark.name }}</h2>
+                <mat-form-field *ngIf="editionMode">
+                  <input matInput class="h2" [(ngModel)]="currentMark.name" (change)="updateMark(currentMark)" />
+                </mat-form-field>
+              </div>
+              <table class="mark-detail">
+                <tr>
+                  <td>Site Web</td>
+                  <td *ngIf="!editionMode">{{ currentMark.webSite }}</td>
+                  <td *ngIf="editionMode">
+                    <mat-form-field>
+                      <input matInput [(ngModel)]="currentMark.webSite" (change)="updateMark(currentMark)" />
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </table>
+              <div fxLayoutAlign="center center" class="m-12 image">
+                <img *ngIf="currentMark.src && currentMark.src.length > 0" [src]="currentMark.src" class="huge m-0"
+                  style="width: 198px;" />
+              </div>
+              <div *ngIf="editionMode" fxLayoutAlign="center center">
+                <button fxLayoutAlign="center" mat-fab color="warn" type="button" class="upload" (click)="file.click()">
+                  <mat-icon>{{
+                    currentMark.src && currentMark.src.length > 0 ? "edit" : "add_photo_alternatet"
+                    }}</mat-icon>
+                </button>
+                <input (change)="filePicked($event)" type="file" #file hidden accept="image/*" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Add New Mark -->
+          <div *ngIf="newMark" fxFlex>
+            <div class="content" fxFlex>
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <mat-form-field>
+                  <input matInput class="h2" [(ngModel)]="newMark.name" placeholder="Nom" />
+                </mat-form-field>
+              </div>
+
+              <table class="mark-detail">
+                <tr>
+                  <td>Site Web</td>
+                  <td>
+                    <mat-form-field>
+                      <input matInput [(ngModel)]="newMark.webSite" placeholder="Site Web" />
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </table>
+              <div fxLayoutAlign="center center" class="m-12 image">
+                <img *ngIf="newMark.src && newMark.src.length > 0" [src]="newMark.src" class="huge m-0"
+                  style="width: 198px;" />
+              </div>
+              <div fxLayoutAlign="center center">
+                <button fxLayoutAlign="center" mat-fab color="warn" type="button" class="upload" (click)="file.click()">
+                  <mat-icon>{{
+                      newMark.src && newMark.src.length > 0 ? "edit" : "add_photo_alternatet"
+                    }}</mat-icon>
+                </button>
+                <input (change)="filePicked($event)" type="file" #file hidden accept="image/*" />
+              </div>
+              <div class="mt-12" fxLayoutAlign="center">
+                <button mat-raised-button color="accent" (click)="addMark()">Créér</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@ import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
 import { DefaultClaim } from 'app/common/models/default-claim';
 import { TourSheetService } from 'app/main/tour-sheet/tour-sheet.service';
 import { CommonService } from 'app/common/services/common.service';
-import { Department } from 'app/main/webcms/models/department';
+import { Department } from 'app/main/webcms/web-messages/models/department';
 import { AppService } from 'app/app.service';
 
 @Component({

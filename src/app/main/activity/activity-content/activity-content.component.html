@@ -101,9 +101,17 @@
                   *matCellDef="let activity"
                   fxHide.lt-md
                 >
-                  <span class="job-title">
-                    {{ activity.totalBreakTimeString }}
-                  </span>
+                <span class="job-title" satPopoverAnchor
+                #breaksAnchor="satPopoverAnchor"
+                (mouseenter)="breaksPopover.open()"
+                (mouseleave)="breaksPopover.close()">
+                  {{ activity.totalBreakTimeString }}
+                </span>
+                <sat-popover #breaksPopover [anchor]="breaksAnchor" horizontalAlign="after">
+                  <div class="popover-info mat-elevation-z8 font-size-14">
+                    {{activity.breaksString}}
+                  </div>
+                </sat-popover>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="endTime">
@@ -376,9 +384,17 @@
               *matCellDef="let activity"
               fxHide.lt-md
             >
-              <span class="job-title">
+              <span class="job-title" satPopoverAnchor
+              #breaksAnchor="satPopoverAnchor"
+              (mouseenter)="breaksPopover.open()"
+              (mouseleave)="breaksPopover.close()">
                 {{ activity.totalBreakTimeString }}
               </span>
+              <sat-popover #breaksPopover [anchor]="breaksAnchor" horizontalAlign="after">
+                <div class="popover-info mat-elevation-z8 font-size-14">
+                  {{activity.breaksString}}
+                </div>
+              </sat-popover>
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="endTime">

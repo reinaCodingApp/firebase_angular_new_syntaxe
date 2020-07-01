@@ -42,5 +42,6 @@ export enum ModuleIdentifiers {
 
   monthlyMeeting = 'monthlyMeeting',
   followupSheetconfiguration = 'followupSheetconfiguration',
-  timeline = 'timeline'
+  timeline = 'timeline',
+  marksProducts = 'marksProducts'
 }

@@ -7,7 +7,7 @@ export class Audit{
     templateId: string;
     title: string;
     date: number;
-    responsible: Employee;
+    responsible: any;
     site: Site;
     report: string;
     isSealed: boolean;

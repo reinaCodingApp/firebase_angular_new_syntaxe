@@ -10,6 +10,7 @@ import { SharedNotificationService } from 'app/common/services/shared-notificati
 import { PrintWeeksDialogComponent } from '../dialogs/print-weeks-dialog/print-weeks-dialog.component';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
+import { TraceabiliyCodesOfweekComponent } from '../dialogs/traceabiliy-codes-ofweek/traceabiliy-codes-ofweek.component';
 
 @Component({
   selector: 'traceability-sidebar',
@@ -138,6 +139,15 @@ export class TraceabilitySidebarComponent implements OnInit {
   printWeeks(): void {
     this.dialogRef = this._matDialog.open(PrintWeeksDialogComponent, {
       panelClass: 'mail-compose-dialog',
+    });
+  }
+
+  managTraceabilityCodesOfWeek(): void{
+    this.dialogRef = this._matDialog.open(TraceabiliyCodesOfweekComponent, {
+      panelClass: 'mail-compose-dialog',
+      data: {
+        traceabilityPlanification: this.traceabilityPlanification,
+      }
     });
   }
 

@@ -1,4 +1,5 @@
 import { Traceability } from './traceability';
+import { TraceabilityWeekCode } from './traceabilityWeekCode';
 
 export class TraceabilityPlanification {
   id: number;
@@ -7,4 +8,5 @@ export class TraceabilityPlanification {
   color: string;
   items: Traceability[];
   mel: string;
+  traceabilityWeekCodes: TraceabilityWeekCode[];
 }

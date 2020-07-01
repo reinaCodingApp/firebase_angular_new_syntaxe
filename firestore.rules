@@ -137,5 +137,84 @@ service cloud.firestore {
         allow update : if isRoot();
         allow delete : if never();
     }
+
+    /***************************************************************************
+    *************************** WebCMS Settings *********************************
+    ****************************************************************************/
+    match /web.homeSettings/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if never();
+    }
+
+    match /web.ourServices/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if never();
+    }
+
+    match /web.ourMission/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if never();
+    }
+
+    match /web.testimonials/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if never();
+    }
+
+    match /web.faq/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
+
+    match /web.news/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
+
+    match /web.marks/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
+
+    match /web.products/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
+
+    match /web.focus/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
+
+    match /web.focusDetails/{document} {
+        allow get, list : if true;
+        allow create : if isRoot();
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
+
+    match /web.newsLetter/{document} {
+        allow get, list, create : if true;
+        allow update : if isRoot();
+        allow delete : if isRoot();
+    }
   }
 }

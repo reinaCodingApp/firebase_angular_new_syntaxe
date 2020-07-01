@@ -4,7 +4,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { BASE_URL } from 'environments/environment';
 import { HttpClient, HttpBackend } from '@angular/common/http';
 import { Employee } from 'app/common/models/employee';
-import { Department } from 'app/main/webcms/models/department';
+import { Department } from 'app/main/webcms/web-messages/models/department';
 import { Attachment } from 'app/common/models/attachment';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';

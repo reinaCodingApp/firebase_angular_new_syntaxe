@@ -1,0 +1,245 @@
+@import "src/@fuse/scss/fuse";
+
+marks {
+  width: 100%;
+
+  .center {
+    .header {
+      .search-wrapper {
+        border-radius: 28px;
+        background-color: white;
+        overflow: hidden;
+        @include mat-elevation(1);
+
+        .sidebar-toggle {
+          margin: 0 0 0 6px;
+          width: 56px;
+          height: 56px;
+          border-radius: 0;
+          border-right: 1px solid;
+        }
+
+        .search {
+          width: 100%;
+          height: 56px;
+          line-height: 56px;
+          padding: 0 18px;
+
+          input {
+            height: 56px;
+            min-height: 56px;
+            max-height: 56px;
+            padding: 0 16px;
+            border: none;
+            outline: none;
+          }
+        }
+      }
+    }
+
+    .content-card {
+      .toolbar {
+        .toolbar-separator {
+          height: 32px;
+          width: 1px;
+          margin: 0 12px;
+        }
+      }
+
+      @include media-breakpoint("lt-md") {
+        .marks-list {
+          border-right: none;
+        }
+
+        .marks-list,
+        .marks-details {
+          flex: 1 0 100%;
+        }
+
+        .marks-details {
+          display: none !important;
+        }
+
+        &.current-mail-selected {
+          .toolbar {
+            padding-left: 16px !important;
+
+            .mail-selection {
+              display: none !important;
+            }
+          }
+
+          .content {
+            .marks-list {
+              display: none !important;
+            }
+
+            .marks-details {
+              display: flex !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .top-bg {
+    height: 120px !important;
+  }
+
+  .header {
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    color: white !important;
+  }
+
+  .marks-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0;
+    border-right: 1px solid;
+    border-right-color: rgba(0, 0, 0, 0.12);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .no-messages-text {
+      font-size: 24px;
+      font-weight: 300;
+    }
+
+    .mail-list {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+  }
+
+  .marks-item {
+    flex-shrink: 0;
+    position: relative;
+    padding: 16px 24px;
+    border-bottom: 1px solid;
+    border-bottom-color: rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+
+    &.unread {
+      .info {
+        .name {
+          font-weight: 700;
+        }
+
+        .row-2 {
+          .subject {
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    .info {
+      overflow: hidden;
+      width: 0;
+      margin-left: 16px;
+      position: relative;
+
+      .row-1 {
+        margin-bottom: 8px;
+
+        .name {
+          font-size: 15px;
+          font-weight: 600;
+
+          .avatar {
+            min-width: 32px;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+          }
+        }
+
+        .actions {
+          margin-left: 4px;
+
+          .mat-icon-button {
+            width: 32px;
+            height: 32px;
+            line-height: 1;
+          }
+        }
+      }
+
+      .row-2 {
+        .subject,
+        .message {
+          width: 100%;
+        }
+
+        .message {
+          position: relative;
+        }
+
+        .labels {
+          margin-top: 8px;
+
+          .label {
+            font-size: 11px;
+            border-radius: 4px;
+            margin: 0 4px 0 0;
+            padding: 3px 8px;
+
+            .label-color {
+              width: 8px;
+              height: 8px;
+              margin-right: 8px;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .marks-details {
+    padding: 24px;
+    .mark-detail {
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+      border-spacing: 0px;
+    }
+    table.mark-details tr{
+      text-transform: uppercase;
+    }
+    table.mark-detail tr td {
+      border: 1px solid lightgray;
+      padding: 10px;
+      font-style: italic;
+      width: 50%;
+    }
+    table.mark-detail tr td:first-child {
+      font-weight: bold;
+      font-style: initial;
+    }
+
+    .mat-header-cell {
+      @include media-breakpoint("lt-md") {
+        padding: 4px !important;
+      }
+    }
+    .mat-cell {
+      @include media-breakpoint("lt-md") {
+        padding: 4px !important;
+      }
+    }
+  }
+}
+
+.sidebar-background {
+  background-color: #fafafa !important;
+  box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2),
+    0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12) !important;
+}

@@ -1,0 +1,53 @@
+<div fxLayout="column" class="p-24 mx-md-256">
+  <div class="faq">
+    <div class="fuse-card mb-8" *ngFor="let faq of faqs">
+      <div class="p-16" fxLayout="row" fxLayoutAlign="space-between center">
+        <input class="h2 p-0 w-100-p" [(ngModel)]="faq.title" name="title" maxlength="50" (change)="updateFaq(faq)" />
+        <div class="actions">
+          <button mat-button (click)="deleteFaq(faq)">
+            <mat-icon color="warn">delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="card-divider full-width"></div>
+      <div fxLayout="column">
+        <div class="p-16" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between"
+          fxLayoutAlign.lt-sm="center">
+          <mat-form-field class="p-0" class="w-100-p">
+            <textarea class="pr-48 pb-4" rows="4" [(ngModel)]="faq.content" matInput (change)="updateFaq(faq)">
+          </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card-divider full-width"></div>
+    </div>
+  </div>
+  <div fxLayoutAlign="center center">
+    <button [satPopoverAnchor]="faqPopover" (click)="faqPopover.toggle()" class="m-8" mat-raised-button color="accent"
+      matTooltip="Ajouter FAQ">
+      <mat-icon class="mr-4">add</mat-icon>
+    </button>
+    <div>
+      <sat-popover #faqPopover hasBackdrop>
+        <div class="popover-faq mat-elevation-z8 font-size-14">
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" fxFlex="100" class="pl-4">
+              <mat-label>Titre</mat-label>
+              <input matInput [(ngModel)]="faq.title" minLength="20" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100">
+              <mat-label>Contenu</mat-label>
+              <textarea rows="4" [(ngModel)]="faq.content" matInput>
+              </textarea>
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="end center" class="mb-12">
+              <button mat-raised-button color="warn" (click)="addFaq()" [disabled]="!faq.title || !faq.content">
+                Créer
+              </button>
+            </div>
+          </div>
+        </div>
+      </sat-popover>
+    </div>
+  </div>
+</div>

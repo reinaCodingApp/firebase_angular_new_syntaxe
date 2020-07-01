@@ -1,0 +1,19 @@
+@import "src/@fuse/scss/fuse";
+
+.faq {
+  .fuse-card {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+}
+
+.popover-faq {
+  font-size: 1.0em;
+  padding: 16px;
+  background-color: white;
+  @include media-breakpoint('gt-sm') {
+    min-width: 460px;
+  }
+  border-radius: 5px;
+  font-weight: 600;
+}

@@ -25,5 +25,14 @@ export class firestoreCollections {
 
   public static readonly shortcuts: string = 'shortcuts';
   public static readonly appVersions: string = 'appVersions';
-
+  public static readonly webHomeSettings: string = 'web.homeSettings';
+  public static readonly webOurServices: string = 'web.ourServices';
+  public static readonly webOurMission: string = 'web.ourMission';
+  public static readonly webTestimonials: string = 'web.testimonials';
+  public static readonly webFaq: string = 'web.faq';
+  public static readonly webNews: string = 'web.news';
+  public static readonly webMarks: string = 'web.marks';
+  public static readonly webProducts: string = 'web.products';
+  public static readonly webFocus: string = 'web.focus';
+  public static readonly webFocusDetails: string = 'web.focusDetails';
 }

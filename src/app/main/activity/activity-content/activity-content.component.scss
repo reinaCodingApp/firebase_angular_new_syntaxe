@@ -82,6 +82,7 @@ activity-content {
 
   .mat-column-day {
     min-width: 130px !important;
+
     @include media-breakpoint("lt-md") {
       min-width: 100px !important;
     }
@@ -89,6 +90,7 @@ activity-content {
 
   .mat-column-fullName {
     min-width: 200px !important;
+
     @include media-breakpoint("lt-md") {
       min-width: 100px !important;
     }
@@ -137,4 +139,13 @@ activity-content {
   .mat-column-actions {
     max-width: 70px !important;
   }
+}
+
+.popover-info {
+  font-size: 1.0em;
+  padding: 16px;
+  background-color: white;
+  max-width: 460px;
+  border-radius: 5px;
+  font-weight: 600;
 }

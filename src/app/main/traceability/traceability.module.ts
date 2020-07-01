@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule, MatExpansionModule, MatTooltipModule, MatMenuModule } from '@angular/material';
+import { MatTableModule, MatExpansionModule, MatTooltipModule, MatMenuModule, MatRadioModule } from '@angular/material';
 import {MatSelectInfiniteScrollModule} from 'ng-mat-select-infinite-scroll';
 
 import { TraceabilityComponent } from './traceability.component';
@@ -27,6 +27,7 @@ import { FuseSidebarModule } from '@fuse/components';
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
+import { TraceabiliyCodesOfweekComponent } from './dialogs/traceabiliy-codes-ofweek/traceabiliy-codes-ofweek.component';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
@@ -45,7 +46,8 @@ const routes: Routes = [
     TraceabilityContentComponent,
     AddTraceabilityDialogComponent,
     AddExceptioncodeDialogComponent,
-    PrintWeeksDialogComponent
+    PrintWeeksDialogComponent,
+    TraceabiliyCodesOfweekComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -66,6 +68,7 @@ const routes: Routes = [
     MatSelectInfiniteScrollModule,
     MatTooltipModule,
     MatMenuModule,
+    MatRadioModule,
     FuseSidebarModule,
     FuseSharedModule,
     CustomConfirmDialogModule
@@ -73,7 +76,8 @@ const routes: Routes = [
   entryComponents: [
     AddTraceabilityDialogComponent,
     AddExceptioncodeDialogComponent,
-    PrintWeeksDialogComponent
+    PrintWeeksDialogComponent,
+    TraceabiliyCodesOfweekComponent
   ]
 })
 export class TraceabilityModule {

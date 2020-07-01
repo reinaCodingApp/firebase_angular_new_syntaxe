@@ -35,8 +35,7 @@ import { firebaseConfig } from 'environments/environment';
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
 import { HomeModule } from './main/home/home.module';
 import { FormsModule } from '@angular/forms';
-import { PostsModule } from './main/webcms/posts/posts.module';
-import { WebcmsModule } from './main/webcms/webcms.module';
+import { WebMessagesModule } from './main/webcms/web-messages/web-messages.module';
 import { AdvanceSalaryModule } from './main/advance-salary/advance-salary.module';
 import { TicketModule } from './main/ticket/ticket.module';
 import { RecapActivityModule } from './main/recap-activity/recap-activity.module';
@@ -61,11 +60,13 @@ import { AccessRightsModule } from './main/access-rights/access-rights.module';
 import { MeetingsModule } from './main/meetings/meetings.module';
 import { MonthlyMeetingModule } from './main/monthly-meeting/monthly-meeting.module';
 import { ActivityTemporaryWorkerModule } from './main/activity-temporary-workers/activity-temporary-workers.module';
+import { WebSiteModule } from './main/webcms/website/website.module';
 
 import { TokenInterceptor } from './main/login/token.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { MarksProductsModule } from './main/webcms/marks-products/marks-products.module';
 
 const appRoutes: Routes = [
   {
@@ -114,8 +115,7 @@ const appRoutes: Routes = [
     LayoutModule,
     LoginModule,
     HomeModule,
-    PostsModule,
-    WebcmsModule,
+    WebMessagesModule,
     AdvanceSalaryModule,
     TicketModule,
     RecapActivityModule,
@@ -140,6 +140,8 @@ const appRoutes: Routes = [
     MonthlyMeetingModule,
     ChangelogModule,
     ActivityTemporaryWorkerModule,
+    WebSiteModule,
+    MarksProductsModule,
 
     // 3rd party modules
     NgxUiLoaderModule,

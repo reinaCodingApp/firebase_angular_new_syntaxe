@@ -219,8 +219,12 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
       data.activitiesPerWeek.forEach(activityPerWeek => {
         activityPerWeek.activities.forEach((activity, index) => {
           if (activity.id === currentActivity.id) {
-            activityPerWeek.activities[index].activityState = 0;
-            activityPerWeek.activities[index].activityType = 0;
+            let deleteActivity = new Activity();
+            deleteActivity.id = currentActivity.id;
+            deleteActivity.activityState = 0;
+            deleteActivity.activityType = 0;
+            deleteActivity.day = activityPerWeek.activities[index].day;
+            activityPerWeek.activities[index] = deleteActivity;
           }
         });
       });
