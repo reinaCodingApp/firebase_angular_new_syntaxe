@@ -39,6 +39,7 @@ export class AuditPrintComponent implements OnInit {
         this.audit = current;
         if (this.audit) {
          this.audit = this.auditsService.getAllAuditSectionsAndItems(this.audit);
+         console.log('### this.audit', this.audit);
         }
       });
     this.auditsService.onSectionsChanged.subscribe(sections => {

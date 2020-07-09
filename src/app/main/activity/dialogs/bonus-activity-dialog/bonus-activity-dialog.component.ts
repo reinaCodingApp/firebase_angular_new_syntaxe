@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ActivityService } from '../../activity.service';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';
@@ -23,10 +22,8 @@ export class BonusActivityDialogComponent implements OnInit {
   constructor(
     public matDialogRef: MatDialogRef<BonusActivityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _activityService: ActivityService,
-    private _notificationService: SharedNotificationService,
-    private _commonService: CommonService
+    private _notificationService: SharedNotificationService
   ) {
     this.activity = data.activity;
   }
@@ -44,14 +41,11 @@ export class BonusActivityDialogComponent implements OnInit {
 
   updateBonusCategory(form: NgForm): void {
     if (form.valid && this.activity.bonusCategory.id !== 0) {
-      this._loaderService.start();
       this._activityService.updateBonusCategory(this.activity).subscribe((updatedActivity) => {
-        this._loaderService.stop();
         this.matDialogRef.close({ success: true, data: updatedActivity });
         this._notificationService.showSuccess('Prime crée avec succés');
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
     }
@@ -59,15 +53,12 @@ export class BonusActivityDialogComponent implements OnInit {
 
   updateReplacementBonusCategory(form: NgForm): void {
     if (form.valid && this.activity.replacementBonusCategory.id !== 0) {
-      this._loaderService.start();
       this._activityService.updateReplacementBonusCategory(this.activity)
         .subscribe((updatedActivity) => {
-          this._loaderService.stop();
           this.matDialogRef.close({ success: true, data: updatedActivity });
           this._notificationService.showSuccess('Prime crée avec succés');
         }, (err) => {
           console.log(err);
-          this._loaderService.stop();
           this._notificationService.showStandarError();
         });
     }

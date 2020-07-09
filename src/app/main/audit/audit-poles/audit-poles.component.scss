@@ -7,12 +7,13 @@ audit-poles {
         width: 100%;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
-
+        background-color: #ffffff !important;
         .header {
-
+          height: 90px;
             h1 {
                 font-size: 40px;
                 font-weight: 300;
+                color: #3C4252;
             }
         }
 
@@ -28,7 +29,7 @@ audit-poles {
                 padding: 24px 0;
                 margin: 16px;
                 border-radius: 8px;
-                background: rgba(0, 0, 0, 0.12);
+                background: #3C4252;
                 transition: box-shadow 150ms ease-in;
                 cursor: pointer;
 

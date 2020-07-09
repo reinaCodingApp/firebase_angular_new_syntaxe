@@ -62,6 +62,34 @@ export async function initializeModulesDatabase(): Promise<any> {
   writeBatch.commit();
   console.log('initialize modules database finished successfully');
 }
+export function createAuditPoles() {
+  const poles = [{displayOrder: 0, name: 'Abattoir bovins et ovins'},
+  {displayOrder: 0, name: 'Abattoir volailles'}, {displayOrder: 0, name: 'C.E.V'}, {displayOrder: 0, name: 'Administration'},
+  {displayOrder: 0, name: 'Traçabilité'}, {displayOrder: 0, name: 'Communication'}, {displayOrder: 0, name: 'Développement'},
+  {displayOrder: 0, name: 'Direction'}, {displayOrder: 0, name: 'Service entretien'}
+];
+  let i = 4;
+  poles.forEach(pole => {
+    pole.displayOrder = i ++;
+    admin.firestore().collection(firestoreCollections.auditPoles).add(pole);
+  });
+}
+export function initializeWebHomeSettings() {
+
+  const components = {featuredPosts: {displayOrder: 8, show: true, title: 'Articles à lire'},
+                      focus: {displayOrder: 7, show: true, title: 'Focus'},
+                      highlightPost: {displayOrder: 0, isClickablePost: false, show: true, title: 'Article à la Une'},
+                      marks: {displayOrder: 5, show: true, title: 'Marques agréées'},
+                      newsLetter: {displayOrder: 10, show: true, title: 'Newsletter'},
+                      ourMission: {displayOrder: 2, show: true, title: 'Notre Mission'},
+                      ourServices: {displayOrder: 3, show: true, title: 'Notre Services'},
+                      partners: {displayOrder: 6, show: true, title: 'Partenaires'},
+                      products: {displayOrder: 4, show: true, title: 'Produits certifiés'},
+                      testimonials: {displayOrder: 9, show: false, title: 'Témoingnages'},
+                      traceability: {displayOrder: 1, show: true, title: 'Traçabilité'}};
+  admin.firestore().collection(firestoreCollections.webHomeSettings).add(components);
+}
+
 export function  createRootUser() {
   const newUser = admin.auth().createUser({
     displayName: 'Mr. Root',

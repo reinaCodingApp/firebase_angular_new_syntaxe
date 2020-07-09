@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgForm } from '@angular/forms';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';
@@ -28,7 +27,6 @@ export class AddActivityDialogComponent implements OnInit {
   constructor(
     public matDialogRef: MatDialogRef<AddActivityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _activityService: ActivityService,
     private _notificationService: SharedNotificationService,
     private _commonService: CommonService
@@ -53,7 +51,6 @@ export class AddActivityDialogComponent implements OnInit {
   }
 
   addActivity(): void {
-    this._loaderService.start();
     const activityToAdd: Activity = {
       startTime: moment(this.activity.startTime).format('LT'),
       endTime: this.activity.endTime != null ? moment(this.activity.endTime).format('LT') : '',
@@ -64,7 +61,6 @@ export class AddActivityDialogComponent implements OnInit {
       isTemporaryWorker: false,
     };
     this._activityService.addAtivity(activityToAdd).subscribe((response) => {
-      this._loaderService.stop();
       if (response.id !== -1) {
         this._notificationService.showSuccess('Insertion enregistrée');
       } else {
@@ -72,19 +68,16 @@ export class AddActivityDialogComponent implements OnInit {
       }
     }, (err) => {
       console.log(err);
-      this._loaderService.stop();
       this._notificationService.showStandarError();
     });
   }
 
   updateActivity(): void {
-    this._loaderService.start();
     const activityToUpdate: Activity = JSON.parse(JSON.stringify(this.activity));
     activityToUpdate.startDate = moment(this.activity.startDate).format('L');
     activityToUpdate.startTime = moment(this.activity.startTime).format('LT');
     activityToUpdate.endTime = this.activity.endTime != null ? moment(this.activity.endTime).format('LT') : '',
       this._activityService.updateActivity(activityToUpdate).subscribe((updatedActivity) => {
-        this._loaderService.stop();
         if (updatedActivity.id !== -1) {
           this._notificationService.showSuccess('Modification enregistrée');
           this.matDialogRef.close({ success: true, data: updatedActivity });
@@ -93,7 +86,6 @@ export class AddActivityDialogComponent implements OnInit {
         }
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }

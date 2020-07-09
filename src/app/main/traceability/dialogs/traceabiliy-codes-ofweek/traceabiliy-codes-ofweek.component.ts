@@ -30,12 +30,11 @@ export class TraceabiliyCodesOfweekComponent implements OnInit {
   searchInput = '';
   lastSearchInput = '';
   requestParameter: RequestParameter;
-  codeMode: string = 'fromCodes';
+  codeMode = 'fromCodes';
 
   constructor(
     public matDialogRef: MatDialogRef<TraceabiliyCodesOfweekComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _traceabilityService: TraceabilityService,
     private _notificationService: SharedNotificationService
   ) {
@@ -60,30 +59,27 @@ export class TraceabiliyCodesOfweekComponent implements OnInit {
   }
 
   addCode(): void {
-    this._loaderService.start();
     this.traceabilityWeekCode.traceabilityPlanificationId = this.traceabilityPlanification.id;
+    this.traceabilityWeekCode.code = this.traceabilityWeekCode.code.toUpperCase();
+    if (this.traceabilityPlanification.traceabilityWeekCodes === null) {
+      this.traceabilityPlanification.traceabilityWeekCodes = [];
+    }
     this._traceabilityService.addTraceabilityWeekCode(this.traceabilityWeekCode)
       .subscribe((addedTraceabilityWeekCode) => {
-        this._loaderService.stop();
         this.traceabilityPlanification.traceabilityWeekCodes.push(addedTraceabilityWeekCode);
       }, (err) => {
-        console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }
 
   deleteTraceabilityWeekCode(traceabilityWeekCode: TraceabilityWeekCode): void {
-    this._loaderService.start();
     this._traceabilityService.deleteTraceabilityWeekCode(traceabilityWeekCode)
       .subscribe((response) => {
-        this._loaderService.stop();
         if (response) {
           this.traceabilityPlanification.traceabilityWeekCodes = this.traceabilityPlanification.traceabilityWeekCodes.filter((item => item.id !== traceabilityWeekCode.id));
         }
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }

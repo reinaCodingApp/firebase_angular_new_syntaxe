@@ -149,6 +149,9 @@
                     width: 100%;
                     border-radius: 8px;
                     @include mat-elevation(1);
+                    .mat-raised-button {
+                      border-radius: 0 !important;
+                    }
                 }
             }
         }

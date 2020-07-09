@@ -140,7 +140,10 @@ export class AuditsService implements Resolve<any>
   }
 
   getAudits(poleId: string) {
-    this.angularFirestore.collection(firestoreCollections.audits, query => query.where('poleId', '==', poleId)).snapshotChanges().subscribe(data => {
+    this.angularFirestore.collection(firestoreCollections.audits,
+      query => query.where('poleId', '==', poleId)
+              .orderBy('date', 'desc'))
+      .snapshotChanges().subscribe(data => {
       const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
       this.onAuditsChanged.next(audits);
     });

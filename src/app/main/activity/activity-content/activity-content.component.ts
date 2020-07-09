@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ActivityService } from '../activity.service';
 import { AddActivityDialogComponent } from '../dialogs/add-activity-dialog/add-activity-dialog.component';
 import { Activity } from 'app/main/activity/models/activity';
@@ -64,7 +63,6 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
   constructor(
     public _matDialog: MatDialog,
     private _activityService: ActivityService,
-    private _loaderService: NgxUiLoaderService,
     private appService: AppService
   ) {
     this._unsubscribeAll = new Subject();
@@ -133,14 +131,11 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
     this.dialogRef.afterClosed()
       .subscribe(response => {
         if (response) {
-          this._loaderService.start();
           this._activityService.deleteActivity(currentActivity)
             .subscribe(() => {
-              this._loaderService.stop();
               this.refreshAfterDelete(currentActivity);
             }, (err) => {
               console.log(err);
-              this._loaderService.stop();
             });
         }
       });
@@ -184,16 +179,14 @@ export class ActivityContentComponent implements OnInit, OnDestroy {
 
   onFilterBySite(): void {
     if (this.filterValue !== undefined && this.activitiesPerEmployee.length != 0) {
-      this._loaderService.start();
       this.activityParameters.activitiesFilter = this.filterValue;
       this._activityService.getActivitiesPerEmployee(this.activityParameters)
         .subscribe((activitiesPerEmployee) => {
-          this._loaderService.stop();
+
           this._activityService.onActivitiesPerEmployeeChanged.next(activitiesPerEmployee);
           this._activityService.generateAllActivities(activitiesPerEmployee);
         }, (err) => {
           console.log(err);
-          this._loaderService.stop();
         });
     }
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgForm } from '@angular/forms';
 import { TonnageService } from '../tonnage.service';
 import { Site } from 'app/common/models/site';
@@ -10,6 +9,7 @@ import { RequestParameter } from 'app/main/tonnage/models/requestParameter';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CommonService } from 'app/common/services/common.service';
 import { Client } from '../models/client';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'tonnage-sidebar',
@@ -51,7 +51,6 @@ export class TonnageSidebarComponent implements OnInit {
 
   getTonnages(form: NgForm): void {
     if (form.valid) {
-      this._loaderService.start();
       this.tonnageFilterViewModel.startDate = moment(this.tonnageFilterViewModel.startDate).format('YYYY-MM-DD');
       this.tonnageFilterViewModel.endDate = moment(this.tonnageFilterViewModel.endDate).format('YYYY-MM-DD');
       this._tonnageService.getTonnages(this.tonnageFilterViewModel)
@@ -59,9 +58,7 @@ export class TonnageSidebarComponent implements OnInit {
           this._tonnageService.onTonnagesChanged.next(tonnageMainViewModel.tonnages);
           this._tonnageService.onTotalBySelectedPeriodChanged.next(tonnageMainViewModel.totalBySelectedPeriod);
           this._tonnageService.onCurrentTonnageChanged.next(null);
-          this._loaderService.stop();
         }, (err) => {
-          this._loaderService.stop();
           console.log(err);
         });
     }

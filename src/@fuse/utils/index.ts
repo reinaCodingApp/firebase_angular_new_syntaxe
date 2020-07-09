@@ -150,6 +150,7 @@ export class FuseUtils
     public static handleize(text): string
     {
         return text.toString().toLowerCase()
+                   .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Crème Brulée to Creme Brulee
                    .replace(/\s+/g, '-')           // Replace spaces with -
                    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
                    .replace(/\-\-+/g, '-')         // Replace multiple - with single -

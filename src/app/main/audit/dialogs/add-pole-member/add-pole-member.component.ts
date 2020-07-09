@@ -57,9 +57,16 @@ export class AddPoleMemberComponent implements OnInit {
       displayName: this.selectedUser.displayName,
       email: this.selectedUser.email
     };
+    if (!pole.members) {
+      pole.members = [];
+
+    }
     if (!pole.members.some(m => m.uid === selecteMember.uid)) {
       pole.members.push(selecteMember);
       this.auditsService.updateAuditPoleMembers(pole).then(() => {
+        if (!this.currentPole.members) {
+          this.currentPole.members = [];
+        }
         this.currentPole.members.push(selecteMember);
       });
     }

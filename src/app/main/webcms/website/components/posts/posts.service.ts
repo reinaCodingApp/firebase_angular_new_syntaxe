@@ -10,6 +10,7 @@ import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 import { firestoreCollections } from 'app/data/firestoreCollections';
 import { AppService } from 'app/app.service';
 import { Post } from './models/post';
+import { FuseUtils } from '@fuse/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -212,10 +213,7 @@ export class PostsService implements Resolve<any>
     this.angularFirestore.collection(collection).add({ ...post });
   }
   private getPostId(title: string) {
-    const id = title.trim().toLowerCase().replace('?', '').
-      replace(/'/g, '').replace(/"/g, '').replace(/!/g, '').replace(/:/g, '').trim().replace(/ /g, '-')
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    console.log('id ', id);
+    const id = FuseUtils.handleize(title);
     return id;
   }
   private getExcerpt(outerHTML: any) {

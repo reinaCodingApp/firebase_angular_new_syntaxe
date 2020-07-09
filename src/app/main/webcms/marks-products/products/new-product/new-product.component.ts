@@ -19,7 +19,7 @@ import { MatChipInputEvent } from '@angular/material';
 export class NewProductComponent implements OnInit {
   marks: Mark[] = [];
   product: Product = new Product();
-  mode: string = 'new';
+  mode = 'new';
   productId: string;
   constructor(
     private marksPorductsService: MarksProductsService,
@@ -48,6 +48,15 @@ export class NewProductComponent implements OnInit {
     })).subscribe(marks => {
       console.log(marks);
       this.marks = marks;
+      if (this.mode === 'edit') {
+        const filteredMark = marks.filter(m => m.uid === this.product.mark.uid);
+        if (filteredMark && filteredMark.length > 0) {
+          this.product.mark = filteredMark[0];
+        }
+
+        console.log('this.product.mark', this.product.mark);
+      }
+
     });
   }
 

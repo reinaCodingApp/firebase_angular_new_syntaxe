@@ -28,9 +28,7 @@ export class TraceabilityContentComponent implements OnInit {
 
   constructor(
     private _traceabilityService: TraceabilityService,
-    private commonService: CommonService,
-    private _matDialog: MatDialog,
-    private _loaderService: NgxUiLoaderService) {
+    private _matDialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -77,15 +75,12 @@ export class TraceabilityContentComponent implements OnInit {
 
   changeWeekNumber(stepNumber: number): void {
     this.requestParameter.week = this.requestParameter.week + stepNumber;
-    this._loaderService.start();
     this._traceabilityService.getTraceabilityPlanification(this.requestParameter)
       .subscribe((traceabilityPlanification) => {
         this._traceabilityService.onRequestParameterChanged.next(this.requestParameter);
         this.traceabilityPlanification = traceabilityPlanification;
         this._traceabilityService.onTaceabilityPlanificationChanged.next(traceabilityPlanification);
-        this._loaderService.stop();
-      }, (err) => {
-        this._loaderService.stop();
+        }, (err) => {
         console.log(err);
       });
   }
@@ -101,7 +96,6 @@ export class TraceabilityContentComponent implements OnInit {
     this.dialogRef.afterClosed()
       .subscribe(response => {
         if (response) {
-          this._loaderService.start();
           this._traceabilityService.deleteTraceability(traceability.id)
             .subscribe((result) => {
               if (result) {
@@ -111,9 +105,7 @@ export class TraceabilityContentComponent implements OnInit {
                   this._traceabilityService.onTaceabilityPlanificationChanged.next(JSON.parse(JSON.stringify(this.traceabilityPlanification)));
                 }
               }
-              this._loaderService.stop();
             }, (err) => {
-              this._loaderService.stop();
               console.log(err);
             });
         }

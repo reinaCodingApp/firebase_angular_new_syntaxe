@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { ExecutiveEmployee } from 'app/main/activity/models/executiveEmployee';
 import { ActivityService } from '../../activity.service';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -20,8 +19,7 @@ export class ActivityEmployeesCountersComponent implements OnInit {
   displayedColumns = ['fullName', 'presenceCounter', 'holidaysCounter'];
 
   constructor(
-    private _activityService: ActivityService,
-    private _loaderService: NgxUiLoaderService) { }
+    private _activityService: ActivityService) { }
 
   ngOnInit(): void {
     this._activityService.onYearsChanged.subscribe((years) => {
@@ -31,14 +29,12 @@ export class ActivityEmployeesCountersComponent implements OnInit {
 
   getExecutiveEmployeeCounters(form: NgForm): void {
     if (form.valid) {
-      this._loaderService.start();
+
       this._activityService.getExecutiveEmployeeCounters(this.year)
         .subscribe((executiveEmployees) => {
-          this._loaderService.stop();
           this.executiveEmployees = executiveEmployees;
         }, (err) => {
           console.log(err);
-          this._loaderService.stop();
         });
     }
   }

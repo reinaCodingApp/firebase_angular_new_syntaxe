@@ -32,10 +32,8 @@ export class PrintWeeksDialogComponent implements OnInit {
   constructor(
     public matDialogRef: MatDialogRef<PrintWeeksDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _traceabilityService: TraceabilityService,
     private _notificationService: SharedNotificationService,
-    private _commonService: CommonService
   ) {
     this.selectedSite = new Site();
     this.requestParameter = new RequestParameter();
@@ -56,17 +54,14 @@ export class PrintWeeksDialogComponent implements OnInit {
     if (form.valid) {
       if (this.requestParameter.weekEnd - this.requestParameter.weekStart <= 10) {
         this.requestParameter.siteId = this.selectedSite.id;
-        this._loaderService.start();
         this._traceabilityService.printWeeks(this.requestParameter)
           .subscribe((traceabilityPlanifications) => {
             this.traceabilityPlanifications = traceabilityPlanifications;
             setTimeout(() => {
               MainTools.printFromHtml('printWeeksContent');
-              this._loaderService.stop();
             }, 500);
           }, (err) => {
             console.log(err);
-            this._loaderService.stop();
             this._notificationService.showStandarError();
           });
       } else {

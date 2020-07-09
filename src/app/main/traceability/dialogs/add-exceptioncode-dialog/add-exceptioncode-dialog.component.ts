@@ -24,7 +24,6 @@ export class AddExceptioncodeDialogComponent implements OnInit {
   constructor(
     public matDialogRef: MatDialogRef<AddExceptioncodeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _traceabilityService: TraceabilityService,
     private _notificationService: SharedNotificationService
   ) {
@@ -41,11 +40,9 @@ export class AddExceptioncodeDialogComponent implements OnInit {
 
   addExceptionCode(form: NgForm): void {
     if (form.valid) {
-      this._loaderService.start();
       this.exceptionalCode.traceabilityId = this.traceability.id;
       this._traceabilityService.addExceptionCode(this.exceptionalCode)
         .subscribe((addedTraceabilityItem) => {
-          this._loaderService.stop();
           if (this.traceability.traceabilityItems == null) {
             this.traceability.traceabilityItems = [];
           }
@@ -54,7 +51,6 @@ export class AddExceptioncodeDialogComponent implements OnInit {
           this.matDialogRef.close();
         }, (err) => {
           console.log(err);
-          this._loaderService.stop();
           this._notificationService.showStandarError();
         });
     }

@@ -1,9 +1,6 @@
 @import "src/@fuse/scss/fuse";
-@import url(https://fonts.googleapis.com/css?family=Lato|Raleway&subset=latin,latin-ext);
 
 audit-print {
-  font-family: Raleway;
-
   p.point {
     text-align: justify;
 
@@ -188,8 +185,13 @@ audit-print {
         }
       }
     }
+    p {
+      font-size: 1.1em;
+    }
   }
-
+  span.values {
+    display: block;
+  }
   @include media-breakpoint("lt-lg") {
     #invoice {
       &.modern {

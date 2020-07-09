@@ -35,6 +35,7 @@ export class AuditPolesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(poles => {
         this.poles = poles;
+        this.poles.concat([...poles, ...poles, ...poles, ...poles, ...poles]);
       });
 
     this.auditsService.onHabilitationLoaded

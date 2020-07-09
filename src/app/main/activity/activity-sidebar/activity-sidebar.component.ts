@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Department } from 'app/common/models/department';
 import { ActivityService } from '../activity.service';
 import { Employee } from 'app/main/ticket/models/employee';
@@ -28,9 +27,7 @@ export class ActivitySidebarComponent implements OnInit {
   habilitation: Habilitation = new Habilitation(0);
 
   constructor(
-    private _activityService: ActivityService,
-    private _loaderService: NgxUiLoaderService
-  ) {
+    private _activityService: ActivityService) {
     this.employees = [];
   }
 
@@ -51,31 +48,25 @@ export class ActivitySidebarComponent implements OnInit {
   }
 
   getEmployeesForDepartment(): void {
-    this._loaderService.start();
     this._activityService.getEmployeesForDepartment(this.selectedDepartment)
       .subscribe((employees) => {
         this.employees = employees;
         this.filtredEmployees = employees;
         this.activityParameters.employees = [];
-        this._loaderService.stop();
       }, (err) => {
-        this._loaderService.stop();
         console.log(err);
       });
   }
 
   getActivities(form: NgForm): void {
     if (form.valid) {
-      this._loaderService.start();
       this.activityParameters.activitiesFilter = '';
       this._activityService.onActivityParametersChanged.next(this.activityParameters);
       this._activityService.getActivitiesPerEmployee(this.activityParameters)
         .subscribe((activitiesPerEmployee) => {
           this._activityService.onActivitiesPerEmployeeChanged.next(activitiesPerEmployee);
           this._activityService.generateAllActivities(activitiesPerEmployee);
-          this._loaderService.stop();
         }, (err) => {
-          this._loaderService.stop();
           console.log(err);
         });
     }

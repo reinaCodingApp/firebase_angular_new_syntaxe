@@ -8,7 +8,6 @@
   },
   "hosting": {
     "public": "dist",
-    "site": "dev-go-avs",
     "ignore": [
       "firebase.json",
       "**/.*",

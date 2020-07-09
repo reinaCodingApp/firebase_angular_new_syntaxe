@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ActivityService } from '../../activity.service';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';
@@ -23,7 +22,6 @@ export class BreaksActivityDialogComponent implements OnInit {
   constructor(
     public matDialogRef: MatDialogRef<BreaksActivityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _activityService: ActivityService,
     private _notificationService: SharedNotificationService,
     private _commonService: CommonService
@@ -43,7 +41,6 @@ export class BreaksActivityDialogComponent implements OnInit {
 
   updateBreaksActivity(form: NgForm): void {
     if (form.valid) {
-      this._loaderService.start();
       const activityBreaksToUpdate: Break[] = JSON.parse(JSON.stringify(this.activityBreaks));
       activityBreaksToUpdate.forEach(activityBreak => {
         const startTime = moment(activityBreak.startTime).format('LT');
@@ -53,12 +50,10 @@ export class BreaksActivityDialogComponent implements OnInit {
       });
       this.activity.breaks = activityBreaksToUpdate;
       this._activityService.updateBreaksActivity(this.activity).subscribe((updatedActivity) => {
-        this._loaderService.stop();
         this.matDialogRef.close({ success: true, data: updatedActivity });
         this._notificationService.showSuccess('Pause crée avec succés');
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
     }

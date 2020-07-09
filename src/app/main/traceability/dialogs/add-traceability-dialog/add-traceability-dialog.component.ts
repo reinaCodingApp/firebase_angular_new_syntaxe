@@ -45,7 +45,6 @@ export class AddTraceabilityDialogComponent implements OnInit {
   constructor(
     public matDialogRef: MatDialogRef<AddTraceabilityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _loaderService: NgxUiLoaderService,
     private _traceabilityService: TraceabilityService,
     private _notificationService: SharedNotificationService
   ) {
@@ -93,11 +92,9 @@ export class AddTraceabilityDialogComponent implements OnInit {
 
   addTraceability(): void {
     if (this.mode === 'new') {
-      this._loaderService.start();
       this.traceability.planificationId = this.traceabilityPlanification.id;
       this._traceabilityService.addTraceability(this.traceability)
         .subscribe((addedTraceability) => {
-          this._loaderService.stop();
           if (addedTraceability) {
             this.traceability.id = addedTraceability.id;
             this.traceability.site = addedTraceability.site;
@@ -107,35 +104,29 @@ export class AddTraceabilityDialogComponent implements OnInit {
           this._notificationService.showSuccess('Traçabilité crée avec succés');
         }, (err) => {
           console.log(err);
-          this._loaderService.stop();
           this._notificationService.showStandarError();
         });
     }
   }
 
   updateColorAndComment(): void {
-    this._loaderService.start();
     this.traceability.planificationId = this.traceabilityPlanification.id;
     this._traceabilityService.updateColorAndComment(this.traceability)
       .subscribe((uptadedTraceability) => {
-        this._loaderService.stop();
         this.traceability.color = uptadedTraceability.color;
         this.traceability.description = uptadedTraceability.description;
         this.refreshData(this.traceability);
         // this.matDialogRef.close();
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }
 
   addTraceabilityItem(): void {
-    this._loaderService.start();
     this.traceabilityItem.traceabilityId = this.traceability.id;
     this._traceabilityService.addTraceabilityItem(this.traceabilityItem)
       .subscribe((addedTraceabilityItem) => {
-        this._loaderService.stop();
         if (this.traceability.traceabilityItems == null) {
           this.traceability.traceabilityItems = [];
         }
@@ -143,20 +134,17 @@ export class AddTraceabilityDialogComponent implements OnInit {
         this.refreshData(this.traceability);
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }
 
   updateTraceabilityItem(): void {
-    this._loaderService.start();
     const requestParameter: RequestParameter = {
       itemId: this.selectedTraceabilityItem.id,
       materialId: this.selectedTraceabilityItem.material.id
     };
     this._traceabilityService.updateItemMaterial(requestParameter)
       .subscribe((updatedTraceabilityItem) => {
-        this._loaderService.stop();
         const index = this.traceability.traceabilityItems.findIndex(item => item.id === updatedTraceabilityItem.id);
         if (index >= 0) {
           this.traceability.traceabilityItems[index] = updatedTraceabilityItem;
@@ -165,19 +153,16 @@ export class AddTraceabilityDialogComponent implements OnInit {
         this.disableUpdateTraceabilityItemMode();
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }
 
   addRingTraceabilityItem(): void {
-    this._loaderService.start();
     this.ringTraceabilityItem.traceabilityId = this.traceability.id;
     this.ringTraceabilityItem.isRing = true;
     this.ringTraceabilityItem.material.id = 57;
     this._traceabilityService.addTraceabilityItem(this.ringTraceabilityItem)
       .subscribe((addedTraceabilityItem) => {
-        this._loaderService.stop();
         this.ringTraceabilityItem.code.code = '';
         if (this.traceability.traceabilityItems == null) {
           this.traceability.traceabilityItems = [];
@@ -186,16 +171,13 @@ export class AddTraceabilityDialogComponent implements OnInit {
         this.refreshData(this.traceability);
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }
 
   deleteTraceabilityItem(traceabilityItem: TraceabilityItem): void {
-    this._loaderService.start();
     this._traceabilityService.deleteTraceabilityItem(traceabilityItem)
       .subscribe((response) => {
-        this._loaderService.stop();
         if (response) {
           this.traceability.traceabilityItems = this.traceability.traceabilityItems
             .filter((item => item.id !== traceabilityItem.id));
@@ -203,7 +185,6 @@ export class AddTraceabilityDialogComponent implements OnInit {
         }
       }, (err) => {
         console.log(err);
-        this._loaderService.stop();
         this._notificationService.showStandarError();
       });
   }
@@ -321,16 +302,14 @@ export class AddTraceabilityDialogComponent implements OnInit {
       week: this.requestParameter.week - 1,
       year: this.requestParameter.year,
     };
-    this._loaderService.start();
     this._traceabilityService.getTraceabilityPlanification(requestParameter)
       .subscribe((lastWeekTraceabilityPlanification) => {
-        let lastWeekSites: Site[] = [];
+        const lastWeekSites: Site[] = [];
         lastWeekTraceabilityPlanification.items.forEach(item => {
           lastWeekSites.push(item.site);
         });
-        let traceabitlities = [];
+        const traceabitlities = [];
         if (this.mode === 'new') {
-          this._loaderService.start();
           lastWeekSites.forEach(site => {
             if (!this.siteAlreadyExist(site)) {
               const traceability = {
@@ -343,7 +322,6 @@ export class AddTraceabilityDialogComponent implements OnInit {
           if (traceabitlities.length > 0) {
             this._traceabilityService.addTraceabilityForPreviousWeekSites(traceabitlities)
               .subscribe((insertedTraceabilities) => {
-                this._loaderService.stop();
                 if (this.traceabilityPlanification.items == null) {
                   this.traceabilityPlanification.items = [];
                 }
@@ -356,16 +334,13 @@ export class AddTraceabilityDialogComponent implements OnInit {
                 this.matDialogRef.close();
               }, (err) => {
                 console.log(err);
-                this._loaderService.stop();
                 this._notificationService.showStandarError();
               });
           } else {
-            this._loaderService.stop();
             this._notificationService.showWarning('Vous avez déjà créé des lignes de traçabilité pour tous les sites de la semaine précédente');
           }
         }
       }, (err) => {
-        this._loaderService.stop();
         this._notificationService.showStandarError();
         console.log(err);
       });

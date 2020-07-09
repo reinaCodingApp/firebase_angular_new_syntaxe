@@ -39,7 +39,7 @@
         <!-- Custom Code -->
         <mat-form-field appearance="outline" fxFlex="40" *ngIf="codeMode == 'customCode'" >
           <mat-label>Code</mat-label>
-          <input matInput [(ngModel)]="traceabilityWeekCode.code" minLength="3" maxLength="3" />
+          <input matInput [(ngModel)]="traceabilityWeekCode.code" class="text-uppercase" minLength="3" maxLength="3" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex="40">

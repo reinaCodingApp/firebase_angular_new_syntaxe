@@ -11,29 +11,32 @@
     <div class="card">
       <div class="content">
         <div fxLayout="column">
-          <h1 fxLayoutAlign="center center" class="font-size-24">
-            <u>{{'Établissement ' + audit.site.name}}</u>
-          </h1>
-          <h1 fxLayoutAlign="center center" class="font-size-24">
-            {{audit.date | date:'dd/MM/yyyy'}}
-          </h1>
+          <div class="font-size-18">
+            <div>Audit réalisé en date du : {{audit.date | date:'dd/MM/yyyy'}}</div>
+            <div>Au sein de l'établissement : {{ audit.site.name}}</div>
+            <div>Nom et prénom de l'auditeur : {{audit.responsible.displayName}}</div>
+          </div>
+
           <ul style="list-style: none; padding: 0px;">
-            <li *ngFor="let item of audit.menus">
+            <li *ngFor="let menu of audit.menus">
               <div fxLayout="column">
-                <h1>
-                  {{ item.title }}
+                <h1 style="background-color: gray; color:white" class="p-8">
+                  {{ menu.title }}
                 </h1>
                 <ul style="list-style: none; padding: 0px;">
-                  <li *ngFor="let section of item.sections">
-                    <h2 style="color: white; background-color: gray;" class="p-8">
+                  <li *ngFor="let section of menu.sections">
+                    <h2 style="text-decoration: underline; margin:0;">
                       {{ section.title  }}
                     </h2>
                     <ul style="list-style: none; padding: 0px;">
-                      <li *ngFor="let folder of section.items">
+                      <li *ngFor="let item of section.items">
                         <div fxLayout="column">
-                          <h2 style="background-color: gainsboro;" class="p-8">
-                            {{ folder.title }}
-                          </h2>
+                          <p style="background-color: gainsboro;" class="p-8">
+                            {{ item.title }}
+                            <span fxLayoutAlign="end center" class="values my-12">
+                              <button class="mx-8" color="{{v===item.effectiveValue ? 'accent' :''}}" mat-stroked-button *ngFor="let v of item.possibleValues.values">{{v}}</button>
+                            </span>
+                          </p>
                         </div>
                       </li>
                     </ul>
@@ -44,9 +47,9 @@
             <li>
               <div fxLayout="column">
                 <h1>Rapport</h1>
-                <h2 style="background-color: gainsboro;" class="p-8">
+                <p class="p-8">
                   {{ audit.report }}
-                </h2>
+                </p>
                 <mat-divider *ngIf="audit.attachments && audit.attachments.length > 0" class="mt-0"></mat-divider>
                 <div class="attachments p-4" fxLayout="row wrap" *ngIf="true || audit.attachments && audit.attachments.length > 0">
                     <div class="media" *ngFor="let attachment of audit.attachments">

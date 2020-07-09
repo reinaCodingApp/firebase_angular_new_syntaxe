@@ -29,8 +29,6 @@ export class TraceabilitySidebarComponent implements OnInit {
 
   constructor(
     private _traceabilityService: TraceabilityService,
-    private _loaderService: NgxUiLoaderService,
-    private _commonService: CommonService,
     private _notificationService: SharedNotificationService,
     private _matDialog: MatDialog
   ) {
@@ -57,15 +55,13 @@ export class TraceabilitySidebarComponent implements OnInit {
   }
 
   getTraceabilityPlanification(): void {
-    this._loaderService.start();
+
     this._traceabilityService.getTraceabilityPlanification(this.requestParameter)
       .subscribe((traceabilityPlanification) => {
         this._traceabilityService.onRequestParameterChanged.next(this.requestParameter);
         this.traceabilityPlanification = traceabilityPlanification;
         this._traceabilityService.onTaceabilityPlanificationChanged.next(traceabilityPlanification);
-        this._loaderService.stop();
       }, (err) => {
-        this._loaderService.stop();
         console.log(err);
       });
   }
@@ -74,7 +70,6 @@ export class TraceabilitySidebarComponent implements OnInit {
       this.selectedColor = this.traceabilityPlanification.color;
     }
     if (this.selectedColor !== 'Non définie') {
-      this._loaderService.start();
       this.requestParameter.color = this.selectedColor;
       this._traceabilityService.updateOrAddPlanification(this.requestParameter)
         .subscribe((traceabilityPlanification) => {
@@ -90,9 +85,7 @@ export class TraceabilitySidebarComponent implements OnInit {
             updatedTraceabilityPlanification = traceabilityPlanification;
           }
           this._traceabilityService.onTaceabilityPlanificationChanged.next(updatedTraceabilityPlanification);
-          this._loaderService.stop();
         }, (err) => {
-          this._loaderService.stop();
           console.log(err);
         });
     } else {
