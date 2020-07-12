@@ -145,7 +145,7 @@
                   *matCellDef="let activity"
                 >
                   <span class="job-title">
-                    {{ activity.site.name }}
+                    {{ activity.activityType == 2 ?  activity.absenceType.title :  activity.site.name}}
                   </span>
                 </mat-cell>
               </ng-container>

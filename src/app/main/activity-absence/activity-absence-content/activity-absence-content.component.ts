@@ -129,7 +129,7 @@ export class ActivityAbsenceContentComponent implements OnInit, OnDestroy {
     });
     if (this.hideRecoveryAbsencesValue) {
       temp = temp.filter((absence) => {
-        return absence.absenceType.id !== 6;
+        return absence.absenceType.id !== 6 && absence.absenceType.id !== 34;
       });
     }
     this.rows = temp;
