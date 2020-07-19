@@ -5,6 +5,9 @@
         [routerLink]="'/audit-detail/'+ audit.poleId" [queryParams]="{isDraft:false}">
         <mat-icon>arrow_back</mat-icon>
       </button>
+      <button fxLayoutAlign="end center" mat-icon-button class="back mr-16" (click)="generateAuditPDF()">
+        <mat-icon>save_alt</mat-icon>
+      </button>
     </div>
 
     <!-- INVOICE -->
@@ -13,7 +16,8 @@
         <div fxLayout="column">
           <div class="font-size-18">
             <div>Audit réalisé en date du : {{audit.date | date:'dd/MM/yyyy'}}</div>
-            <div>Au sein de l'établissement : {{ audit.site.name}}</div>
+            <div *ngIf="audit.site">Au sein de l'établissement : {{ audit.site.name}}</div>
+            <div *ngIf="audit.department">Département : {{ audit.department.name}}</div>
             <div>Nom et prénom de l'auditeur : {{audit.responsible.displayName}}</div>
           </div>
 
@@ -33,8 +37,12 @@
                         <div fxLayout="column">
                           <p style="background-color: gainsboro;" class="p-8">
                             {{ item.title }}
-                            <span fxLayoutAlign="end center" class="values my-12">
-                              <button class="mx-8" color="{{v===item.effectiveValue ? 'accent' :''}}" mat-stroked-button *ngFor="let v of item.possibleValues.values">{{v}}</button>
+                            <span fxLayout="row wrap" fxLayoutAlign="end center" class="values my-4">
+                              <button class="m-8" *ngFor="let v of item.possibleValues.values"
+                                color="{{v===item.effectiveValue ? 'accent' :''}}" mat-raised-button
+                                style="cursor: 'not-allowed';" [ngStyle]="{
+                                  'text-decoration': v!== item.effectiveValue ? 'line-through': ''
+                                  }">{{v}}</button>
                             </span>
                           </p>
                         </div>
@@ -51,11 +59,12 @@
                   {{ audit.report }}
                 </p>
                 <mat-divider *ngIf="audit.attachments && audit.attachments.length > 0" class="mt-0"></mat-divider>
-                <div class="attachments p-4" fxLayout="row wrap" *ngIf="true || audit.attachments && audit.attachments.length > 0">
-                    <div class="media" *ngFor="let attachment of audit.attachments">
-                        <img class="preview" [src]="attachment.url" />
-                        <div class="title" [innerHTML]="attachment.fileName"></div>
-                    </div>
+                <div class="attachments p-4" fxLayout="row wrap"
+                  *ngIf="true || audit.attachments && audit.attachments.length > 0">
+                  <div class="media" *ngFor="let attachment of audit.attachments">
+                    <img class="preview" [src]="attachment.url" />
+                    <div class="title" [innerHTML]="attachment.fileName"></div>
+                  </div>
                 </div>
               </div>
             </li>

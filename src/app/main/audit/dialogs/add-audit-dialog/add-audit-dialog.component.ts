@@ -9,6 +9,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SiteType } from 'app/main/sites/models/siteType';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
+import { Department } from 'app/common/models/department';
+import { ReplaySubject } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'add-audit-dialog',
@@ -24,26 +27,55 @@ export class AddAuditDialogComponent implements OnInit {
   filtredTemplates: AuditTemplate[] = [];
   selectedTemplate: AuditTemplate = null;
   action = '';
-  siteTypes: SiteType[] = [];
+  departments: Department[] = [];
   smallScreen: boolean;
+
+  public placeGroupsCtrl: FormControl = new FormControl();
+  public placeGroupsFilterCtrl: FormControl = new FormControl();
+
+  private placeGroups: any[] = [];
+  public filteredPlaceGroups: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  selectedPlace: Department | Site;
+
   constructor(
     private sharedNotificationService: SharedNotificationService,
     private breakpointObserver: BreakpointObserver,
     public matDialogRef: MatDialogRef<AddAuditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private auditsService: AuditsService) {
+    this.auditsService.onSitesChanged.subscribe(sites => {
+      this.sites = sites;
+    });
+    this.auditsService.onDepartmentsChanged.subscribe(departments => {
+      this.departments = departments;
+    });
+
+    this.placeGroups = [
+      {
+        name: 'Départements',
+        places: this.departments
+      },
+      {
+        name: 'Établissements',
+        places: this.sites
+      }
+    ];
+    this.filteredPlaceGroups.next(this.copyPlaceGroups(this.placeGroups));
     if (data && data.action) {
       this.action = data.action;
     }
     if (this.action === 'new-template') {
       this.selectedTemplate = {} as AuditTemplate;
     }
-
+    this.placeGroupsFilterCtrl.valueChanges
+      .subscribe(() => {
+        this.filterPlaceGroups();
+      });
   }
 
   submitNewAudit() {
-    if (!this.audit.site) {
-      this.sharedNotificationService.showError('Veuillez sélectionner le site à auditer');
+    if (!this.selectedPlace) {
+      this.sharedNotificationService.showError('Veuillez sélectionner le site ou departement à auditer');
       return;
     }
     if (!this.dateParam) {
@@ -59,6 +91,14 @@ export class AddAuditDialogComponent implements OnInit {
     this.audit.date = time;
     this.audit.title = this.selectedTemplate.name;
     this.audit.report = '';
+    const department = this.departments.find(d => d.id === this.selectedPlace.id);
+    if (department) {
+      this.audit.department = this.selectedPlace;
+      this.audit.site = null;
+    } else {
+      this.audit.site = this.selectedPlace;
+      this.audit.department = null;
+    }
     this.matDialogRef.close({ auditProperties: this.audit, template: this.selectedTemplate });
   }
   submitNewTemplate() {
@@ -72,12 +112,6 @@ export class AddAuditDialogComponent implements OnInit {
     this.auditsService.onTemplatesChanged.subscribe(data => {
       this.templates = data.filter(t => t.status === 'valid');
     });
-    this.auditsService.onSitesChanged.subscribe(data => {
-      this.sites = data;
-    });
-    this.auditsService.onSiteTypesChanged.subscribe(data => {
-      this.siteTypes = data;
-    });
     this.breakpointObserver
       .observe(['(min-width: 600px)'])
       .subscribe((state: BreakpointState) => {
@@ -87,5 +121,40 @@ export class AddAuditDialogComponent implements OnInit {
           this.smallScreen = true;
         }
       });
+  }
+
+  filterPlaceGroups() {
+    if (!this.placeGroups) {
+      return;
+    }
+    let search = this.placeGroupsFilterCtrl.value;
+    const placeGroupsCopy = this.copyPlaceGroups(this.placeGroups);
+    if (!search) {
+      this.filteredPlaceGroups.next(placeGroupsCopy);
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredPlaceGroups.next(
+      placeGroupsCopy.filter(placeGroup => {
+        const showPlaceGroup = placeGroup.name.toLowerCase().indexOf(search) > -1;
+        if (!showPlaceGroup) {
+          placeGroup.places = placeGroup.places.filter(p => p.name.toLowerCase().indexOf(search) > -1);
+        }
+        return placeGroup.places.length > 0;
+      })
+    );
+  }
+
+  copyPlaceGroups(placeGroups: any[]) {
+    const placeGroupsCopy = [];
+    placeGroups.forEach(placeGroup => {
+      placeGroupsCopy.push({
+        name: placeGroup.name,
+        places: placeGroup.places.slice()
+      });
+    });
+    return placeGroupsCopy;
   }
 }

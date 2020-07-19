@@ -40,9 +40,9 @@
           [ngClass]="audit.title" [@animate]="{value:'*',params:{y:'100%'}}">
           <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
             <div class="header" fxLayout="row" fxLayoutAlign="center center"
-              [ngClass]="audit.site.types.length > 1 ? 'web-bg' : 'type-' + audit.site.types[0].id">
+              [ngClass]="audit.site?.types.length > 1 ? 'web-bg' : 'type-' + audit.site?.types[0].id">
               <div class="category fuse-white-500-fg" fxFlex>
-                {{audit.site.name}}
+                {{audit.site ? audit.site.name : audit.department.name}}
               </div>
               <div class="category">
                 <mat-icon class="fuse-white-500-fg">edit</mat-icon>
@@ -74,10 +74,10 @@
           <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
 
             <div class="header" fxLayout="row" fxLayoutAlign="center center"
-              [ngClass]="audit.site.types.length > 1 ? 'web-bg' : 'type-' + audit.site.types[0].id">
+              [ngClass]="audit.site?.types.length > 1 ? 'web-bg' : 'type-' + audit.site?.types[0].id">
 
               <div class="category fuse-white-500-fg" fxFlex>
-                {{audit.site.name}}
+                {{audit.site ? audit.site.name : audit.department.name}}
               </div>
             </div>
 

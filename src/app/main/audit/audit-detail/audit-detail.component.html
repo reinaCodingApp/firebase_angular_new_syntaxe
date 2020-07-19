@@ -39,7 +39,8 @@
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <div>
-                <h2 *ngIf="currentAudit" >{{'Établissement ' + currentAudit.site.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
+                <h2 *ngIf="currentAudit && currentAudit.site" >{{'Établissement ' + currentAudit.site.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
+                <h2 *ngIf="currentAudit && currentAudit.department" >{{'Département ' + currentAudit.department.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
             </div>
             <button *ngIf="!isDraft"  fxLayoutAlign="end center" mat-icon-button [routerLink]="'/audit-print/' + currentAudit?.id"><mat-icon>print</mat-icon></button>
         </div>
@@ -61,7 +62,12 @@
                             [class.mat-elevation-z2]="true">
                           <p [innerHTML]="item.title"></p>
                           <div fxLayout="row wrap" fxLayoutAlign="end end" >
-                            <button (click)="updateEffectiveValue(item,v)" mat-raised-button class="m-4" color="{{item.effectiveValue==v ? 'accent' :''}}" *ngFor="let v of item.possibleValues.values" >{{v}}</button>
+                            <button (click)="updateEffectiveValue(item,v)" mat-raised-button class="m-4" color="{{item.effectiveValue==v ? 'accent' :''}}" *ngFor="let v of item.possibleValues.values"
+                            [ngStyle]="{
+                            'text-decoration': v!== item.effectiveValue && !isDraft ? 'line-through': '',
+                            'cursor': !isDraft ? 'not-allowed': ''
+                            }"
+                            >{{v}}</button>
                           </div>
                         </div>
                       </div>

@@ -3,6 +3,8 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuditsService } from '../audit.service';
 import { Audit } from '../models/audit';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import * as moment from 'moment';
 
 @Component({
   selector: 'audit-print',
@@ -17,6 +19,7 @@ export class AuditPrintComponent implements OnInit {
   constructor(
     private auditsService: AuditsService,
     private _fuseConfigService: FuseConfigService,
+    private _loaderService: NgxUiLoaderService,
     private route: ActivatedRoute,
     private router: Router) {
     this.route.params.subscribe(params => {
@@ -38,8 +41,8 @@ export class AuditPrintComponent implements OnInit {
       .subscribe(current => {
         this.audit = current;
         if (this.audit) {
-         this.audit = this.auditsService.getAllAuditSectionsAndItems(this.audit);
-         console.log('### this.audit', this.audit);
+          this.audit = this.auditsService.getAllAuditSectionsAndItems(this.audit);
+          console.log('### this.audit', this.audit);
         }
       });
     this.auditsService.onSectionsChanged.subscribe(sections => {
@@ -48,5 +51,23 @@ export class AuditPrintComponent implements OnInit {
       }
     });
   }
+
+  generateAuditPDF(): void {
+    this._loaderService.start();
+    this.auditsService.generateAuditPDF(this.audit)
+      .subscribe((data) => {
+        this._loaderService.stop();
+        const downloadURL = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        const fileName = `${this.audit.site ? this.audit.site.name : this.audit.department.name}_${moment().format('DD-MM-YYYY')}.pdf`;
+        link.download = fileName;
+        link.click();
+      }, (err) => {
+        this._loaderService.stop();
+        console.log(err);
+      });
+  }
+
 }
 

@@ -21,6 +21,7 @@ import { Service } from 'app/main/ticket/models/service';
 export class CommonService {
   private GET_SITE_TYPES_URI = 'common/get_site_types';
   private GET_SITES_URI = 'common/get_sites';
+  private GET_DEPARTMENTS_URI = 'common/get_departments';
   private GET_EMPLOYEES_URI = 'common/get_employees';
   private GET_EMPLOYEES_BY_DEPARTMENT_URI = 'activity/all_employees';
 
@@ -64,6 +65,15 @@ export class CommonService {
       const url = `${BASE_URL}${this.GET_SITES_URI}`;
       this.httpClient.get<any>(url).subscribe((sites) => {
         resolve(sites);
+      }, reject);
+    });
+  }
+
+  getDepartments(onlyForActivities = false): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const url = `${BASE_URL}${this.GET_DEPARTMENTS_URI}?onlyForActivities=${onlyForActivities}`;
+      this.httpClient.get<any>(url).subscribe((departments) => {
+        resolve(departments);
       }, reject);
     });
   }

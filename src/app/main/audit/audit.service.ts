@@ -23,10 +23,15 @@ import { AuditPole } from './models/audit-pole';
 import { MainTools } from 'app/common/tools/main-tools';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Attachment } from 'app/common/models/attachment';
+import { Department } from 'app/common/models/department';
+import { BASE_URL } from 'environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class AuditsService implements Resolve<any>
 {
+  private GENERATE_AUDIT_PDF_URI = 'audit/generate_pdf';
+
   onTemplatesChanged: BehaviorSubject<AuditTemplate[]>;
   onAuditPolesChanged: BehaviorSubject<AuditPole[]>;
   onCurrentTemplateChanged: BehaviorSubject<AuditTemplate>;
@@ -34,6 +39,7 @@ export class AuditsService implements Resolve<any>
   onAuditsDraftsChanged: BehaviorSubject<Audit[]>;
   onCurrentAuditChanged: BehaviorSubject<Audit>;
   onSitesChanged: BehaviorSubject<SiteWithTypes[]>;
+  onDepartmentsChanged: BehaviorSubject<Department[]>;
   onSiteTypesChanged: BehaviorSubject<SiteType[]>;
   onPossibleValuesChanged: BehaviorSubject<PossibleValue[]>;
   onSectionsChanged: BehaviorSubject<AuditSection[]>;
@@ -52,6 +58,7 @@ export class AuditsService implements Resolve<any>
     private router: Router,
     private commonService: CommonService,
     private appService: AppService,
+    private httpClient: HttpClient,
     private accessRightsService: AccessRightsService) {
     this.onTemplatesChanged = new BehaviorSubject([]);
     this.onAuditPolesChanged = new BehaviorSubject([]);
@@ -61,6 +68,7 @@ export class AuditsService implements Resolve<any>
     this.onCurrentAuditChanged = new BehaviorSubject(null);
     this.onSiteTypesChanged = new BehaviorSubject([]);
     this.onSitesChanged = new BehaviorSubject([]);
+    this.onDepartmentsChanged = new BehaviorSubject([]);
     this.onSectionsChanged = new BehaviorSubject(null);
     this.onPossibleValuesChanged = new BehaviorSubject([]);
     this.onHabilitationLoaded = new BehaviorSubject(null);
@@ -118,6 +126,7 @@ export class AuditsService implements Resolve<any>
                       this.getAudits(route.params.poleId);
                       this.getAuditsDrafts(route.params.poleId);
                       this.getSites();
+                      this.getDepartments();
                       this.getPossibleValues();
                       this.onHabilitationLoaded.next(habilitation);
                       resolve();
@@ -214,18 +223,18 @@ export class AuditsService implements Resolve<any>
     item.effectiveValue = value;
     return this.angularFirestore.collection(firestoreCollections.auditItems).doc(item.id).set(item);
   }
-  getSiteTypes() {
-    this.commonService.getSiteTypes().then(sitesTypes => {
-      this.sitesTypes = sitesTypes;
-      this.onSiteTypesChanged.next(sitesTypes);
-    });
-  }
+
   getSites() {
     this.commonService.getSites().then(sites => {
       this.sites = sites;
       this.onSitesChanged.next(sites);
     });
-    this.onSitesChanged.next(this.sites);
+  }
+
+  getDepartments() {
+    this.commonService.getDepartments(true).then(departments => {
+      this.onDepartmentsChanged.next(departments);
+    });
   }
 
   getPossibleValues() {
@@ -368,6 +377,7 @@ export class AuditsService implements Resolve<any>
           newAudit.date = auditProperties.date;
           newAudit.title = auditProperties.title;
           newAudit.site = auditProperties.site;
+          newAudit.department = auditProperties.department;
           newAudit.isSealed = false,
             newAudit.templateId = template.id,
             newAudit.report = '';
@@ -491,6 +501,11 @@ export class AuditsService implements Resolve<any>
   addPossibleValue(possibleValue: PossibleValue): Promise<any> {
     const newPossibleValue = { name: possibleValue.name, index: possibleValue.index, values: possibleValue.values } as PossibleValue;
     return this.angularFirestore.collection(firestoreCollections.auditPossibleValues).add(newPossibleValue);
+  }
+
+  generateAuditPDF(audit: Audit): any {
+    const url = `${BASE_URL}${this.GENERATE_AUDIT_PDF_URI}`;
+    return this.httpClient.post<any>(url, audit, { responseType: 'blob' as 'json' });
   }
 
 }
