@@ -50,6 +50,8 @@ export class FollowupSheetService implements Resolve<any>{
   private GET_EMPLOYEES_LEVELS_URI = 'followupSheet/get/employees_levels';
   private ADD_EMPLOYEE_LEVEL_URI = 'followupSheet/add/employee_level';
   private UPDATE_EMPLOYEE_LEVEL_URI = 'followupSheet/update/employee_level';
+  private ACTIVATE_EMPLOYEE_LEVEL = 'followupSheet/activate/employee_level';
+  private DEACTIVATE_EMPLOYEE_LEVEL = 'followupSheet/deactivate/employee_level';
 
   // points
   private ADD_POINT_URI = 'followupSheet/section/folder/point/add';
@@ -269,9 +271,9 @@ export class FollowupSheetService implements Resolve<any>{
 
   // Configuration
 
-  getEmployeesLevels(): Promise<any> {
+  getEmployeesLevels(includeDisabledEmloyeeLevels: boolean = false): Promise<any> {
     return new Promise((resolve, reject) => {
-      const url = `${BASE_URL}${this.GET_EMPLOYEES_LEVELS_URI}`;
+      const url = `${BASE_URL}${this.GET_EMPLOYEES_LEVELS_URI}?includeDisabledEmloyeeLevels=${includeDisabledEmloyeeLevels}`;
       this._httpClient.get<any>(url)
         .subscribe((result) => {
           this.onEmployeesChanged.next(result.employees);
@@ -290,6 +292,16 @@ export class FollowupSheetService implements Resolve<any>{
   updateEmployeeLevel(employeeLevel: EmployeeLevel): Observable<boolean> {
     const url = `${BASE_URL}${this.UPDATE_EMPLOYEE_LEVEL_URI}`;
     return this._httpClient.post<boolean>(url, employeeLevel);
+  }
+
+  activateEmployeeLevel(employeeLevel: EmployeeLevel): any {
+    const url = `${BASE_URL}${this.ACTIVATE_EMPLOYEE_LEVEL}?employeeLevelId=${employeeLevel.id}`;
+    return this._httpClient.get<any>(url);
+  }
+
+  deactivateEmployeeLevel(employeeLevel: EmployeeLevel): any {
+    const url = `${BASE_URL}${this.DEACTIVATE_EMPLOYEE_LEVEL}?employeeLevelId=${employeeLevel.id}`;
+    return this._httpClient.get<any>(url);
   }
 
   // Points

@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule, MatExpansionModule, MatTooltipModule } from '@angular/material';
+import { MatTableModule, MatExpansionModule, MatTooltipModule, MatSortModule, MatCheckboxModule, MatMenuModule } from '@angular/material';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule, FuseWidgetModule } from '@fuse/components';
@@ -88,7 +88,9 @@ const routes: Routes = [
     FuseWidgetModule,
     CustomConfirmDialogModule,
     NgxMatSelectSearchModule,
-
+    MatSortModule,
+    MatCheckboxModule,
+    MatMenuModule,
     MatTooltipModule,
     FuseSidebarModule,
     FuseSharedModule

@@ -31,6 +31,9 @@
   </div>
   <!-- / HEADER -->
   <div class="content p-24">
+    <mat-checkbox  class="ml-12" (change)="getEmployeeLevels()" [(ngModel)]="includeDisabledEmployeeLevels" name="includeDisabledEmployeeLevels">
+      Afficher également les employés désactivés
+    </mat-checkbox>
     <div>
       <fuse-widget
         [@animate]="{ value: '*', params: { y: '100%' } }"
@@ -39,10 +42,11 @@
         fxFlex="100"
       >
         <div class="fuse-widget-front">
-          <mat-table #table [dataSource]="employeesLevels">
+          <mat-table #table [dataSource]="employeesLevels" matSort
+          (matSortChange)="sortEmployeeLevels($event)">
             <!-- fullName Column -->
             <ng-container matColumnDef="employee">
-              <mat-header-cell *matHeaderCellDef>Employé</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header="employeeLevel">Employé</mat-header-cell>
               <mat-cell *matCellDef="let employeeLevel">
                 {{ employeeLevel.employee.fullName }}
               </mat-cell>
@@ -82,20 +86,40 @@
                 fxLayoutAlign="center center"
                 *matCellDef="let employeeLevel"
               >
+              <button mat-button [matMenuTriggerFor]="actionsMenu">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #actionsMenu="matMenu">
                 <button
-                  mat-icon-button
-                  color="accent"
-                  class="mat-elevation-z1"
+                  mat-menu-item
                   (click)="updateEmployeeLevel(employeeLevel)"
                   *ngIf="habilitation.isSuperAdmin()"
                 >
-                  <mat-icon>edit</mat-icon>
+                  <mat-icon color="accent">edit</mat-icon>
+                  Modifier
                 </button>
+                <button
+                mat-menu-item
+                (click)="deactivateEmployeeLevel(employeeLevel)"
+                *ngIf="habilitation.isSuperAdmin() && employeeLevel.isActive"
+              >
+                <mat-icon color="warn">close</mat-icon>
+                Désactiver
+              </button>
+              <button
+              mat-menu-item
+              (click)="activateEmployeeLevel(employeeLevel)"
+              *ngIf="habilitation.isSuperAdmin() && !employeeLevel.isActive"
+            >
+              <mat-icon color="accent">check</mat-icon>
+              Activer
+            </button>
+              </mat-menu>
               </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-            <mat-row *matRowDef="let employeeLevel; columns: displayColumns">
+            <mat-row *matRowDef="let employeeLevel; columns: displayColumns" [ngStyle]="{'background-color': employeeLevel.isActive ? true : '#f44336'}">
             </mat-row>
           </mat-table>
         </div>

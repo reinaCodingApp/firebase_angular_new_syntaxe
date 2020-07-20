@@ -51,6 +51,7 @@ export class AddEmployeelevelDialogComponent implements OnInit {
     this._followupSheetService.onEmployeeLevelsChanged.subscribe((employeesLevels) => {
       this.employeesLevels = employeesLevels;
     });
+    this.filterResponsibles();
   }
 
   addEmployeeLevel(): void {
@@ -138,13 +139,6 @@ export class AddEmployeelevelDialogComponent implements OnInit {
     return employee !== undefined;
   }
 
-  disableSubmitButton(): boolean {
-    const employee = this.responsibles.find(r => {
-      return r.id === this.employeeLevel.employee.id;
-    });
-    return (this.employeeLevel.hierarchyLevel > 1 && employee === undefined);
-  }
-
   checkResponsibleHierarchyLevel(): boolean {
     const responsibleEmployeeLevel = this.employeesLevels.find(r => {
       return r.employee.id === this.employeeLevel.responsible.id;
@@ -167,6 +161,20 @@ export class AddEmployeelevelDialogComponent implements OnInit {
     }
     searchInput = searchInput.toLowerCase();
     this.filtredResponsibles = this.responsibles.filter(d => d.fullName.toLowerCase().indexOf(searchInput) > -1);
+  }
+
+  filterResponsibles(): void {
+    const responsibleHierarchyLevel = this.employeeLevel.hierarchyLevel === 1 ? 2 : 3;
+    const availableResponsibles: Employee[] = [];
+    const employeeLevelResponsibles = this.employeesLevels.filter(r => r.hierarchyLevel === responsibleHierarchyLevel);
+    employeeLevelResponsibles.forEach(element => {
+      const availableResponsible = this.responsibles.find(r => r.id === element.employee.id);
+      if (availableResponsible) {
+        availableResponsibles.push(element.employee);
+      }
+    });
+    this.responsibles = availableResponsibles;
+    this.filtredResponsibles = availableResponsibles;
   }
 
 }
