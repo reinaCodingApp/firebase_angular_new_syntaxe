@@ -118,6 +118,12 @@
             height: 72px;
             min-height: 72px;
             max-height: 72px;
+            @include media-breakpoint('xs') {
+              height: auto;
+              min-height: auto;
+              max-height: inherit;
+              padding: 0px 24px !important;
+            }
         }
 
         .content {

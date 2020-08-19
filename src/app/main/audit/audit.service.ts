@@ -151,11 +151,11 @@ export class AuditsService implements Resolve<any>
   getAudits(poleId: string) {
     this.angularFirestore.collection(firestoreCollections.audits,
       query => query.where('poleId', '==', poleId)
-              .orderBy('date', 'desc'))
+        .orderBy('date', 'desc'))
       .snapshotChanges().subscribe(data => {
-      const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
-      this.onAuditsChanged.next(audits);
-    });
+        const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
+        this.onAuditsChanged.next(audits);
+      });
   }
   getAuditsDrafts(poleId: string) {
     console.log('poleId', poleId);
@@ -324,6 +324,17 @@ export class AuditsService implements Resolve<any>
   updateAuditPrperties(auditProperties: Audit) {
     return this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(auditProperties.id).set(auditProperties);
   }
+
+  updateAudit(audit: Audit) {
+    const auditToUpdate = { date: audit.date, department: audit.department, site: audit.site };
+    return this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(audit.id).update(auditToUpdate);
+  }
+
+  updateAuditMenu(auditMenu: AuditMenu) {
+    const auditMenuToUpdate = { report: auditMenu.report };
+    return this.angularFirestore.collection(firestoreCollections.auditMenus).doc(auditMenu.id).update(auditMenuToUpdate);
+  }
+
   addTemplate(template: AuditTemplate): Promise<void> {
     const writeBatch: firebase.firestore.WriteBatch = this.angularFirestore.firestore.batch();
     const templateDocument = this.angularFirestore.collection(firestoreCollections.auditTemplates).ref.doc();
@@ -436,6 +447,16 @@ export class AuditsService implements Resolve<any>
 
   }
 
+  deleteAudit(audit: Audit) {
+    const writeBatch: firebase.firestore.WriteBatch = this.angularFirestore.firestore.batch();
+    const auditDocument = this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(audit.id);
+    writeBatch.delete(auditDocument.ref);
+    this.deleteFromCollection(audit, firestoreCollections.auditMenus);
+    this.deleteFromCollection(audit, firestoreCollections.auditItems );
+    this.deleteFromCollection(audit, firestoreCollections.auditSections);
+    return writeBatch.commit();
+  }
+
   storeAttachment(file: File): Observable<number> {
     const filePath = file.name;
     const size = MainTools.getFileSizeToString(file.size);
@@ -452,32 +473,69 @@ export class AuditsService implements Resolve<any>
     return uploadTask.percentageChanges();
   }
 
-  getAllAuditSectionsAndItems(audit: Audit) {
-    for (let index = 0; index < audit.menus.length; index++) {
-      const menu = audit.menus[index];
-      this.angularFirestore.collection(firestoreCollections.auditSections, query => query.where('menuId', '==', menu.id))
+  async getFullAudit(auditId: string, isDraft: boolean = false): Promise<Audit> {
+    const auditsCollection = isDraft ? firestoreCollections.auditsDrafts : firestoreCollections.audits;
+    const getAudit = (): Promise<Audit> => new Promise((resolve, reject) => {
+      this.angularFirestore.collection(auditsCollection).doc(auditId)
+        .get()
+        .toPromise()
+        .then(audit => {
+          if (audit.exists) {
+            this.currentAudit = { id: audit.id, ...audit.data() } as Audit;
+          }
+          resolve(this.currentAudit);
+        });
+    });
+    const getAuditMenus = (): Promise<AuditMenu[]> => new Promise((resolve, reject) => {
+      this.angularFirestore.collection(firestoreCollections.auditMenus, query => query.where('auditId', '==', this.currentAudit.id))
+        .get()
+        .toPromise()
+        .then(result => {
+          const auditMenus = result.docs.map(d => ({ id: d.id, ...d.data() } as AuditMenu))
+            .sort((a, b) => a.displayOrder - b.displayOrder);
+          resolve(auditMenus);
+        }).catch((err) => {
+          reject(err);
+        });
+    });
+    const getAuditSections = (menuId: string): Promise<AuditSection[]> => new Promise((resolve, reject) => {
+      this.angularFirestore.collection(firestoreCollections.auditSections, query => query.where('menuId', '==', menuId))
         .get()
         .subscribe(result => {
           const sections = result.docs.map(d => ({ id: d.id, ...d.data() } as AuditSection))
             .sort((a, b) => a.displayOrder - b.displayOrder);
-          this.angularFirestore.collection(firestoreCollections.auditItems, query => query.where('menuId', '==', menu.id))
-            .get()
-            .subscribe(items => {
-              const menuItems = items.docs.map(d => ({ id: d.id, ...d.data() } as AuditItem));
-              sections.forEach(s => {
-                menuItems.forEach(i => {
-                  if (s.id === i.sectionId) {
-                    if (!s.items) {
-                      s.items = [];
-                    }
-                    s.items.push(i);
-                  }
-                });
-                s.items = s.items.sort((a, b) => a.displayOrder - b.displayOrder);
-              });
-              menu.sections = sections;
-            });
+          resolve(sections);
+        }, err => {
+          reject();
+          console.log(err);
         });
+    });
+    const getAuditItems = (menuId: string): Promise<AuditItem[]> => new Promise((resolve, reject) => {
+      this.angularFirestore.collection(firestoreCollections.auditItems, query => query.where('menuId', '==', menuId))
+        .get()
+        .subscribe(items => {
+          const menuItems = items.docs.map(d => ({ id: d.id, ...d.data() } as AuditItem));
+          resolve(menuItems);
+        });
+    });
+    let audit = await getAudit();
+    const menus = await getAuditMenus();
+    audit.menus = menus;
+    for await (const menu of audit.menus) {
+      let sections = await getAuditSections(menu.id);
+      let menuItems = await getAuditItems(menu.id);
+      sections.forEach(s => {
+        menuItems.forEach(i => {
+          if (s.id === i.sectionId) {
+            if (!s.items) {
+              s.items = [];
+            }
+            s.items.push(i);
+          }
+        });
+        s.items = s.items.sort((a, b) => a.displayOrder - b.displayOrder);
+      });
+      menu.sections = sections;
     }
     return audit;
   }
@@ -503,9 +561,33 @@ export class AuditsService implements Resolve<any>
     return this.angularFirestore.collection(firestoreCollections.auditPossibleValues).add(newPossibleValue);
   }
 
-  generateAuditPDF(audit: Audit): any {
+  generateAuditPDF(auditToPrint: any): any {
     const url = `${BASE_URL}${this.GENERATE_AUDIT_PDF_URI}`;
-    return this.httpClient.post<any>(url, audit, { responseType: 'blob' as 'json' });
+    return this.httpClient.post<any>(url, auditToPrint, { responseType: 'blob' as 'json' });
   }
 
+  getAuditItems(aduitId: string): Promise<AuditItem[]> {
+    return new Promise((resolve, reject) => {
+      this.angularFirestore.collection(firestoreCollections.auditItems, query => query.where('auditId', '==', aduitId))
+        .get()
+        .subscribe(items => {
+          const menuItems = items.docs.map(d => ({ id: d.id, ...d.data() } as AuditItem));
+          resolve(menuItems);
+        });
+    });
+  }
+
+  private deleteFromCollection(audit: Audit, collectionName: string) {
+    this.angularFirestore.collection(collectionName, query => query.where('auditId', '==', audit.id))
+      .get().toPromise()
+      .then((querySnapshot) => {
+        const batch: firebase.firestore.WriteBatch = this.angularFirestore.firestore.batch();
+        querySnapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        return batch.commit();
+      }).then(() => {
+        console.log(`delete completed for ${collectionName}`);
+      });
+  }
 }

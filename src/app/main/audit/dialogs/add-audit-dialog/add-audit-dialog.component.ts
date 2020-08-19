@@ -67,6 +67,11 @@ export class AddAuditDialogComponent implements OnInit {
     if (this.action === 'new-template') {
       this.selectedTemplate = {} as AuditTemplate;
     }
+    if (this.action === 'edit-audit') {
+      this.audit = data.audit as Audit;
+      this.selectedPlace = this.audit.site ? this.audit.site : this.audit.department;
+      this.dateParam = moment(this.audit.date);
+    }
     this.placeGroupsFilterCtrl.valueChanges
       .subscribe(() => {
         this.filterPlaceGroups();
@@ -156,5 +161,36 @@ export class AddAuditDialogComponent implements OnInit {
       });
     });
     return placeGroupsCopy;
+  }
+
+  compareFn(value1: any, value2: any): any {
+    return value1 && value2 ?
+      value1.id === value2.id :
+      value1 === value2;
+  }
+
+  updateAudit() {
+    if (!this.selectedPlace) {
+      this.sharedNotificationService.showError('Veuillez sélectionner le site ou departement à auditer');
+      return;
+    }
+    if (!this.dateParam) {
+      this.sharedNotificationService.showError('Veuillez indiquer la date de l\'audit');
+      return;
+    }
+    const time = moment(this.dateParam).toDate().getTime();
+    this.audit.date = time;
+    const department = this.departments.find(d => d.id === this.selectedPlace.id);
+    if (department) {
+      this.audit.department = this.selectedPlace;
+      this.audit.site = null;
+    } else {
+      this.audit.site = this.selectedPlace;
+      this.audit.department = null;
+    }
+    const auditUpdated = { ...this.audit };
+    this.auditsService.updateAudit(auditUpdated).then(() => {
+      this.matDialogRef.close();
+    });
   }
 }

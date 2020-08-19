@@ -1,0 +1,36 @@
+<mat-toolbar class="mat-primary m-0">
+  <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">Valider Audit</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="p-24">
+  <div mat-dialog-content>
+    <div fxLayout="column">
+      <div *ngIf="data.length > 0" class="message-box mb-12" fxLayout="column">
+        <h3>Attention, les points suivants ne sont pas renseignés : </h3>
+        <div fxLayout="column">
+          <div *ngFor="let point of data">
+            <p>
+              {{point.title }}
+            </p>
+            <div fxLayout="row wrap" fxLayoutAlign="end end">
+              <button mat-raised-button class="m-4" *ngFor="let v of point.possibleValues.values">{{v}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2>Souhaitez-vous clôturer cet audit ?</h2>
+    </div>
+    <h2>
+      {{ data.message }}
+    </h2>
+  </div>
+  <div mat-dialog-actions fxLayoutAlign="center center">
+    <button class="mr-8" mat-raised-button (click)="onCancel()">
+      Annuler
+    </button>
+    <button mat-raised-button color="accent" (click)="onConfirm()">
+      Confirmer
+    </button>
+  </div>
+</div>

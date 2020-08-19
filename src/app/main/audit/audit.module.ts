@@ -23,6 +23,7 @@ import { AuditPrintComponent } from './audit-print/audit-print.component';
 import { SharedPipesModule } from 'app/pipes/shared-pipes.module';
 import { AddPoleMemberComponent } from './dialogs/add-pole-member/add-pole-member.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { ValidateAuditDialogComponent } from './dialogs/validate-audit-dialog/validate-audit-dialog.component';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes = [
@@ -87,7 +88,8 @@ const routes = [
     AuditPossibleValuesComponent,
     AuditPolesComponent,
     AuditPrintComponent,
-    AddPoleMemberComponent
+    AddPoleMemberComponent,
+    ValidateAuditDialogComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -115,6 +117,6 @@ const routes = [
   providers: [
     AuditsService
   ],
-  entryComponents: [AddAuditDialogComponent, AddPoleMemberComponent]
+  entryComponents: [AddAuditDialogComponent, AddPoleMemberComponent, ValidateAuditDialogComponent]
 })
 export class AuditModule { }

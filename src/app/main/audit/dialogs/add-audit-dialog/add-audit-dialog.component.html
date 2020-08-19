@@ -2,7 +2,7 @@
   <mat-toolbar class="mat-accent m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
       <span class="title dialog-title">
-        {{ action === "new-audit" ? "Créer une fiche d'audit" : "Créer un modèle"}}
+        {{ action === "new-audit" ? "Créer une fiche d'audit" : (action === "edit-audit" ? "Modifier une fiche d'audit" : "Créer un modèle")}}
       </span>
       <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
         <mat-icon>close</mat-icon>
@@ -10,16 +10,17 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <div mat-dialog-content class="p-16 p-md-24 m-0" *ngIf="action==='new-audit'" fusePerfectScrollbar>
+  <!-- NEW,EDIT AUDIT -->
+  <div mat-dialog-content class="p-16 p-md-24 m-0" *ngIf="action==='new-audit' || action==='edit-audit'" fusePerfectScrollbar>
     <form #f="ngForm" name="newAuditForm" class="compose-form" fxLayout="column">
       <!-- WEB VIEW -->
       <mat-horizontal-stepper *ngIf="!smallScreen" labelPosition="bottom" [linear]="true">
         <!-- site and date-->
-        <mat-step label="Site" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
+        <mat-step label="Site-Departement" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
           <div class="mt-4" fxLayout="column">
             <mat-form-field class="w-100-p" appearance="outline">
               <mat-label>Département - Établissement</mat-label>
-              <mat-select required name="audit_site" [(ngModel)]="selectedPlace">
+              <mat-select required name="audit_site" [(ngModel)]="selectedPlace" [compareWith]="compareFn">
                 <ngx-mat-select-search [formControl]="placeGroupsFilterCtrl" placeholderLabel="Rechercher"
                   noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
                 <mat-optgroup *ngFor="let group of filteredPlaceGroups | async" [label]="group.name">
@@ -42,14 +43,18 @@
             </mat-form-field>
           </div>
           <div fxLayout="row" fxLayoutAlign="end center" class="mt-32">
-            <button mat-raised-button matStepperNext type="button" [disabled]="!selectedPlace || !dateParam"
+            <button *ngIf="action=='new-audit'"  mat-raised-button matStepperNext type="button" [disabled]="!selectedPlace || !dateParam"
               color="accent">
               Suivant
             </button>
+            <button *ngIf="action=='edit-audit'" mat-raised-button type="button" [disabled]="!selectedPlace || !dateParam"
+            color="accent" (click)="updateAudit(audit)">
+            Modifier
+          </button>
           </div>
         </mat-step>
         <!-- Audit template -->
-        <mat-step label="Modèle">
+        <mat-step label="Modèle" *ngIf="action==='new-audit'">
           <div class="mt-4">
             <div fxLayout="column" fxLayoutAlign="space-between none">
               <mat-form-field appearance="outline">
@@ -75,16 +80,21 @@
       <!-- MOBILE VIEW -->
       <mat-vertical-stepper *ngIf="smallScreen" labelPosition="bottom" [linear]="true">
         <!-- site and date-->
-        <mat-step label="Site" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
+        <mat-step label="Site-Departement" ngModelGroup="generalInfo" #generalInfo="ngModelGroup" [stepControl]="generalInfo">
           <div class="mt-4" fxLayout="column">
             <mat-form-field class="w-100-p" appearance="outline">
-              <mat-label>Choix du site</mat-label>
-              <mat-select required name="audit_site" [(ngModel)]="audit.site">
-                <mat-option *ngFor="let site of sites" [value]="site">
-                  {{ site.name }}
-                </mat-option>
+              <mat-label>Département - Établissement</mat-label>
+              <mat-select required name="audit_site" [(ngModel)]="selectedPlace" [compareWith]="compareFn">
+                <ngx-mat-select-search [formControl]="placeGroupsFilterCtrl" placeholderLabel="Rechercher"
+                  noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+                <mat-optgroup *ngFor="let group of filteredPlaceGroups | async" [label]="group.name">
+                  <mat-option *ngFor="let place of group.places" [value]="place">
+                    {{place.name}}
+                  </mat-option>
+                </mat-optgroup>
               </mat-select>
             </mat-form-field>
+
             <mat-form-field class="w-100-p" appearance="outline">
               <mat-label>Date de l'audit</mat-label>
               <input #start="ngModel" matInput [matDatepicker]="startPicker" placeholder="Date de l'audit"
@@ -97,19 +107,23 @@
             </mat-form-field>
           </div>
           <div fxLayout="row" fxLayoutAlign="end center" class="mt-32">
-            <button mat-raised-button matStepperNext type="button" [disabled]="!audit.site || !dateParam"
+            <button *ngIf="action=='new-audit'"  mat-raised-button matStepperNext type="button" [disabled]="!selectedPlace || !dateParam"
               color="accent">
               Suivant
             </button>
+            <button *ngIf="action=='edit-audit'" mat-raised-button type="button" [disabled]="!selectedPlace || !dateParam"
+            color="accent" (click)="updateAudit(audit)">
+            Modifier
+          </button>
           </div>
         </mat-step>
         <!-- Audit template -->
-        <mat-step label="Modèle">
+        <mat-step label="Modèle" *ngIf="action==='new-audit'">
           <div class="mt-4">
             <div fxLayout="column" fxLayoutAlign="space-between none">
               <mat-form-field appearance="outline">
                 <mat-label>Choisir un modèle d'audit</mat-label>
-                <mat-select required name="site_types" [(ngModel)]="selectedTemplate">
+                <mat-select required name="templates" [(ngModel)]="selectedTemplate">
                   <mat-option *ngFor="let template of templates" [value]="template">
                     {{ template.name }}
                   </mat-option>
@@ -129,6 +143,8 @@
       </mat-vertical-stepper>
     </form>
   </div>
+
+  <!-- NEW TEMPLATE -->
   <div mat-dialog-content class="p-24 m-0" *ngIf="action==='new-template'" fusePerfectScrollbar>
     <form #f2="ngForm" name="newTemplateForm" class="compose-form">
       <div fxLayout="column" fxLayoutAlign="center center">

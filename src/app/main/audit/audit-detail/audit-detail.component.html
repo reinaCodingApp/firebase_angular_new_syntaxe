@@ -42,7 +42,20 @@
                 <h2 *ngIf="currentAudit && currentAudit.site" >{{'Établissement ' + currentAudit.site.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
                 <h2 *ngIf="currentAudit && currentAudit.department" >{{'Département ' + currentAudit.department.name}}<span class="subtitle secondary-text">{{' - le '+ (currentAudit.date | date:'dd/MM/yyyy')}}</span></h2>
             </div>
-            <button *ngIf="!isDraft"  fxLayoutAlign="end center" mat-icon-button [routerLink]="'/audit-print/' + currentAudit?.id"><mat-icon>print</mat-icon></button>
+            <button *ngIf="!isDraft" fxLayoutAlign="end center" mat-icon-button [routerLink]="'/audit-print/' + currentAudit?.id"><mat-icon>print</mat-icon></button>
+            <button *ngIf="isDraft" mat-button [matMenuTriggerFor]="actionsMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #actionsMenu="matMenu">
+              <button mat-menu-item (click)="editAudit(currentAudit)">
+                <mat-icon color="accent">edit</mat-icon>
+                Modifier
+              </button>
+              <button mat-menu-item (click)="deleteAudit(currentAudit)">
+                <mat-icon color="warn">delete_outline</mat-icon>
+                Supprimer
+              </button>
+            </mat-menu>
         </div>
         <!-- / HEADER -->
 
@@ -71,8 +84,22 @@
                           </div>
                         </div>
                       </div>
+                      <!-- Report for menu -->
+                      <div>
+                        <mat-form-field appearance="outline" class="w-100-p">
+                            <mat-label>Rapport</mat-label>
+                            <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="menuReport" [(ngModel)]="currentMenu.report" (change)="updateReport(currentMenu)" rows="18">
+                            </textarea>
+                        </mat-form-field>
+                    </div>
                     </div>
                     <div id="course-step-content" *ngIf="currentMenu && currentMenu.id.length === 0" class="course-step-content">
+                      <div *ngFor="let menu of currentAudit.menus">
+                        <div *ngIf="menu.id && menu.report?.length > 0">
+                          <h1>{{menu.title}}</h1>
+                          <p [innerHTML]="menu.report"></p>
+                        </div>
+                      </div>
                         <mat-form-field appearance="outline" class="w-100-p">
                             <mat-label>Rapport général</mat-label>
                             <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="title" [(ngModel)]="currentAudit.report" (change)="updateAuditPrperties()" rows="18">

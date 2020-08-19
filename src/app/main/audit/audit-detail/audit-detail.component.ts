@@ -12,8 +12,10 @@ import { AuditItem } from 'app/main/audit/models/audit-item';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Attachment } from 'app/common/models/attachment';
+import { AddAuditDialogComponent } from '../dialogs/add-audit-dialog/add-audit-dialog.component';
+import { ValidateAuditDialogComponent } from '../dialogs/validate-audit-dialog/validate-audit-dialog.component';
 
 @Component({
   selector: 'audit-detail',
@@ -42,7 +44,8 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     private _fuseSidebarService: FuseSidebarService,
     private auditsService: AuditsService,
     public matDialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.route.queryParams.subscribe((params) => {
       this.isDraft = params.isDraft === 'true';
@@ -102,7 +105,7 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.currentAudit && this.currentAudit.menus && this.currentAudit.menus.length > 0) {
           this.currentMenu = this.currentAudit.menus[0];
           this.auditsService.getAuditSectionsAndItems(this.currentMenu.id);
-          this.currentAudit.menus.push({ id: '', title: 'Rapport' } as AuditMenu);
+          this.currentAudit.menus.push({ id: '', title: 'Rapports' } as AuditMenu);
           this.totalMenusCount = this.currentAudit.menus.length;
         }
       });
@@ -137,13 +140,17 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unsubscribeAll.complete();
   }
 
-  saveAudit() {
-    this.dialogRef = this.matDialog.open(CustomConfirmDialogComponent, {
-      panelClass: 'confirm-dialog',
-      data: {
-        title: 'Valider audit',
-        message: 'Confirmez-vous la validation de de cet audit ?'
+  async saveAudit() {
+    const notCheckedPoints: AuditItem[] = [];
+    const auditItems = await this.auditsService.getAuditItems(this.currentAudit.id);
+    auditItems.forEach(item => {
+      if (!item.effectiveValue) {
+        notCheckedPoints.push(item);
       }
+    });
+    this.dialogRef = this.matDialog.open(ValidateAuditDialogComponent, {
+      panelClass: 'validate-audit-dialog',
+      data: notCheckedPoints
     });
     this.dialogRef.afterClosed()
       .subscribe(response => {
@@ -172,5 +179,46 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
       this.currentAudit.attachments.splice(index, 1);
       this.updateAuditPrperties();
     }
+  }
+
+  deleteAudit(audit: Audit) {
+    this.dialogRef = this.matDialog.open(CustomConfirmDialogComponent, {
+      panelClass: 'confirm-dialog',
+      data: {
+        title: 'Suppression audit',
+        message: 'Confirmez-vous la suppression de cet audit?'
+      }
+    });
+    this.dialogRef.afterClosed()
+      .subscribe(response => {
+        if (response) {
+          this.auditsService.deleteAudit(audit)
+            .then(() => {
+              this.router.navigateByUrl('/audits/' + audit.poleId);
+            }).catch((err) => {
+              console.log(err);
+            });
+        }
+      });
+  }
+
+  editAudit(audit: Audit) {
+    this.dialogRef = this.matDialog.open(AddAuditDialogComponent, {
+      panelClass: 'add-audit-dialog',
+      data: {
+        action: 'edit-audit',
+        audit: audit
+      }
+    });
+    this.dialogRef.afterClosed()
+      .subscribe(response => {
+        console.log('## AUDIT UPDATED');
+      });
+  }
+
+  updateReport(menu: AuditMenu) {
+    this.auditsService.updateAuditMenu(menu).then(() => {
+      console.log('## MENU REPORT UPDATED');
+    });
   }
 }
