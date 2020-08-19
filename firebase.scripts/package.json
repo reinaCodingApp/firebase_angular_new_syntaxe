@@ -15,8 +15,8 @@
     "init-modulesKeys": "ts-node -e \"require('./src/index.ts').initializeModulesKeys()\"",
     "init-modulesDatabase": "ts-node -e \"require('./src/index.ts').initializeModulesDatabase()\"",
     "init-audit-poles": "ts-node -e \"require('./src/index.ts').createAuditPoles()\"",
-    "init-web-home-settings": "ts-node -e \"require('./src/index.ts').initializeWebHomeSettings()\""
-
+    "init-web-home-settings": "ts-node -e \"require('./src/index.ts').initializeWebHomeSettings()\"",
+    "update-posts-src": "ts-node -e \"require('./src/index.ts').updatePostsSrcProperty()\""
   },
   "keywords": [],
   "author": "",

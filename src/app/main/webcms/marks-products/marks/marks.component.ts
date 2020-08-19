@@ -32,6 +32,18 @@ export class MarksComponent implements OnInit {
       console.log(marks);
       this.marks = marks;
     });
+    this.marksPorductsService.onMarkPictureChanged.subscribe(imageURL => {
+      if (imageURL) {
+        if (this.editionMode === true) {
+        this.currentMark.src = imageURL;
+        this.updateMark(this.currentMark);
+        } else {
+          this.newMark.src = imageURL;
+        }
+      }
+
+
+    });
   }
 
   getMarkDetails(mark: Mark): void {
@@ -54,8 +66,8 @@ export class MarksComponent implements OnInit {
   addMark(): void {
     if (this.newMark && this.newMark.name.length > 0 && this.newMark.webSite.length > 0 && this.newMark.src) {
       this.newMark.displayOrder = this.marks.length;
-      this.marksPorductsService.addMark(this.newMark, this.file).subscribe(() => {
-        console.log('added');
+      this.marksPorductsService.addMark(this.newMark).then(() => {
+        console.log('### mark added');
         this.newMark = null;
       });
     } else {
@@ -72,17 +84,21 @@ export class MarksComponent implements OnInit {
   filePicked(fileInput): void {
     if (fileInput.target.files && fileInput.target.files[0]) {
       this.file = fileInput.target.files[0];
-      if (this.editionMode) {
-        this.marksPorductsService.uploadFile(this.currentMark, this.file)
-          .subscribe(() => {
-          });
-      } else {
-        const reader = new FileReader();
-        reader.readAsDataURL(this.file);
-        reader.onload = (_event) => {
-          this.newMark.src = reader.result;
-        };
-      }
+      const file = fileInput.target.files[0];
+      this.marksPorductsService.uploadMarkPicutre(file).then(() => {
+        console.log('### mark image uploaded');
+      });
+      // if (this.editionMode) {
+      //   this.marksPorductsService.uploadFile(this.currentMark, this.file)
+      //     .subscribe(() => {
+      //     });
+      // } else {
+      //   const reader = new FileReader();
+      //   reader.readAsDataURL(this.file);
+      //   reader.onload = (_event) => {
+      //     this.newMark.src = reader.result;
+      //   };
+      // }
     }
   }
 

@@ -76,14 +76,14 @@ export class NewFocusComponent implements OnInit {
       const file = fileInput.target.files[0];
       if (this.mode === 'edit') {
         this.focusService.uploadImageForFocus(this.focus, file)
-          .subscribe(() => {
+          .then(() => {
           });
       } else {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (_event) => {
           this.focusService.uploadImageForFocus(this.focus, file)
-            .subscribe(() => {
+            .then(() => {
             });
         };
       }
@@ -95,7 +95,7 @@ export class NewFocusComponent implements OnInit {
       const file = fileInput.target.files[0];
       if (this.mode === 'edit') {
         this.focusService.uploadImageForInterlocutor(this.focus, file)
-          .subscribe(() => {
+          .then(() => {
           });
       } else {
         const reader = new FileReader();
@@ -103,7 +103,7 @@ export class NewFocusComponent implements OnInit {
         reader.onload = (_event) => {
 
           this.focusService.uploadImageForInterlocutor(this.focus, file)
-            .subscribe(() => {
+            .then(() => {
             });
         };
       }

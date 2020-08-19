@@ -10,25 +10,29 @@ import { firestoreCollections } from 'app/data/firestoreCollections';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { Product } from './models/product';
+import { resizeImage } from 'app/common/tools/main-tools';
+import { MatSnackBar } from '@angular/material';
 
-@Injectable({
-  providedIn: 'root'
-})
+const MARKS_IMAGE_SIZE = { width: 300, height: 200 };
+const PRODUCTS_IMAGE_SIZE = { width: 1366, height: 905 };
+const MARKS_STORAGE_PATH = 'marks';
+const PRODUCTS_STORAGE_PATH = 'products';
+@Injectable()
 export class MarksProductsService implements Resolve<any>
 {
-  private basePath = 'marks';
-  private productsBasePath = 'products';
-
   onHabilitationLoaded: BehaviorSubject<Habilitation>;
   private moduleIdentifier = ModuleIdentifiers.marksProducts;
+  onMarkPictureChanged: BehaviorSubject<string>;
 
   constructor(
     private angularFirestore: AngularFirestore,
     private router: Router,
     private appService: AppService,
-    private angualrFireStorage: AngularFireStorage
+    private angularFireStorage: AngularFireStorage,
+    private matSnackBar: MatSnackBar
   ) {
     this.onHabilitationLoaded = new BehaviorSubject(null);
+    this.onMarkPictureChanged = new BehaviorSubject(null);
   }
   resolve(): Observable<any> | Promise<any> | any {
     return new Promise((resolve, reject) => {
@@ -60,30 +64,15 @@ export class MarksProductsService implements Resolve<any>
     return this.angularFirestore.collection(firestoreCollections.webMarks, query => query.orderBy('displayOrder')).snapshotChanges();
   }
 
-  addMark(mark: Mark, file: File) {
+  addMark(mark: Mark) {
     const newMark =
       {
         name: mark.name,
         webSite: mark.webSite,
-        displayOrder: mark.displayOrder
+        displayOrder: mark.displayOrder,
+        src: mark.src
       } as Mark;
-    if (file != null) {
-      const filePath = `${this.basePath}/${file.name}`;
-      const storageRef = this.angualrFireStorage.ref(filePath);
-      const uploadTask = this.angualrFireStorage.upload(filePath, file);
-      uploadTask.snapshotChanges().pipe(
-        finalize(() => {
-          storageRef.getDownloadURL().subscribe(downloadURL => {
-            console.log('File available at', downloadURL);
-            newMark.src = downloadURL;
-            this.angularFirestore.collection(firestoreCollections.webMarks).add(newMark);
-          });
-        })
-      ).subscribe();
-      return uploadTask.percentageChanges();
-    } else {
-      this.angularFirestore.collection(firestoreCollections.webMarks).add(newMark);
-    }
+    return this.angularFirestore.collection(firestoreCollections.webMarks).add(newMark);
   }
 
   updateMark(mark: Mark): Promise<any> {
@@ -98,9 +87,9 @@ export class MarksProductsService implements Resolve<any>
   }
 
   uploadFile(mark: Mark, file: File) {
-    const filePath = `${this.basePath}/${file.name}`;
-    const storageRef = this.angualrFireStorage.ref(filePath);
-    const uploadTask = this.angualrFireStorage.upload(filePath, file);
+    const filePath = `${MARKS_STORAGE_PATH}/${file.name}`;
+    const storageRef = this.angularFireStorage.ref(filePath);
+    const uploadTask = this.angularFireStorage.upload(filePath, file);
     uploadTask.snapshotChanges().pipe(
       finalize(() => {
         storageRef.getDownloadURL().subscribe(downloadURL => {
@@ -113,6 +102,31 @@ export class MarksProductsService implements Resolve<any>
     ).subscribe();
     return uploadTask.percentageChanges();
   }
+  uploadMarkPicutre(file: File) {
+    const splited = file.name.split('.');
+    const fileExtension = splited[splited.length - 1];
+    const fileName = `${new Date().getTime()}.${fileExtension}`;
+    return resizeImage(file, MARKS_IMAGE_SIZE.width, MARKS_IMAGE_SIZE.height).then(blobResult => {
+      const storageRef = this.angularFireStorage.ref(`images/${MARKS_STORAGE_PATH}/${fileName}`);
+      const uploadTask = storageRef.put(blobResult);
+      uploadTask.snapshotChanges().pipe(
+        finalize(() => {
+          storageRef.getDownloadURL().subscribe(downloadURL => {
+            this.onMarkPictureChanged.next(downloadURL);
+          });
+        })
+      ).subscribe();
+    }).catch(error => {
+      const msg = error.message ? error.message : `La ressource n'a pas pu être traitée, veuillez joindre un fichier PNG ou JPEG`;
+      this.matSnackBar.open(msg, 'OK', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        duration: 30000,
+        panelClass: 'warn'
+      });
+      console.log('###### errormessage', error);
+    });
+  }
 
   // Products
 
@@ -120,8 +134,8 @@ export class MarksProductsService implements Resolve<any>
     return this.angularFirestore.collection(firestoreCollections.webProducts, query => {
       if (searchInput && searchInput.length > 0) {
         return query.orderBy('name')
-                    .startAt(searchInput)
-                    .endAt(searchInput + '\uf8ff');
+          .startAt(searchInput)
+          .endAt(searchInput + '\uf8ff');
       } else {
         return query;
       }
@@ -160,21 +174,34 @@ export class MarksProductsService implements Resolve<any>
     return this.angularFirestore.collection(firestoreCollections.webProducts).doc(uid).get();
   }
 
-  uploadImageForProduct(product: Product, file: File) {
-    const filePath = `${this.productsBasePath}/${file.name}`;
-    const storageRef = this.angualrFireStorage.ref(filePath);
-    const uploadTask = this.angualrFireStorage.upload(filePath, file);
-    uploadTask.snapshotChanges().pipe(
-      finalize(() => {
-        storageRef.getDownloadURL().subscribe(downloadURL => {
-          product.images.push(downloadURL);
-          if (product.uid) {
-            this.updateProduct(product);
-          }
-        });
-      })
-    ).subscribe();
-    return uploadTask.percentageChanges();
+  uploadImageForProduct(product: Product, file: File): Promise<any> {
+    const splited = file.name.split('.');
+    const fileExtension = splited[splited.length - 1];
+    const fileName = `${new Date().getTime()}.${fileExtension}`;
+    return resizeImage(file, PRODUCTS_IMAGE_SIZE.width, PRODUCTS_IMAGE_SIZE.height).then(blobResult => {
+      const filePath = `${PRODUCTS_STORAGE_PATH}/${fileName}`;
+      const storageRef = this.angularFireStorage.ref(filePath);
+      const uploadTask = storageRef.put(blobResult);
+      uploadTask.snapshotChanges().pipe(
+        finalize(() => {
+          storageRef.getDownloadURL().subscribe(downloadURL => {
+            product.images.push(downloadURL);
+            if (product.uid) {
+              this.updateProduct(product);
+            }
+          });
+        })
+      ).subscribe();
+    }).catch(error => {
+      const msg = error.message ? error.message : `La ressource n'a pas pu être traitée, veuillez joindre un fichier PNG ou JPEG`;
+      this.matSnackBar.open(msg, 'OK', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        duration: 30000,
+        panelClass: 'warn'
+      });
+      console.log('###### errormessage', error);
+    });
   }
 
 }

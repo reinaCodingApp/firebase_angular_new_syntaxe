@@ -85,14 +85,14 @@ export class NewProductComponent implements OnInit {
       const file = fileInput.target.files[0];
       if (this.mode === 'edit') {
         this.marksPorductsService.uploadImageForProduct(this.product, file)
-          .subscribe(() => {
+          .then(() => {
           });
       } else {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (_event) => {
           this.marksPorductsService.uploadImageForProduct(this.product, file)
-            .subscribe(() => {
+            .then(() => {
             });
         };
       }

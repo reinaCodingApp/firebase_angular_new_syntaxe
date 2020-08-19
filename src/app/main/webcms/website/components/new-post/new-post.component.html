@@ -49,16 +49,16 @@
             <div class="h2">Image</div>
           </div>
           <div fxLayout="column" fxLayoutAlign="center center" class="p-16" fxFlex>
-            <div class="message-box mb-12" fxLayout="row">
+            <!-- <div class="message-box mb-12" fxLayout="row">
               Ajouter une image avec cette résolution : 320x380
-            </div>
+            </div> -->
             <div class="image">
-              <img *ngIf="post.src && post.src.length > 0" [src]="post.src" class="huge m-0" />
+              <img *ngIf="post.src" [src]="post.src?.medium" class="huge m-0" />
             </div>
             <div fxLayoutAlign="center center">
               <button fxLayoutAlign="center" mat-fab color="warn" type="button" class="upload" (click)="file.click()">
                 <mat-icon>{{
-                    post.src && post.src.length > 0 ? "edit" : "add_photo_alternatet"
+                    post.src?.medium ? "edit" : "add_photo_alternatet"
                   }}</mat-icon>
               </button>
               <input (change)="filePicked($event)" type="file" #file hidden accept="image/*" />

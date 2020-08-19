@@ -11,6 +11,12 @@ import { firestoreCollections } from 'app/data/firestoreCollections';
 import { AppService } from 'app/app.service';
 import { Post } from './models/post';
 import { FuseUtils } from '@fuse/utils';
+import { resizeImage } from 'app/common/tools/main-tools';
+import { MatSnackBar } from '@angular/material';
+
+const POST_STORAGE_PATH = 'posts';
+const POST_BIG_IMAGE_SIZE = { width: 1366, height: 905 };
+const POST_MEDIUM_IMAGE_SIZE = { width: 640, height: 424 };
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +33,10 @@ export class PostsService implements Resolve<any>
 
   constructor(
     private angularFirestore: AngularFirestore,
-    private angualrFireStorage: AngularFireStorage,
+    private angularFireStorage: AngularFireStorage,
     private appService: AppService,
-    private router: Router
+    private router: Router,
+    private matSnackBar: MatSnackBar
   ) {
     this.onFilterChanged = new Subject();
     this.onPostsChanged = new BehaviorSubject([]);
@@ -100,7 +107,7 @@ export class PostsService implements Resolve<any>
       content: post.content,
       timestamp: post.timestamp,
       excerpt: this.getExcerpt(post.content),
-      src: post.src ? post.src : null,
+      src: { big: post.src.big, medium: post.src.medium },
       fileName: post.fileName ? post.fileName : null,
       categoryId: !isNews ? post.categoryId : null,
       editionDate: new Date().getTime()
@@ -123,34 +130,17 @@ export class PostsService implements Resolve<any>
   addPost(post: Post, file: File, isNews: boolean): Observable<number> {
     post.id = this.getPostId(post.title);
     post.categoryId = isNews ? null : post.categoryId;
-    if (file != null) {
-      const filePath = `${this.basePath}/${file.name}`;
-      const storageRef = this.angualrFireStorage.ref(filePath);
-      const uploadTask = this.angualrFireStorage.upload(filePath, file);
-      uploadTask.snapshotChanges().pipe(
-        finalize(() => {
-          storageRef.getDownloadURL().subscribe(downloadURL => {
-            console.log('File available at', downloadURL);
-            post.src = downloadURL;
-            post.fileName = file.name;
-            post.id = this.getPostId(post.title);
-            this.saveFileData(post, isNews);
-          });
-        })
-      ).subscribe();
-      return uploadTask.percentageChanges();
-    } else {
-      this.saveFileData(post, isNews);
-      return of(100);
-    }
+    post.src = { big: post.src.big, medium: post.src.medium };
+    this.saveFileData(post, isNews);
+    return of(100);
   }
 
   insertPost(post: Post, file: File): Observable<number> {
     post.id = this.getPostId(post.title);
     if (file != null) {
       const filePath = `${this.basePath}/${file.name}`;
-      const storageRef = this.angualrFireStorage.ref(filePath);
-      const uploadTask = this.angualrFireStorage.upload(filePath, file);
+      const storageRef = this.angularFireStorage.ref(filePath);
+      const uploadTask = this.angularFireStorage.upload(filePath, file);
       uploadTask.snapshotChanges().pipe(
         finalize(() => {
           storageRef.getDownloadURL().subscribe(downloadURL => {
@@ -177,7 +167,7 @@ export class PostsService implements Resolve<any>
       content: post.content,
       timestamp: post.timestamp,
       excerpt: this.getExcerpt(post.content),
-      src: post.src ? post.src : null,
+      src: { big: post.src.big, medium: post.src.medium },
       fileName: post.fileName ? post.fileName : null,
       categoryId: !isNews ? post.categoryId : null,
       editionDate: new Date().getTime()
@@ -191,26 +181,42 @@ export class PostsService implements Resolve<any>
     return writeBatch.commit();
   }
 
-  uploadFile(post: Post, file: File) {
-    const filePath = `${this.basePath}/${file.name}`;
-    const storageRef = this.angualrFireStorage.ref(filePath);
-    const uploadTask = this.angualrFireStorage.upload(filePath, file);
-    uploadTask.snapshotChanges().pipe(
-      finalize(() => {
-        storageRef.getDownloadURL().subscribe(downloadURL => {
-          console.log('File available at', downloadURL);
-          post.src = downloadURL;
-          post.fileName = file.name;
-        });
-      })
-    ).subscribe();
-    return uploadTask.percentageChanges();
+  uploadFile(post: Post, file: File, type: string) {
+    const splited = file.name.split('.');
+    const fileExtension = splited[splited.length - 1];
+    const fileName = `${new Date().getTime()}.${fileExtension}`;
+    const width = type === 'big' ? POST_BIG_IMAGE_SIZE.width : POST_MEDIUM_IMAGE_SIZE.width;
+    const height = type === 'big' ? POST_BIG_IMAGE_SIZE.height : POST_MEDIUM_IMAGE_SIZE.height;
+    return resizeImage(file, width, height).then(blobResult => {
+      const filePath = `${POST_STORAGE_PATH}/${fileName}`;
+      const storageRef = this.angularFireStorage.ref(filePath);
+      const uploadTask = storageRef.put(blobResult);
+      uploadTask.snapshotChanges().pipe(
+        finalize(() => {
+          storageRef.getDownloadURL().subscribe(downloadURL => {
+            console.log('File available at', downloadURL);
+            post.src.big = type === 'big' ? downloadURL : post.src.big;
+            post.src.medium = type === 'medium' ? downloadURL : post.src.medium;
+            post.fileName = file.name;
+          });
+        })
+      ).subscribe();
+    }).catch(error => {
+      const msg = error.message ? error.message : `La ressource n'a pas pu être traitée, veuillez joindre un fichier PNG ou JPEG`;
+      this.matSnackBar.open(msg, 'OK', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        duration: 30000,
+        panelClass: 'warn'
+      });
+      console.log('###### errormessage', error);
+    });
   }
 
-  private saveFileData(post: Post, isNews: boolean = false) {
+  private saveFileData(post: Post, isNews: boolean = false): Promise<any> {
     console.log('fileUpload to add', post);
     const collection = isNews ? firestoreCollections.webNews : firestoreCollections.posts;
-    this.angularFirestore.collection(collection).add({ ...post });
+    return this.angularFirestore.collection(collection).add({ ...post });
   }
   private getPostId(title: string) {
     const id = FuseUtils.handleize(title);

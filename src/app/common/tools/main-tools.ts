@@ -106,3 +106,45 @@ export class MainTools {
 
 
 }
+
+export function resizeImage(file: File, expectedWidth: number, expectedHeight: number, keepAspectRatio: boolean = false): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = URL.createObjectURL(file);
+      image.onload = () => {
+          const originWidth = image.width;
+          const originHeight = image.height;
+          console.log('origin ', originWidth + ' ' + originHeight);
+          console.log('expected ', expectedWidth + ' ' + expectedHeight);
+          if (originWidth < expectedWidth || originHeight < expectedHeight) {
+              const errorMessage = {message: `La photo jointe au produit n'est pas assez grande, la taille minimale requise est : ${expectedWidth} x ${expectedHeight} pixels`};
+              reject(errorMessage);
+          }
+          let newWidth;
+          let newHeight;
+          if (keepAspectRatio) {
+              if (originWidth > originHeight) {
+                  newHeight = originHeight * (expectedWidth / originWidth);
+                  newWidth = expectedWidth;
+              } else {
+                  newWidth = originWidth * (expectedHeight / originHeight);
+                  newHeight = expectedHeight;
+              }
+          } else {
+              newWidth = expectedWidth;
+              newHeight = expectedHeight;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+
+          const context = canvas.getContext('2d');
+
+          context.drawImage(image, 0, 0, newWidth, newHeight);
+
+          canvas.toBlob(resolve, file.type);
+      };
+      image.onerror = reject;
+  });
+}
+

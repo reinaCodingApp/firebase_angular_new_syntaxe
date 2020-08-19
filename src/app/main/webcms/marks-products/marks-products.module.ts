@@ -76,6 +76,7 @@ const routes: Routes = [
 
     FuseSharedModule,
     FuseSidebarModule,
-  ]
+  ],
+  providers: [MarksProductsService]
 })
 export class MarksProductsModule { }

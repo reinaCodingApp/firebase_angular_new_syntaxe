@@ -59,17 +59,9 @@ export class AddPostDialogComponent implements OnInit {
   filePicked(fileInput): void {
     if (fileInput.target.files && fileInput.target.files[0]) {
       this.file = fileInput.target.files[0];
-      if (this.data.mode === 'edit') {
-        this._postsService.uploadFile(this.post, this.file)
-          .subscribe(() => {
-          });
-      } else {
-        const reader = new FileReader();
-        reader.readAsDataURL(this.file);
-        reader.onload = (_event) => {
-          this.post.src = reader.result;
-        };
-      }
+      this._postsService.uploadFile(this.post, this.file, 'big')
+        .then(() => {
+        });
     }
   }
 

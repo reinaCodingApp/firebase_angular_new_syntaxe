@@ -9,6 +9,7 @@ import { PostsService } from '../posts/posts.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-new-post',
@@ -75,17 +76,11 @@ export class NewPostComponent implements OnInit {
   filePicked(fileInput): void {
     if (fileInput.target.files && fileInput.target.files[0]) {
       this.file = fileInput.target.files[0];
-      if (this.mode === 'edit') {
-        this._postsService.uploadFile(this.post, this.file)
-          .subscribe(() => {
-          });
-      } else {
-        const reader = new FileReader();
-        reader.readAsDataURL(this.file);
-        reader.onload = (_event) => {
-          this.post.src = reader.result;
-        };
-      }
+      const bigImage = this._postsService.uploadFile(this.post, this.file, 'big');
+      const mediumImage = this._postsService.uploadFile(this.post, this.file, 'medium');
+      forkJoin([bigImage, mediumImage]).subscribe(() => {
+        console.log('## Upload Done');
+      });
     }
   }
 

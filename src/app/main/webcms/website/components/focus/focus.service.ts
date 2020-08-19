@@ -7,18 +7,22 @@ import { finalize } from 'rxjs/operators';
 import { Focus } from './models/focus';
 import { FocusDetails } from './models/focusDetails';
 import * as moment from 'moment';
+import { resizeImage } from 'app/common/tools/main-tools';
+import { MatSnackBar } from '@angular/material';
+
+const FOCUS_STORAGE_PATH = 'focus';
+const FOCUS_IMAGE_SIZE = { width: 1366, height: 905 };
+const INTERLOCUTOR_IMAGE_SIZE = { width: 640, height: 768 };
 
 @Injectable({
   providedIn: 'root'
 })
 export class FocusService {
-  private basePath = 'focus';
-
   constructor(
     private angularFirestore: AngularFirestore,
-    private angualrFireStorage: AngularFireStorage
-  ) {
-  }
+    private angularFireStorage: AngularFireStorage,
+    private matSnackBar: MatSnackBar
+  ) { }
 
   getFocuses(): Observable<any> {
     return this.angularFirestore.collection(firestoreCollections.webFocus).snapshotChanges();
@@ -111,43 +115,72 @@ export class FocusService {
   }
 
   uploadImageForFocus(focus: Focus, file: File) {
-    const filePath = `${this.basePath}/${file.name}`;
-    const storageRef = this.angualrFireStorage.ref(filePath);
-    const uploadTask = this.angualrFireStorage.upload(filePath, file);
-    uploadTask.snapshotChanges().pipe(
-      finalize(() => {
-        storageRef.getDownloadURL().subscribe(downloadURL => {
-          focus.images.push(downloadURL);
-          if (focus.uid) {
-            this.updateFocus(focus);
-          }
-        });
-      })
-    ).subscribe();
-    return uploadTask.percentageChanges();
+    const splited = file.name.split('.');
+    const fileExtension = splited[splited.length - 1];
+    const fileName = `${new Date().getTime()}.${fileExtension}`;
+    return resizeImage(file, FOCUS_IMAGE_SIZE.width, FOCUS_IMAGE_SIZE.height).then(blobResult => {
+      const filePath = `${FOCUS_STORAGE_PATH}/${fileName}`;
+      const storageRef = this.angularFireStorage.ref(filePath);
+      const uploadTask = storageRef.put(blobResult);
+      uploadTask.snapshotChanges().pipe(
+        finalize(() => {
+          storageRef.getDownloadURL().subscribe(downloadURL => {
+            focus.images.push(downloadURL);
+            if (focus.uid) {
+              this.updateFocus(focus);
+            }
+          });
+        })
+      ).subscribe();
+    }).catch(error => {
+      const msg = error.message ? error.message : `La ressource n'a pas pu être traitée, veuillez joindre un fichier PNG ou JPEG`;
+      this.matSnackBar.open(msg, 'OK', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        duration: 30000,
+        panelClass: 'warn'
+      });
+      console.log('###### errormessage', error);
+    });
   }
 
   uploadImageForInterlocutor(focus: Focus, file: File) {
-    const filePath = `${this.basePath}/${file.name}`;
-    const storageRef = this.angualrFireStorage.ref(filePath);
-    const uploadTask = this.angualrFireStorage.upload(filePath, file);
-    uploadTask.snapshotChanges().pipe(
-      finalize(() => {
-        storageRef.getDownloadURL().subscribe(downloadURL => {
-          focus.focusDetails.interlocutor.image = downloadURL;
-          if (focus.uid) {
-            this.updateFocus(focus);
-          }
-        });
-      })
-    ).subscribe();
-    return uploadTask.percentageChanges();
+    const splited = file.name.split('.');
+    const fileExtension = splited[splited.length - 1];
+    const fileName = `${new Date().getTime()}.${fileExtension}`;
+    return resizeImage(file, INTERLOCUTOR_IMAGE_SIZE.width, INTERLOCUTOR_IMAGE_SIZE.height).then(blobResult => {
+      const filePath = `${FOCUS_STORAGE_PATH}/${fileName}`;
+      const storageRef = this.angularFireStorage.ref(filePath);
+      const uploadTask = storageRef.put(blobResult);
+      uploadTask.snapshotChanges().pipe(
+        finalize(() => {
+          storageRef.getDownloadURL().subscribe(downloadURL => {
+            focus.focusDetails.interlocutor.image = downloadURL;
+            if (focus.uid) {
+              this.updateFocus(focus);
+            }
+          });
+        })
+      ).subscribe();
+    }).catch(error => {
+      const msg = error.message ? error.message : `La ressource n'a pas pu être traitée, veuillez joindre un fichier PNG ou JPEG`;
+      this.matSnackBar.open(msg, 'OK', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        duration: 30000,
+        panelClass: 'warn'
+      });
+      console.log('###### errormessage', error);
+    });
   }
 
   uploadImageForIllustration(focus: Focus, file: File, index: number) {
-    const filePath = `${this.basePath}/${file.name}`;
-    const storageRef = this.angualrFireStorage.ref(filePath);
-    const uploadTask = this.angualrFireStorage.upload(filePath, file);
+    const splited = file.name.split('.');
+    const fileExtension = splited[splited.length - 1];
+    const fileName = `${new Date().getTime()}.${fileExtension}`;
+    const filePath = `${FOCUS_STORAGE_PATH}/${fileName}`;
+    const storageRef = this.angularFireStorage.ref(filePath);
+    const uploadTask = this.angularFireStorage.upload(filePath, file);
     uploadTask.snapshotChanges().pipe(
       finalize(() => {
         storageRef.getDownloadURL().subscribe(downloadURL => {
