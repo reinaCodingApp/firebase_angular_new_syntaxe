@@ -161,6 +161,7 @@ export class AddTraceabilityDialogComponent implements OnInit {
     this.ringTraceabilityItem.traceabilityId = this.traceability.id;
     this.ringTraceabilityItem.isRing = true;
     this.ringTraceabilityItem.material.id = 57;
+    this.ringTraceabilityItem.code.code = this.ringTraceabilityItem.code.code.toUpperCase();
     this._traceabilityService.addTraceabilityItem(this.ringTraceabilityItem)
       .subscribe((addedTraceabilityItem) => {
         this.ringTraceabilityItem.code.code = '';

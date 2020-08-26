@@ -41,6 +41,7 @@ export class AddExceptioncodeDialogComponent implements OnInit {
   addExceptionCode(form: NgForm): void {
     if (form.valid) {
       this.exceptionalCode.traceabilityId = this.traceability.id;
+      this.exceptionalCode.code = this.exceptionalCode.code.toUpperCase();
       this._traceabilityService.addExceptionCode(this.exceptionalCode)
         .subscribe((addedTraceabilityItem) => {
           if (this.traceability.traceabilityItems == null) {
