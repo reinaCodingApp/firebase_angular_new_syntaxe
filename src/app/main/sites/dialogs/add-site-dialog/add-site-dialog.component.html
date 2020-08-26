@@ -180,6 +180,7 @@
             type="button"
             mat-raised-button
             matSuffix
+            [disabled]="zipCode.invalid"
             (click)="generateAgreementNumber()"
           >
             Générer N°
@@ -190,6 +191,7 @@
             mat-icon-button
             type="button"
             matSuffix
+            [disabled]="zipCode.invalid"
             (click)="generateAgreementNumber()"
           >
             <mat-icon>autorenew</mat-icon>
