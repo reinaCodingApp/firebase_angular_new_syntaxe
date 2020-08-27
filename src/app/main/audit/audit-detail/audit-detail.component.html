@@ -82,27 +82,44 @@
                             }"
                             >{{v}}</button>
                           </div>
+                      <!-- Non Conform Comment -->
+                      <div *ngIf="item.effectiveValue == nonConformValue">
+                        <mat-form-field class="w-100-p">
+                            <mat-label>Explication</mat-label>
+                            <textarea required placeholder="Expliquer la non confirmité de ce point" [readonly]="!isDraft" matInput name="nonConformComment" [(ngModel)]="item.comment" (change)="updateNonConformComment(item)" rows="2">
+                            </textarea>
+                        </mat-form-field>
+                      </div>
                         </div>
                       </div>
                       <!-- Report for menu -->
                       <div>
                         <mat-form-field appearance="outline" class="w-100-p">
-                            <mat-label>Rapport</mat-label>
-                            <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="menuReport" [(ngModel)]="currentMenu.report" (change)="updateReport(currentMenu)" rows="18">
+                            <mat-label>Commentaires </mat-label>
+                            <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="menuReport" [(ngModel)]="currentMenu.report" (change)="updateReport(currentMenu)" rows="5">
                             </textarea>
                         </mat-form-field>
                     </div>
                     </div>
                     <div id="course-step-content" *ngIf="currentMenu && currentMenu.id.length === 0" class="course-step-content">
+                      <div>
+                        <mat-checkbox
+                        [(ngModel)]="currentAudit.globalAppreciation"
+                        name="globalAppreciation"
+                        [disabled]="!habilitation.canEdit() || !isDraft"
+                        (change)="updateAuditPrperties()">
+                      </mat-checkbox>
+                      <span class="h3 ml-4">Appréciation positive</span>
+                      </div>
                       <div *ngFor="let menu of currentAudit.menus">
                         <div *ngIf="menu.id && menu.report?.length > 0">
-                          <h1>{{menu.title}}</h1>
+                          <h1 class="text-uppercase">{{menu.title}}</h1>
                           <p [innerHTML]="menu.report"></p>
                         </div>
                       </div>
                         <mat-form-field appearance="outline" class="w-100-p">
-                            <mat-label>Rapport général</mat-label>
-                            <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="title" [(ngModel)]="currentAudit.report" (change)="updateAuditPrperties()" rows="18">
+                            <mat-label>RAPPORT GÉNÉRAL</mat-label>
+                            <textarea [readonly]="!habilitation.canEdit() || !isDraft" matInput name="title" [(ngModel)]="currentAudit.report" (change)="updateAuditPrperties()" rows="10">
                             </textarea>
                         </mat-form-field>
                         <mat-divider *ngIf="currentAudit.attachments && currentAudit.attachments.length > 0" class="mt-0"></mat-divider>

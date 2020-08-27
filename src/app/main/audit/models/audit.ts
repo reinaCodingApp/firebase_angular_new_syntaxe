@@ -21,4 +21,5 @@ export class Audit {
   poleId: string;
   ownerId: string;
   attachments: Attachment[];
+  globalAppreciation: boolean;
 }

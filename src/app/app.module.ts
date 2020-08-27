@@ -90,6 +90,7 @@ const appRoutes: Routes = [
 
     // firebase
     AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule.enablePersistence(),
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireAuthModule,

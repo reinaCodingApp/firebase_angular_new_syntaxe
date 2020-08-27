@@ -96,6 +96,7 @@ export class AddAuditDialogComponent implements OnInit {
     this.audit.date = time;
     this.audit.title = this.selectedTemplate.name;
     this.audit.report = '';
+    this.audit.globalAppreciation = false;
     const department = this.departments.find(d => d.id === this.selectedPlace.id);
     if (department) {
       this.audit.department = this.selectedPlace;

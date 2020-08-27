@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Attachment } from 'app/common/models/attachment';
 import { AddAuditDialogComponent } from '../dialogs/add-audit-dialog/add-audit-dialog.component';
 import { ValidateAuditDialogComponent } from '../dialogs/validate-audit-dialog/validate-audit-dialog.component';
+import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 
 @Component({
   selector: 'audit-detail',
@@ -32,6 +33,7 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   totalMenusCount = 0;
   private dialogRef: any;
   isDraft: boolean;
+  nonConformValue = 'Pas conforme';
   habilitation: Habilitation = new Habilitation(0);
 
   @ViewChildren(FusePerfectScrollbarDirective)
@@ -45,7 +47,8 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     private auditsService: AuditsService,
     public matDialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private sharedNotificationService: SharedNotificationService
   ) {
     this.route.queryParams.subscribe((params) => {
       this.isDraft = params.isDraft === 'true';
@@ -67,6 +70,13 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   updateEffectiveValue(item: AuditItem, value: string) {
     if (this.habilitation.canEdit() === true && this.isDraft) {
       this.auditsService.updateEffectiveValue(item, value).then(result => {
+        console.log('updated', result);
+      });
+    }
+  }
+  updateNonConformComment(item: AuditItem) {
+    if (this.isDraft) {
+      this.auditsService.updateNonConformComment(item).then(result => {
         console.log('updated', result);
       });
     }
@@ -105,7 +115,7 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.currentAudit && this.currentAudit.menus && this.currentAudit.menus.length > 0) {
           this.currentMenu = this.currentAudit.menus[0];
           this.auditsService.getAuditSectionsAndItems(this.currentMenu.id);
-          this.currentAudit.menus.push({ id: '', title: 'Rapports' } as AuditMenu);
+          this.currentAudit.menus.push({ id: '', title: 'Synthèse' } as AuditMenu);
           this.totalMenusCount = this.currentAudit.menus.length;
         }
       });
@@ -143,6 +153,11 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   async saveAudit() {
     const notCheckedPoints: AuditItem[] = [];
     const auditItems = await this.auditsService.getAuditItems(this.currentAudit.id);
+    if (!this.isNonConformHaveComment(auditItems)){
+       console.log('#MISSING COMMENT');
+       this.sharedNotificationService.showError(`Les explications de non confirmité sont obligatoires, veuillez les renseigner`);
+       return;
+    }
     auditItems.forEach(item => {
       if (!item.effectiveValue) {
         notCheckedPoints.push(item);
@@ -220,5 +235,17 @@ export class AuditDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     this.auditsService.updateAuditMenu(menu).then(() => {
       console.log('## MENU REPORT UPDATED');
     });
+  }
+
+  isNonConformHaveComment(items: AuditItem[]): boolean {
+    let isValid = true;
+    items.forEach(item => {
+      if (item.effectiveValue === this.nonConformValue &&
+        (!item.comment || item.comment.length <= 0)
+      ) {
+          isValid = false;
+      }
+    });
+    return isValid;
   }
 }

@@ -189,6 +189,8 @@ export class AuditsService implements Resolve<any>
               console.log('menus', this.currentAudit.menus);
               this.onCurrentAuditChanged.next(this.currentAudit);
             });
+        } else {
+          this.router.navigateByUrl('/audit-poles');
         }
       });
   }
@@ -221,6 +223,10 @@ export class AuditsService implements Resolve<any>
   }
   updateEffectiveValue(item: AuditItem, value: string) {
     item.effectiveValue = value;
+    return this.angularFirestore.collection(firestoreCollections.auditItems).doc(item.id).set(item);
+  }
+
+  updateNonConformComment(item: AuditItem) {
     return this.angularFirestore.collection(firestoreCollections.auditItems).doc(item.id).set(item);
   }
 
@@ -400,6 +406,7 @@ export class AuditsService implements Resolve<any>
           newAudit.poleId = auditProperties.poleId;
           newAudit.ownerId = this.connectedUser.uid;
           newAudit.attachments = auditProperties.attachments;
+          newAudit.globalAppreciation = auditProperties.globalAppreciation;
           const auditDocument = this.angularFirestore.collection(firestoreCollections.auditsDrafts).ref.doc();
           console.log(auditDocument);
           writeBatch.set(auditDocument, newAudit);
@@ -452,7 +459,7 @@ export class AuditsService implements Resolve<any>
     const auditDocument = this.angularFirestore.collection(firestoreCollections.auditsDrafts).doc(audit.id);
     writeBatch.delete(auditDocument.ref);
     this.deleteFromCollection(audit, firestoreCollections.auditMenus);
-    this.deleteFromCollection(audit, firestoreCollections.auditItems );
+    this.deleteFromCollection(audit, firestoreCollections.auditItems);
     this.deleteFromCollection(audit, firestoreCollections.auditSections);
     return writeBatch.commit();
   }

@@ -10,4 +10,5 @@ export class AuditItem
     possibleValues: PossibleValue;
     effectiveValue?: string;
     displayOrder: number;
+    comment: string;
 }

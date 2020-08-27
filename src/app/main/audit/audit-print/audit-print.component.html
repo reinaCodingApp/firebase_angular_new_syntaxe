@@ -19,6 +19,19 @@
             <div *ngIf="audit.site">Au sein de l'établissement : {{ audit.site.name}}</div>
             <div *ngIf="audit.department">Département : {{ audit.department.name}}</div>
             <div>Nom et prénom de l'auditeur : {{audit.responsible.displayName}}</div>
+            <div>Appréciation positive : {{audit.globalAppreciation ? 'Oui' : 'Non'}}</div>
+          </div>
+          <div fxLayout="column">
+            <h1>Statistiques</h1>
+            <p class="m-0" *ngFor="let point of auditStats?.pointsStat">
+              {{ point.total }} point(s) avec la réponse "{{ point.effectiveValue }}".
+            </p>
+            <p class="m-0">
+              {{ auditStats?.notCheckedPointsTotal }} point(s) non renseigné(s).
+            </p>
+            <p class="m-0">
+              {{ auditStats?.reportsTotal }} rapport(s) écrit(s).
+            </p>
           </div>
 
           <ul style="list-style: none; padding: 0px;">
@@ -35,7 +48,7 @@
                     <ul style="list-style: none; padding: 0px;">
                       <li *ngFor="let item of section.items">
                         <div fxLayout="column">
-                          <p style="background-color: gainsboro;" class="p-8">
+                          <span style="background-color: gainsboro;" class="p-8 my-12">
                             {{ item.title }}
                             <span fxLayout="row wrap" fxLayoutAlign="end center" class="values my-4">
                               <button class="m-8" *ngFor="let v of item.possibleValues.values"
@@ -44,7 +57,9 @@
                                   'text-decoration': v!== item.effectiveValue ? 'line-through': ''
                                   }">{{v}}</button>
                             </span>
-                          </p>
+                            <p *ngIf="item.effectiveValue == 'Pas conforme'">{{item.comment}}</p>
+                          </span>
+
                         </div>
                       </li>
                     </ul>
@@ -73,18 +88,7 @@
               </div>
             </li>
             <li>
-              <div fxLayout="column">
-                <h1>Statistiques</h1>
-                <p class="m-0" *ngFor="let point of auditStats?.pointsStat">
-                  {{ point.total }} point(s) avec la réponse "{{ point.effectiveValue }}".
-                </p>
-                <p class="m-0">
-                  {{ auditStats?.notCheckedPointsTotal }} point(s) non renseigné(s).
-                </p>
-                <p class="m-0">
-                  {{ auditStats?.reportsTotal }} rapport(s) écrit(s).
-                </p>
-              </div>
+
             </li>
           </ul>
         </div>

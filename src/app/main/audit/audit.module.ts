@@ -14,7 +14,7 @@ import { AuditsService } from './audit.service';
 import { AuditDetailComponent } from './audit-detail/audit-detail.component';
 import { AddAuditDialogComponent } from './dialogs/add-audit-dialog/add-audit-dialog.component';
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
-import { MatToolbarModule, MatDatepickerModule, MatStepperModule, MatDialogModule, MatTooltipModule, MatMenuModule, MatChipsModule, MatAutocompleteModule, MatDividerModule } from '@angular/material';
+import { MatToolbarModule, MatDatepickerModule, MatStepperModule, MatDialogModule, MatTooltipModule, MatMenuModule, MatChipsModule, MatAutocompleteModule, MatDividerModule, MatCheckboxModule } from '@angular/material';
 import { AuditAdministrationComponent } from './audit-administration/audit-administration.component';
 import { AuditEditTemplateComponent } from './audit-edit-template/audit-edit-template.component';
 import { AuditPossibleValuesComponent } from './audit-possible-values/audit-possible-values.component';
@@ -110,6 +110,7 @@ const routes = [
     MatDividerModule,
     NgxMatSelectSearchModule,
     SharedPipesModule,
+    MatCheckboxModule,
 
     FuseSharedModule,
     FuseSidebarModule,

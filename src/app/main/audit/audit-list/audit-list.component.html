@@ -39,8 +39,7 @@
         <div class="course" *ngFor="let audit of auditsDrafts" fxFlex="100" fxFlex.gt-xs="50" fxFlex.gt-sm="33"
           [ngClass]="audit.title" [@animate]="{value:'*',params:{y:'100%'}}">
           <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
-            <div class="header" fxLayout="row" fxLayoutAlign="center center"
-              [ngClass]="audit.site?.types.length > 1 ? 'web-bg' : 'type-' + audit.site?.types[0].id">
+            <div class="header" fxLayout="row" fxLayoutAlign="center center">
               <div class="category fuse-white-500-fg" fxFlex>
                 {{audit.site ? audit.site.name : audit.department.name}}
               </div>
@@ -73,9 +72,7 @@
 
           <div class="course-content" fxLayout="column" fxFlex="1 1 auto">
 
-            <div class="header" fxLayout="row" fxLayoutAlign="center center"
-              [ngClass]="audit.site?.types.length > 1 ? 'web-bg' : 'type-' + audit.site?.types[0].id">
-
+            <div class="header" fxLayout="row" fxLayoutAlign="center center">
               <div class="category fuse-white-500-fg" fxFlex>
                 {{audit.site ? audit.site.name : audit.department.name}}
               </div>
