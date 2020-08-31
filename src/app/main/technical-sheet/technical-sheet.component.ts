@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Habilitation } from '../access-rights/models/habilitation';
 import { Subject } from 'rxjs';
 import { AppService } from 'app/app.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddTechnicalSheetDialogComponent } from './dilaogs/add-technical-sheet-dialog/add-technical-sheet-dialog.component';
 
 @Component({

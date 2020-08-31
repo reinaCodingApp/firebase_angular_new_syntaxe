@@ -13,7 +13,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule, MatDatepickerModule, MatTabsModule, MatTableModule, MatChipsModule } from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule } from '@fuse/components';

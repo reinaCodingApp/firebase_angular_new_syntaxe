@@ -5,7 +5,7 @@ import { Site } from 'app/common/models/site';
 import { Audit } from '../../models/audit';
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SiteType } from 'app/main/sites/models/siteType';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { BreakpointState, BreakpointObserver } from '@angular/cdk/layout';

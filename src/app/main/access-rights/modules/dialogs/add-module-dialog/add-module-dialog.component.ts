@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { Module } from 'app/main/access-rights/models/module';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NgForm } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AccessRightsService } from 'app/main/access-rights/access-rights.service';

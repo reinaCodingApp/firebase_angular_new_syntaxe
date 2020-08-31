@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, HostBinding, Input } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ClientsService } from '../../clients.service';
 import { Client } from 'app/main/clients/models/client';

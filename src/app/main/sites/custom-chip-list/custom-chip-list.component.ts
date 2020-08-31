@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'custom-chip-list',
@@ -22,7 +22,7 @@ export class CustomChipListComponent implements OnInit {
   itemCtrl = new FormControl();
   filteredItems: Observable<any[]>;
 
-  @ViewChild('ItemInput', { static: false }) ItemInput: ElementRef;
+  @ViewChild('ItemInput') ItemInput: ElementRef;
 
   constructor() {
     this.filteredItems = this.itemCtrl.valueChanges.pipe(

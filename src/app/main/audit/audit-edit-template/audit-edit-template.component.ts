@@ -3,7 +3,7 @@ import { AuditTemplate } from 'app/main/audit/models/audit-template';
 import { AuditMenu } from 'app/main/audit/models/audit-menu';
 import { AuditsService } from '../audit.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { AuditSection } from 'app/main/audit/models/audit-section';
 import { AuditItem } from 'app/main/audit/models/audit-item';

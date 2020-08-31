@@ -18,7 +18,7 @@ import { CustomConfirmDialogComponent as CustomConfirmDialogComponent } from 'ap
   encapsulation: ViewEncapsulation.None
 })
 export class AdvanceSalaryContentComponent implements OnInit, OnDestroy {
-  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent) table: DatatableComponent;
   advances: Advance[];
   rows: any[];
   loadingIndicator: boolean;

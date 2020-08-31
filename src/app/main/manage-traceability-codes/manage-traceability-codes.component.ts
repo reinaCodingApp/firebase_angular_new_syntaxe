@@ -13,7 +13,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
   animations: fuseAnimations
 })
 export class ManageTraceabilityCodesComponent implements OnInit {
-  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent) table: DatatableComponent;
   pageSizeOptions = [10, 25, 50, 100];
   codes: any[];
   totalElements: number;

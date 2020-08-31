@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';

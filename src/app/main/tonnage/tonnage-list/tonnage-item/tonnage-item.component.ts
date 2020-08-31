@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, HostBinding, Input } from '@angular/core';
 import { AddTonnageDialogComponent } from '../../dialogs/add-tonnage-dialog/add-tonnage-dialog.component';
 import { Tonnage } from 'app/main/tonnage/models/tonnage';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TonnageService } from '../../tonnage.service';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';

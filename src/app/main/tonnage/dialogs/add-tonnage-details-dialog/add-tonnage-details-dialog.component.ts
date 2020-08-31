@@ -4,7 +4,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TonnageDetail } from '../../models/tonnageDetail';
 import { TonnageService } from '../../tonnage.service';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Tonnage } from '../../models/tonnage';
 import { TonnageItemType } from '../../models/tonnageItemType';
 

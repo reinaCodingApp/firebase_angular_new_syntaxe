@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ActivityTemporaryWorkerService } from '../../activity-temporary-workers.service';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';

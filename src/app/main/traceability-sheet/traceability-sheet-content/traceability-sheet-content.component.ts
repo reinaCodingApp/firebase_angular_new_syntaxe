@@ -11,7 +11,7 @@ import { Attachment } from 'app/common/models/attachment';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';
 import { AddSheetItemDialogComponent } from '../add-sheet-item-dialog/add-sheet-item-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 
 @Component({

@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { AuditsService } from '../audit.service';
 import { AuditPole } from '../models/audit-pole';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddPoleMemberComponent } from '../dialogs/add-pole-member/add-pole-member.component';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 

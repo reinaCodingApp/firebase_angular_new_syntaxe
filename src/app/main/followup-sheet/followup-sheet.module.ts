@@ -10,7 +10,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule, MatExpansionModule, MatTooltipModule, MatSortModule, MatCheckboxModule, MatMenuModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule, FuseWidgetModule } from '@fuse/components';

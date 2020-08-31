@@ -8,7 +8,7 @@ import { navigation } from 'app/navigation/navigation';
 import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { User } from 'app/main/settings/models/user';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ModuleIdentifiers } from 'app/data/moduleIdentifiers';
 import { AppService } from 'app/app.service';
 

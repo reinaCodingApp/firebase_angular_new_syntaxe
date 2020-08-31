@@ -4,7 +4,7 @@ import { PossibleValue } from 'app/main/audit/models/possible-value';
 import { AuditsService } from '../audit.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -23,7 +23,7 @@ export class AuditPossibleValuesComponent implements OnInit, OnDestroy {
   addOnBlur = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   valueCtrl = new FormControl();
-  @ViewChild('valueInput', { static: false }) valueInput: ElementRef;
+  @ViewChild('valueInput') valueInput: ElementRef;
 
   private unsubscribeAll: Subject<any>;
 

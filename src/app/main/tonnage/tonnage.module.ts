@@ -13,7 +13,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatDatepickerModule, MatTableModule, MatTabsModule, MatExpansionModule, MatTooltipModule } from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { TranslateModule } from '@ngx-translate/core';
 

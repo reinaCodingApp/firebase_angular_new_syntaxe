@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddTicketDialogComponent } from 'app/main/ticket/dialogs/add-ticket-dialog/add-ticket-dialog.component';
 import { TicketService } from 'app/main/ticket/ticket.service';
 import { take } from 'rxjs/operators';

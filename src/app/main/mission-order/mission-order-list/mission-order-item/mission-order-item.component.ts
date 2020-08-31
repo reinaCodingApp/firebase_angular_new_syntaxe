@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MissionOrder } from 'app/main/mission-order/models/missionOrder';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddMissionOrderComponent } from '../../dialogs/add-mission-order/add-mission-order.component';
 import { MissionOrderService } from '../../mission-order.service';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';

@@ -2,7 +2,7 @@ import { AppService } from 'app/app.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'app/common/services/common.service';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddActivityAbsenceDialogComponent } from './dialogs/add-activity-absence-dialog/add-activity-absence-dialog.component';
 import { ActivityAbsenceService } from './activity-absence.service';
 import { Habilitation } from '../access-rights/models/habilitation';

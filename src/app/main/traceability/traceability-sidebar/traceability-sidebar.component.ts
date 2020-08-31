@@ -4,7 +4,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TraceabilityService } from '../traceability.service';
 import { CommonService } from 'app/common/services/common.service';
 import { RequestParameter } from 'app/main/traceability/models/descending/requestParameter';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { TraceabilityPlanification } from 'app/main/traceability/models/descending/traceabilityPlanification';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { PrintWeeksDialogComponent } from '../dialogs/print-weeks-dialog/print-weeks-dialog.component';

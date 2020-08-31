@@ -10,7 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule, MatCheckboxModule, MatMenuModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 

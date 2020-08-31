@@ -4,7 +4,7 @@ import { AccessRightsService } from '../access-rights.service';
 import { fuseAnimations } from '@fuse/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddModuleDialogComponent } from './dialogs/add-module-dialog/add-module-dialog.component';
 
 @Component({

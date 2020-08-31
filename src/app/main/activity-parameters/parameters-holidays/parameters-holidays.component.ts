@@ -3,7 +3,7 @@ import { ActivityParametersService } from '../activity-parameters.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { Holiday } from 'app/main/activity-parameters/models/holiday';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddHolidayDialogComponent } from './dialogs/add-holiday-dialog/add-holiday-dialog.component';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';

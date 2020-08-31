@@ -7,7 +7,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { FooterComponent } from 'app/layout/components/footer/footer.component';
-import { MatMenuModule, MatTooltipModule, MatBadgeModule } from '@angular/material';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [

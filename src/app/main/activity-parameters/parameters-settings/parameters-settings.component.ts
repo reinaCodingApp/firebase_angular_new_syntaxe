@@ -4,7 +4,8 @@ import { CompleteEmployee } from 'app/main/activity/models/completeEmployee';
 import { FormControl, NgForm } from '@angular/forms';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { startWith, map } from 'rxjs/operators';
 import { ActivityParametersService } from '../activity-parameters.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
@@ -39,7 +40,7 @@ export class ParametersSettingsComponent implements OnInit {
   allDepartments: any[];
   habilitation: Habilitation = new Habilitation(0);
 
-  @ViewChild('departmentInput', { static: false }) departmentInput: ElementRef;
+  @ViewChild('departmentInput') departmentInput: ElementRef;
 
   constructor(
     private _activityParamatersService: ActivityParametersService,

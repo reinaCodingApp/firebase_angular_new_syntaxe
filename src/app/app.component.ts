@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
   navigation: any;
   showConfigButton;
   configurationUrl = '';
-  currentAppVersion: AppVersion = null;  
+  currentAppVersion: AppVersion = null;
 
   private _unsubscribeAll: Subject<any>;
   constructor(
@@ -74,7 +74,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.appService.getLastAppVersion().subscribe( result => {
       if (result && result.length > 0) {
-        const lastVersion = result.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as AppVersion))[0];
+        const lastVersion = result.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() as {} } as AppVersion))[0];
         if (!this.currentAppVersion) {
           this.currentAppVersion = lastVersion;
           this.appService.latestKnownAppVersion = lastVersion;
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
         this.appService.onAppVersionChanged.next(lastVersion);
       }
-    });    
+    });
   }
 
   ngOnInit(): void {

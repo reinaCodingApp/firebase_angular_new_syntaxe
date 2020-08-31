@@ -5,7 +5,7 @@ import { TraceabilityService } from '../traceability.service';
 import { TraceabilityPlanification } from 'app/main/traceability/models/descending/traceabilityPlanification';
 import { Traceability } from 'app/main/traceability/models/descending/traceability';
 import { AddTraceabilityDialogComponent } from '../dialogs/add-traceability-dialog/add-traceability-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { RequestParameter } from 'app/main/traceability/models/descending/requestParameter';
 import { NgxUiLoaderService } from 'ngx-ui-loader';

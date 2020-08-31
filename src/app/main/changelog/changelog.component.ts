@@ -8,7 +8,7 @@ import { Habilitation } from './../access-rights/models/habilitation';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { User } from '../settings/models/user';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AppVersion, VersionDetail } from './models/app-version';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 

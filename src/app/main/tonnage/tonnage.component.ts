@@ -4,7 +4,7 @@ import { CommonService } from 'app/common/services/common.service';
 import { TonnageService } from './tonnage.service';
 import { Tonnage } from 'app/main/tonnage/models/tonnage';
 import { Habilitation } from '../access-rights/models/habilitation';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddTonnageDialogComponent } from './dialogs/add-tonnage-dialog/add-tonnage-dialog.component';
 
 @Component({

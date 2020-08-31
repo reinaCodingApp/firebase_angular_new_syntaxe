@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 import { FuseSharedModule } from '@fuse/shared.module';

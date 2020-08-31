@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, Inject, ElementRef, ViewChild } from '@angular/core';
 import { UsersService } from '../../users.service';
 import { User } from 'app/main/settings/models/user';
-import { MatDialogRef, MAT_DIALOG_DATA, MatAutocompleteSelectedEvent, MatAutocomplete, MatChipInputEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
@@ -39,8 +41,8 @@ export class UserFormDialogComponent implements OnInit {
   allClaims: string[] = [];
   connectedUser: User;
 
-  @ViewChild('claimInput', { static: false }) claimInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('claimInput') claimInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
   constructor(
     private commonService: CommonService,
     private appService: AppService,

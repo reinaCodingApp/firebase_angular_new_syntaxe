@@ -14,7 +14,7 @@ import { SharedNotificationService } from 'app/common/services/shared-notificati
 import { LoginService } from 'app/main/login/login.service';
 import { Attachment } from 'app/common/models/attachment';
 import { CommonService } from 'app/common/services/common.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 import { PaginatedDiscussions } from '../models/paginatedDiscussions';

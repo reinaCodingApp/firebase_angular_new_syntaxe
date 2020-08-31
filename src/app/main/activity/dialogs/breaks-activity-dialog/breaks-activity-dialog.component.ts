@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivityService } from '../../activity.service';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CommonService } from 'app/common/services/common.service';

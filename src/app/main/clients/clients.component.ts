@@ -4,7 +4,7 @@ import { CommonService } from 'app/common/services/common.service';
 import { ClientsService } from './clients.service';
 import { Client } from 'app/main/clients/models/client';
 import { AddClientDialogComponent } from './dialogs/add-client-dialog/add-client-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 
 @Component({

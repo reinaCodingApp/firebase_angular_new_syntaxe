@@ -7,7 +7,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { CodirComment } from 'app/main/meetings/models/codirComment';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddDecisionDialogComponent } from './dilaogs/add-decision-dialog/add-decision-dialog.component';
 import { GenerateTaskDialogComponent } from './dilaogs/generate-task-dialog/generate-task-dialog.component';
 import { CommonService } from 'app/common/services/common.service';

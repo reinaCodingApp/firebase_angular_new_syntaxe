@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { fuseAnimations } from '@fuse/animations';
 import { AdvanceSalaryService } from './advance-salary.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { AddAdvanceSalaryDialogComponent } from './dialogs/add-advance-salary-dialog/add-advance-salary-dialog.component';

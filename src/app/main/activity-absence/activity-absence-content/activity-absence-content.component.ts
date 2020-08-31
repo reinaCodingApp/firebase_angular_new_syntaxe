@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None
 })
 export class ActivityAbsenceContentComponent implements OnInit, OnDestroy {
-  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent) table: DatatableComponent;
   rows: ActivityAbsence[];
   temp: ActivityAbsence[];
   filterValue: string;

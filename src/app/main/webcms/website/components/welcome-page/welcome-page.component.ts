@@ -31,7 +31,7 @@ export class WelcomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.welcomeService.getWebHomeSettings().subscribe(data => {
-      this.settings = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as {}))[0];
+      this.settings = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() as {} } as {}))[0];
       console.log('###### settings', this.settings);
       const homeSettings = [];
       Object.keys(this.settings).map((key) => {

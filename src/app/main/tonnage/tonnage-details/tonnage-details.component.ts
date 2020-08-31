@@ -7,7 +7,7 @@ import { SharedNotificationService } from 'app/common/services/shared-notificati
 import { TonnageDetail } from 'app/main/tonnage/models/tonnageDetail';
 import { TonnageItemType } from 'app/main/tonnage/models/tonnageItemType';
 import { NgForm } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
 import { AddTonnageDetailsDialogComponent } from '../dialogs/add-tonnage-details-dialog/add-tonnage-details-dialog.component';

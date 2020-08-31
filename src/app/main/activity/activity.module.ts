@@ -10,7 +10,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule, MatTableModule, MatMenuModule, MatSortModule, MatTooltipModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 

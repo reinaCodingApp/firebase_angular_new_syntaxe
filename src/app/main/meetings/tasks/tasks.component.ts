@@ -8,7 +8,7 @@ import { FilterParameter } from 'app/main/meetings/models/filterParameter';
 import { MeetInstance } from 'app/main/meetings/models/meetInstance';
 import { GeneratedTask } from 'app/main/meetings/models/generatedTask';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { RequestParameter } from 'app/main/meetings/models/requestParameter';
 import { GeneratedTaskComment } from 'app/main/meetings/models/generatedTaskComment';
 import { ReaffectTaskDialogComponent } from '../dilaogs/reaffect-task-dialog/reaffect-task-dialog.component';

@@ -2,7 +2,7 @@ import { UsersService } from './users.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { User } from 'app/main/settings/models/user';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { UserFormDialogComponent } from './dialogs/user-form-dialog/user-form-dialog.component';
 import { fuseAnimations } from '@fuse/animations';
 import { MainTools } from 'app/common/tools/main-tools';

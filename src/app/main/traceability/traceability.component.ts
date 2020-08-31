@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'app/common/services/common.service';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddTraceabilityDialogComponent } from './dialogs/add-traceability-dialog/add-traceability-dialog.component';
 import { TraceabilityPlanification } from './models/descending/traceabilityPlanification';
 import { TraceabilityService } from './traceability.service';

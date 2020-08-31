@@ -9,7 +9,7 @@ import { BASE_URL } from 'environments/environment';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { Attachment } from 'app/common/models/attachment';
 import { CommonService } from 'app/common/services/common.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { TicketService } from '../../ticket.service';
 import { AssignTicketDialogComponent } from '../../dialogs/assign-ticket-dialog/assign-ticket-dialog.component';

@@ -3,7 +3,7 @@ import { FaqService } from './faq.service';
 import { map, take } from 'rxjs/operators';
 import { FaqPost } from './models/faqPost';
 import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SatPopover } from '@ncstate/sat-popover';
 
 @Component({
@@ -12,7 +12,7 @@ import { SatPopover } from '@ncstate/sat-popover';
   styleUrls: ['./faq.component.scss']
 })
 export class FaqComponent implements OnInit {
-  @ViewChild('faqPopover', { static: false }) faqPopover: SatPopover;
+  @ViewChild('faqPopover') faqPopover: SatPopover;
   faqs: FaqPost[];
   dialogRef: any;
   faq: FaqPost;

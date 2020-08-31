@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-new-product',

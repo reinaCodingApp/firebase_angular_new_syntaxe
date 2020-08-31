@@ -13,7 +13,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule, MatDatepickerModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatStepperModule } from '@angular/material/stepper';
 
 import { TranslateModule } from '@ngx-translate/core';
 

@@ -24,7 +24,7 @@ export class PostComponent implements OnInit, AfterViewInit{
   currentCategorie: Category = new Category();
   dateParam =  new Date();
   confirmationText = '';
-  @ViewChild('ref', {static: false})
+  @ViewChild('ref')
   tref: ElementRef;
 
 

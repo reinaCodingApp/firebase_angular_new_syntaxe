@@ -3,7 +3,7 @@ import { MissionOrderService } from './mission-order.service';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { Habilitation } from '../access-rights/models/habilitation';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddMissionOrderComponent } from './dialogs/add-mission-order/add-mission-order.component';
 import { PaginatedMissionOrders } from './models/paginatedMissionOrders';
 

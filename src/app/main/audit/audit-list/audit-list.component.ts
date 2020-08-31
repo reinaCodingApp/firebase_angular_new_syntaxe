@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { AuditsService } from '../audit.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Audit } from 'app/main/audit/models/audit';
 import { SiteType } from 'app/main/sites/models/siteType';
 import { AppService } from 'app/app.service';

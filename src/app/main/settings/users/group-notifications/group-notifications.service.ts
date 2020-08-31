@@ -17,7 +17,7 @@ export class GroupNotificationsService {
 
   getGroups(): void {
     this.angularFirestore.collection(firestoreCollections.groupsNotifications).snapshotChanges().subscribe(data => {
-      const groups = data.map(g => ({ id: g.payload.doc.id, ...g.payload.doc.data() } as GroupNotification));
+      const groups = data.map(g => ({ id: g.payload.doc.id, ...g.payload.doc.data() as {} } as GroupNotification));
       this.onGroupsNotifactionsChanged.next(groups);
     });
   }

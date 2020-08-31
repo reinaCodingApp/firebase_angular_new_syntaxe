@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NewsDetail } from 'app/main/home/models/news-detail';
 import { MainTools } from 'app/common/tools/main-tools';
 import { TimelineService } from '../../timeline.service';

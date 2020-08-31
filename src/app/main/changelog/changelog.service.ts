@@ -56,7 +56,7 @@ export class ChangelogService implements Resolve<any> {
           }
         }).snapshotChanges()
         .subscribe(response => {
-          this.appVersions = response.map(i => ({ id: i.payload.doc.id, ...i.payload.doc.data() } as AppVersion));
+          this.appVersions = response.map(i => ({ id: i.payload.doc.id, ...i.payload.doc.data() as {} } as AppVersion));
           this.onAppVersionsChanged.next(this.appVersions);
           resolve(this.appVersions);
         }, reject);

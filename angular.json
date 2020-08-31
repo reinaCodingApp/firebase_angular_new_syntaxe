@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -57,16 +58,32 @@
                   "type": "initial",
                   "maximumWarning": "10mb",
                   "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             },
             "ec": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "sourceMap": true,
               "extractCss": true
             },
             "hmr": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -95,6 +112,10 @@
                   "type": "initial",
                   "maximumWarning": "10mb",
                   "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }

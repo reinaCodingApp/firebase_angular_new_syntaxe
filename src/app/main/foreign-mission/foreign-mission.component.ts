@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'app/common/services/common.service';
 import { AddForeignMissionDialogComponent } from './dialogs/add-foreign-mission-dialog/add-foreign-mission-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ForeignMissionService } from './foreign-mission.service';
 import { Habilitation } from '../access-rights/models/habilitation';
 import { fuseAnimations } from '@fuse/animations';

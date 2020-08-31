@@ -8,7 +8,7 @@ import { Focus } from './models/focus';
 import { FocusDetails } from './models/focusDetails';
 import * as moment from 'moment';
 import { resizeImage } from 'app/common/tools/main-tools';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const FOCUS_STORAGE_PATH = 'focus';
 const FOCUS_IMAGE_SIZE = { width: 1366, height: 905 };

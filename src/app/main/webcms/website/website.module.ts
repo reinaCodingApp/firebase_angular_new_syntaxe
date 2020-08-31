@@ -20,7 +20,15 @@ import { FuseSidebarModule, FuseConfirmDialogModule, FuseWidgetModule } from '@f
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
-import { MatProgressSpinnerModule, MatTabsModule, MatSlideToggleModule, MatTableModule, MatDatepickerModule, MatRadioModule, MatTooltipModule, MatExpansionModule, MatDividerModule } from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { WebsiteComponent } from './website.component';
 import { WebsiteService } from './website.service';
 import { WelcomePageComponent } from './components/welcome-page/welcome-page.component';

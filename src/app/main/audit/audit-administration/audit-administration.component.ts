@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuditTemplate } from 'app/main/audit/models/audit-template';
 import { fuseAnimations } from '@fuse/animations';
 import { AuditsService } from '../audit.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PossibleValue } from 'app/main/audit/models/possible-value';
 import { AddAuditDialogComponent } from '../dialogs/add-audit-dialog/add-audit-dialog.component';
 import { takeUntil } from 'rxjs/operators';

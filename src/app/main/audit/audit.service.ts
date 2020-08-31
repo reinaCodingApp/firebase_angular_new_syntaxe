@@ -153,7 +153,7 @@ export class AuditsService implements Resolve<any>
       query => query.where('poleId', '==', poleId)
         .orderBy('date', 'desc'))
       .snapshotChanges().subscribe(data => {
-        const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
+        const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data()  as {}} as Audit));
         this.onAuditsChanged.next(audits);
       });
   }
@@ -165,7 +165,7 @@ export class AuditsService implements Resolve<any>
         .where('poleId', '==', poleId))
       .snapshotChanges()
       .subscribe(data => {
-        const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() } as Audit));
+        const audits = data.map(a => ({ id: a.payload.doc.id, ...a.payload.doc.data() as {} } as Audit));
         this.onAuditsDraftsChanged.next(audits);
       });
   }
@@ -254,7 +254,7 @@ export class AuditsService implements Resolve<any>
 
   getTemplates(poleId: string) {
     this.angularFirestore.collection(firestoreCollections.auditTemplates, query => query.where('poleId', '==', poleId)).snapshotChanges().subscribe(templates => {
-      const auditTemplates: AuditTemplate[] = templates.map(t => ({ id: t.payload.doc.id, ...t.payload.doc.data() } as AuditTemplate));
+      const auditTemplates: AuditTemplate[] = templates.map(t => ({ id: t.payload.doc.id, ...t.payload.doc.data() as {} } as AuditTemplate));
       this.onTemplatesChanged.next(auditTemplates);
     });
   }
@@ -525,12 +525,12 @@ export class AuditsService implements Resolve<any>
           resolve(menuItems);
         });
     });
-    let audit = await getAudit();
+    const audit = await getAudit();
     const menus = await getAuditMenus();
     audit.menus = menus;
     for await (const menu of audit.menus) {
-      let sections = await getAuditSections(menu.id);
-      let menuItems = await getAuditItems(menu.id);
+      const sections = await getAuditSections(menu.id);
+      const menuItems = await getAuditItems(menu.id);
       sections.forEach(s => {
         menuItems.forEach(i => {
           if (s.id === i.sectionId) {

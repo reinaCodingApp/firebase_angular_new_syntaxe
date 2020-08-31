@@ -12,7 +12,7 @@ import { AppService } from 'app/app.service';
 import { Post } from './models/post';
 import { FuseUtils } from '@fuse/utils';
 import { resizeImage } from 'app/common/tools/main-tools';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const POST_STORAGE_PATH = 'posts';
 const POST_BIG_IMAGE_SIZE = { width: 1366, height: 905 };

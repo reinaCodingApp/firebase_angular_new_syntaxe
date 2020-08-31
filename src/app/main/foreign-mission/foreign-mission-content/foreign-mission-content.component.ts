@@ -16,7 +16,7 @@ import { CustomConfirmDialogComponent } from 'app/shared/custom-confirm-dialog/c
   encapsulation: ViewEncapsulation.None
 })
 export class ForeignMissionContentComponent implements OnInit {
-  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent) table: DatatableComponent;
   rows: any[];
   loadingIndicator: boolean;
   reorderable: boolean;

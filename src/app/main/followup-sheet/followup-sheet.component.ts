@@ -9,7 +9,7 @@ import { Folder } from 'app/main/followup-sheet/models/folder';
 import { Point } from 'app/main/followup-sheet/models/point';
 import { Section } from 'app/main/followup-sheet/models/section';
 import { AddSimpletaskDialogComponent } from './dialogs/add-simpletask-dialog/add-simpletask-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Attachment } from 'app/common/models/attachment';
 import { CommonService } from 'app/common/services/common.service';
 import { RequestParameter } from 'app/main/followup-sheet/models/requestParameter';

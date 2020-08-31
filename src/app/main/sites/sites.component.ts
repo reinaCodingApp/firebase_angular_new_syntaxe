@@ -4,7 +4,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SitesService } from './sites.service';
 import { SiteFilter } from 'app/main/sites/models/siteFilter';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddSiteDialogComponent } from './dialogs/add-site-dialog/add-site-dialog.component';
 import { Habilitation } from '../access-rights/models/habilitation';
 

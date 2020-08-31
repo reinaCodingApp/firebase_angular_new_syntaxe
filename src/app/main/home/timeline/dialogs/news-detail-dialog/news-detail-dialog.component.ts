@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddNewsDialogComponent } from '../add-news-dialog/add-news-dialog.component';
 import { Subject } from 'rxjs';
 

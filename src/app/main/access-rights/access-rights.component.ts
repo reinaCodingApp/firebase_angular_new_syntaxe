@@ -6,7 +6,7 @@ import { Module } from 'app/main/access-rights/models/module';
 import { User } from 'app/main/settings/models/user';
 import { fuseAnimations } from '@fuse/animations';
 import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ClonePermissionsDialogComponent } from './dialogs/clone-permissions-dialog/clone-permissions-dialog.component';
 
 

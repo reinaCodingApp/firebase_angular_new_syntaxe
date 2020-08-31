@@ -24,7 +24,7 @@ import { MailMainSidebarComponent } from './sidebars/main/main-sidebar.component
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
-import { MatProgressSpinnerModule } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WebMessagesComponent } from './web-messages.component';
 import { MailListComponent } from './mail-list/mail-list.component';
 import { MailListItemComponent } from './mail-list/mail-list-item/mail-list-item.component';

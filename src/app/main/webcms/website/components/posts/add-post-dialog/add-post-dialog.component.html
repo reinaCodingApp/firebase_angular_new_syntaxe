@@ -70,7 +70,7 @@
       <div fxLayout="row" fxLayoutAlign="center center" class="mt-12">
         <div class="image">
           <img
-            *ngIf="post.src && post.src.length > 0"
+            *ngIf="post.src"
             [src]="post.src"
             class="huge m-0"
           />
@@ -85,7 +85,7 @@
             (click)="file.click()"
           >
             <mat-icon>{{
-              post.src && post.src.length > 0 ? "edit" : "add_photo_alternatet"
+              post.src  ? "edit" : "add_photo_alternatet"
             }}</mat-icon>
           </button>
           <input

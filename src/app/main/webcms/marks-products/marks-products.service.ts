@@ -11,7 +11,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { Product } from './models/product';
 import { resizeImage } from 'app/common/tools/main-tools';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const MARKS_IMAGE_SIZE = { width: 300, height: 200 };
 const PRODUCTS_IMAGE_SIZE = { width: 1366, height: 905 };

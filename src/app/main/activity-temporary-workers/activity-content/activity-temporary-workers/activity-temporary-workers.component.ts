@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivityTemporaryWorkerService } from '../../activity-temporary-workers.service';
 import { CompleteEmployee } from 'app/main/activity/models/completeEmployee';
 import { fuseAnimations } from '@fuse/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 import { Department } from 'app/common/models/department';

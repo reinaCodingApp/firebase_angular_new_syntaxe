@@ -1,7 +1,7 @@
 import { ChangelogService } from './../../changelog.service';
 import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 import { AppVersion, VersionDetail } from '../../models/app-version';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-version-dialog',

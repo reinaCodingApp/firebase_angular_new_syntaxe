@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule } from '@fuse/components';

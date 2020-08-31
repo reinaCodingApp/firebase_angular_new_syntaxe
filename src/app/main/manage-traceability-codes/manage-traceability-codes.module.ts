@@ -7,7 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule } from '@fuse/components';

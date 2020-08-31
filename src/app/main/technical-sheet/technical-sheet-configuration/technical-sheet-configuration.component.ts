@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { EmployeeLevel } from 'app/main/followup-sheet/models/employeeLevel';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Habilitation } from 'app/main/access-rights/models/habilitation';
 import { AdditiveProvider } from '../models/additiveProvider';
 import { AddEmployeelevelDialogComponent } from 'app/main/followup-sheet/followup-sheet-configuration/dialogs/add-employeelevel-dialog/add-employeelevel-dialog.component';

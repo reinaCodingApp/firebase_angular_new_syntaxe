@@ -13,7 +13,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatDatepickerModule, MatTableModule, MatTabsModule, MatPaginatorModule, MatChipsModule, MatAutocompleteModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule } from '@fuse/components';

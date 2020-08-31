@@ -42,7 +42,7 @@ export class TimelineService {
       .snapshotChanges()
       .subscribe(response => {
         if (response) {
-          const publicMessages = response.map(message => ({ uid: message.payload.doc.id, ...message.payload.doc.data() } as PublicMessage));
+          const publicMessages = response.map(message => ({ uid: message.payload.doc.id, ...message.payload.doc.data() as {} } as PublicMessage));
           publicMessages.forEach(m => {
             this.angularFirestore.collection(firestoreCollections.publicComments, query => query.where('parentId', '==', m.uid))
               .snapshotChanges()
@@ -115,7 +115,7 @@ export class TimelineService {
     this.angularFirestore.collection(firestoreCollections.news, query => query.orderBy('date', 'desc'))
       .snapshotChanges()
       .subscribe(data => {
-        const news = data.map(i => ({ uid: i.payload.doc.id, ...i.payload.doc.data() } as News));
+        const news = data.map(i => ({ uid: i.payload.doc.id, ...i.payload.doc.data() as {} } as News));
         this.onNewsChanged.next(news);
       });
   }
