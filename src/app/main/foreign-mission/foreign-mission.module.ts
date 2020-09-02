@@ -25,6 +25,7 @@ import { AddForeignMissionDialogComponent } from './dialogs/add-foreign-mission-
 import { ForeignMissionService } from './foreign-mission.service';
 
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
@@ -53,6 +54,7 @@ const routes: Routes = [
     MatSelectModule,
     MatMomentDatetimeModule,
     MatDatetimepickerModule,
+    NgxMatSelectSearchModule,
 
     FuseSidebarModule,
     FuseSharedModule,

@@ -8,6 +8,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
 import { MatDialog } from '@angular/material/dialog';
 import { ClonePermissionsDialogComponent } from './dialogs/clone-permissions-dialog/clone-permissions-dialog.component';
+import { SharedNotificationService } from 'app/common/services/shared-notification.service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class AccessRightsComponent implements OnInit, OnDestroy {
 
   constructor(
     private accessRightsService: AccessRightsService,
+    private notificationsService: SharedNotificationService,
     private matDialog: MatDialog
   ) {
     this.displayColumns = ['a', ...EmbeddedDatabase.basicAccessRights];
@@ -67,6 +69,9 @@ export class AccessRightsComponent implements OnInit, OnDestroy {
     console.log(this.currentUser);
     this.accessRightsService.updateUserClaims(this.currentUser).then(result => {
       console.log('update result', result);
+      this.notificationsService.showSuccess('Permissions sont modifiés avec succès');
+    }).catch((err) => {
+      this.notificationsService.showStandarError();
     });
   }
 

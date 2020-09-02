@@ -33,7 +33,16 @@
           required
           [(ngModel)]="foreignMission.employee.id"
         >
-          <mat-option *ngFor="let employee of employees" [value]="employee.id">
+          <mat-option>
+            <ngx-mat-select-search
+              ngModel
+              name="searchINput"
+              (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let employee of filtredEmployees" [value]="employee.id">
             {{ employee.fullName }}
           </mat-option>
         </mat-select>

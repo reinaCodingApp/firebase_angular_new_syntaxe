@@ -20,6 +20,7 @@ import { MainTools } from 'app/common/tools/main-tools';
 export class AddForeignMissionDialogComponent implements OnInit {
   foreignMission: ForeignMissionActivity;
   employees: Employee[];
+  filtredEmployees: Employee[];
   sites: Site[];
 
   constructor(
@@ -43,6 +44,7 @@ export class AddForeignMissionDialogComponent implements OnInit {
   ngOnInit(): void {
     this._foreignMissionService.onEmployeesChanged.subscribe((employees) => {
       this.employees = employees;
+      this.filtredEmployees = employees;
     });
     this._foreignMissionService.onSitesChanged.subscribe((sites) => {
       this.sites = sites;
@@ -91,6 +93,14 @@ export class AddForeignMissionDialogComponent implements OnInit {
         this.addForeignMission();
       }
     }
+  }
+
+  searchEmployee(searchInput): void {
+    if (!this.employees) {
+      return;
+    }
+    searchInput = searchInput.toLowerCase();
+    this.filtredEmployees = this.employees.filter(d => d.fullName.toLowerCase().indexOf(searchInput) > -1);
   }
 
 }
