@@ -1,0 +1,10 @@
+<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign='center center'>
+  <span class="message m-8">
+    Une nouvelle version de l'application est disponible
+  </span>
+  <div fxLayout="row">
+    <button mat-raised-button (click)="refreshPage()" class="m-4">Actualiser</button>
+    <button mat-raised-button (click)="redirectToChangeLogPage()" class="m-4">Voir Nouveautés</button>
+  </div>
+</div>
+

@@ -57,6 +57,13 @@
   background-color: #bd362f !important;
 }
 
+.new-version-snackbar {
+  max-width: 60vw !important;
+  @include media-breakpoint("lt-md") {
+    max-width: 100% !important;
+  }
+}
+
 @media print {
   #non-printable {
     display: none !important;
@@ -111,4 +118,8 @@ i.fa {
 
 .ck-editor__editable {
   min-height: 320px  !important;
+}
+
+.new-version-snackbar {
+  background-color: #ef6c00 !important;
 }

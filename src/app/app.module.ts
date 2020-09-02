@@ -66,6 +66,7 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { MarksProductsModule } from './main/webcms/marks-products/marks-products.module';
+import { NewVersionSnackbarComponent } from './shared/new-version-snackbar/new-version-snackbar.component';
 
 const appRoutes: Routes = [
   {
@@ -76,7 +77,8 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NewVersionSnackbarComponent
   ],
   imports: [
     BrowserModule,
@@ -173,7 +175,8 @@ const appRoutes: Routes = [
   ],
   bootstrap: [
     AppComponent
-  ]
+  ],
+  entryComponents: [NewVersionSnackbarComponent]
 })
 export class AppModule {
 }

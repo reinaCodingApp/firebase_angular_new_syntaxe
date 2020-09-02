@@ -10,6 +10,8 @@ import { AccessRightsService } from './main/access-rights/access-rights.service'
 import { Habilitation } from './main/access-rights/models/habilitation';
 import { AppVersion } from './main/changelog/models/app-version';
 import { first, mergeMap, take } from 'rxjs/operators';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { NewVersionSnackbarComponent } from './shared/new-version-snackbar/new-version-snackbar.component';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +25,11 @@ export class AppService {
   onAppVersionChanged: BehaviorSubject<AppVersion>;
   latestKnownAppVersion: AppVersion = null;
 
-  constructor(private angularFireAuth: AngularFireAuth,
-              private angularFirestore: AngularFirestore
-              ) {
+  constructor(
+    private angularFireAuth: AngularFireAuth,
+    private angularFirestore: AngularFirestore,
+    private snackBar: MatSnackBar
+  ) {
     this.onShowConfigButtonChanged = new BehaviorSubject(false);
     this.onConfigurationUrlChanged = new BehaviorSubject('');
     this.onCurentUserChanged = new BehaviorSubject(null);
@@ -77,11 +81,11 @@ export class AppService {
 
     }
   }
-  getLastAppVersion(): Observable<DocumentChangeAction<unknown>[]>{
+  getLastAppVersion(): Observable<DocumentChangeAction<unknown>[]> {
     return this.angularFirestore.collection(firestoreCollections.appVersions,
-                                            query => query.where('published', '==', true)
-                                                          .orderBy('versionCode', 'desc')
-                                                          .limit(1)).snapshotChanges();
+      query => query.where('published', '==', true)
+        .orderBy('versionCode', 'desc')
+        .limit(1)).snapshotChanges();
   }
   getCurrentUser(): Observable<User> {
     if (this.currentUser) {
@@ -104,20 +108,20 @@ export class AppService {
       return Promise.resolve(this.currentUser);
     }
     return await this.angularFireAuth.authState.
-    pipe(first(), mergeMap(u => {
-          if (!u) {
-            return Promise.resolve(null);
+      pipe(first(), mergeMap(u => {
+        if (!u) {
+          return Promise.resolve(null);
+        }
+        return u.getIdTokenResult().then(claims => {
+          const user = { uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL } as User;
+          if (claims) {
+            user.customClaims = claims.claims;
           }
-          return u.getIdTokenResult().then(claims => {
-            const user = { uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL } as User;
-            if (claims) {
-              user.customClaims = claims.claims;
-            }
-            this.currentUser = user;
-            return user;
-          });
-        })
-     ).toPromise();
+          this.currentUser = user;
+          return user;
+        });
+      })
+      ).toPromise();
   }
 
   setConfigButtonParameters(visible: boolean, configurationUrl: string): void {
@@ -138,5 +142,18 @@ export class AppService {
           console.log(err);
         });
     });
+  }
+
+  displayNewAppVersionSnackBar(): void {
+    if (!this.currentUser.customClaims.isRoot) {
+      const config: MatSnackBarConfig = {
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['new-version-snackbar']
+      };
+      this.snackBar.openFromComponent(NewVersionSnackbarComponent, {
+        ...config
+      });
+    }
   }
 }

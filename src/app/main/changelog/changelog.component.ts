@@ -85,16 +85,7 @@ export class ChangelogComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response) {
           this.appVersions = response;
-          this.hasWaitingVersion = this.appVersions.length > 0 && !this.appVersions[0].published;          
-        }
-      });
-    this.appService.onAppVersionChanged.
-      pipe(takeUntil(this.unsubscribeAll))
-      .subscribe(response => {
-        if (this.appService.latestKnownAppVersion.versionCode < response.versionCode) {
-          if (!this.currentUser.customClaims.isRoot) {
-            window.location.reload();
-          }
+          this.hasWaitingVersion = this.appVersions.length > 0 && !this.appVersions[0].published;
         }
       });
   }

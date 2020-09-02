@@ -80,7 +80,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.appService.latestKnownAppVersion = lastVersion;
         } else {
           if (lastVersion.versionCode > this.currentAppVersion.versionCode) {
-            this.router.navigate(['changelog']);
+            this.appService.displayNewAppVersionSnackBar();
           }
         }
         this.appService.onAppVersionChanged.next(lastVersion);
