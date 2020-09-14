@@ -42,62 +42,62 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'employee-tickets',
-    component: EmployeeTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: EmployeeTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'employee-tickets/:id',
-    component: EmployeeTicketDetailsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: EmployeeTicketDetailsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/pending',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/pending/:id',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/closed',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/closed/:id',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/urgent',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/urgent/:id',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/filter/:serviceId',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/filter/:serviceId/:id',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/search/:searchInput',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {
     path: 'admin-tickets/search/:searchInput/:id',
-    component: AdminTicketsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AdminTicketsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TicketService }
   },
   {

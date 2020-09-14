@@ -40,12 +40,12 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'technicalSheet',
-    component: TechnicalSheetComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: TechnicalSheetComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TechnicalSheetService }
   },
   {
     path: 'technicalSheet-configuration',
-    component: TechnicalSheetConfigurationComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: TechnicalSheetConfigurationComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TechnicalSheetService }
   }
 ];

@@ -29,7 +29,8 @@ import { AddNewsDialogComponent } from './timeline/dialogs/add-news-dialog/add-n
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { source: HomeService } }
+  { path: 'home', component: HomeComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { source: HomeService } }
 ];
 
 @NgModule({

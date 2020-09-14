@@ -33,13 +33,13 @@ const routes: Routes = [
   {
     path: 'monthlyMeeting',
     component: MonthlyMeetingComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MonthlyMeetingService }
   },
   {
     path: 'monthlyMeeting/details/:id',
     component: MonthlyMeetingDetailsComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MonthlyMeetingService }
   }
 ];

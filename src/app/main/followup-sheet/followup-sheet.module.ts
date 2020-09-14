@@ -36,33 +36,33 @@ const routes: Routes = [
   {
     path: 'followupSheet',
     component: FollowupSheetComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: FollowupSheetService }
   },
   {
     path: 'getLastRecap',
     component: FollowupSheetRecapComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: FollowupSheetService }
   },
   {
     path: 'followupSheet/getSheetRecap',
     component: FollowupSheetRecapComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: FollowupSheetService },
     runGuardsAndResolvers: 'paramsOrQueryParamsChange'
   },
     {
     path: 'FollowupSheet/GetSheetRecap',
     component: FollowupSheetRecapComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: FollowupSheetService },
     runGuardsAndResolvers: 'paramsOrQueryParamsChange'
   },
   {
     path: 'followupSheet-configuration',
     component: FollowupSheetConfigurationComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: FollowupSheetService }
   },
 ];

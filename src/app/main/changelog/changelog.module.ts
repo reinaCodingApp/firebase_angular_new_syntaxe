@@ -19,7 +19,7 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'changelog',
-    component: ChangelogComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: ChangelogComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: ChangelogService }
   }
 ];

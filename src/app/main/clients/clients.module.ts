@@ -38,7 +38,7 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'clients',
-    component: ClientsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: ClientsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: ClientsService }
   }
 ];

@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'manageTraceabilityCodes',
     component: ManageTraceabilityCodesComponent
-    , ...canActivate(redirectUnauthorizedToLoginPage),
+    , // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: ManageTraceabilityCodesService }
   }
 ];

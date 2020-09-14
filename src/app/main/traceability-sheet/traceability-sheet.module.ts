@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: 'traceabilitySheet',
     component: TraceabilitySheetComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TraceabilitySheetService }
   }
 ];

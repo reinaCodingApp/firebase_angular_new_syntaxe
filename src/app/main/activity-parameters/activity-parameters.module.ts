@@ -30,7 +30,8 @@ import { ParametersEmployeesComponent } from './parameters-employees/parameters-
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'activityParameters', component: ActivityParametersComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { resolve: ActivityParametersService } }
+  { path: 'activityParameters', component: ActivityParametersComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { resolve: ActivityParametersService } }
 ];
 
 @NgModule({

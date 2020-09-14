@@ -34,17 +34,17 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'marks-products/marks',
-    component: MarksComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: MarksComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MarksProductsService }
   },
   {
     path: 'marks-products/products',
-    component: ProductsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: ProductsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MarksProductsService }
   },
   {
     path: 'marks-products/products/product',
-    component: NewProductComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: NewProductComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MarksProductsService }
   }
 ];

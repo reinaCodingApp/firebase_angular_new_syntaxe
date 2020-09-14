@@ -29,7 +29,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'foreignMission', component: ForeignMissionComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { resolve: ForeignMissionService } }
+  { path: 'foreignMission', component: ForeignMissionComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { resolve: ForeignMissionService } }
 ];
 
 @NgModule({

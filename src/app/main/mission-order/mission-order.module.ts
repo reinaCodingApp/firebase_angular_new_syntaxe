@@ -41,7 +41,7 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'missionOrder',
-    component: MissionOrderComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: MissionOrderComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MissionOrderService }
   }
 ];

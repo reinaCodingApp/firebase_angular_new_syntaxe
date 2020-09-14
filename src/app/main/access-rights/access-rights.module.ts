@@ -31,14 +31,14 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes = [
   {
     path: 'access-rights/:userId',
-    component: AccessRightsComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AccessRightsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AccessRightsService
     }
   },
   {
     path: 'settings/modules',
-    component: ModulesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: ModulesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AccessRightsService
     },

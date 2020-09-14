@@ -27,7 +27,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'paymentStatistics', component: ActivityStatisticsComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { resolve: ActivityStatisticsService } }
+  { path: 'paymentStatistics', component: ActivityStatisticsComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { resolve: ActivityStatisticsService } }
 ];
 
 @NgModule({

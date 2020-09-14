@@ -33,52 +33,52 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'webcms/discussions',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/discussions/:id',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/frauds',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/frauds/:id',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/closed',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/closed/:id',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/filter/:departmentId',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/filter/:departmentId/:id',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/search/:searchInput',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
   {
     path: 'webcms/search/:searchInput/:id',
-    component: WebMessagesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: WebMessagesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: WebMessagesService }
   },
 

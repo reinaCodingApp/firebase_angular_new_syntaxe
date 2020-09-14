@@ -38,49 +38,49 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes = [
   {
     path: 'audits/:poleId',
-    component: AuditListComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditListComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     }
   },
   {
     path: 'audit-detail/:auditId',
-    component: AuditDetailComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditDetailComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     }
   },
   {
     path: 'audits-administration/:poleId',
-    component: AuditAdministrationComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditAdministrationComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     },
   },
   {
     path: 'audits-templates/:templateId',
-    component: AuditEditTemplateComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditEditTemplateComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     },
   },
   {
     path: 'audits-possibleValues',
-    component: AuditPossibleValuesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditPossibleValuesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     }
   },
   {
     path: 'audit-poles',
-    component: AuditPolesComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditPolesComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     }
   },
   {
     path: 'audit-print/:auditId',
-    component: AuditPrintComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: AuditPrintComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: {
       main: AuditsService
     }

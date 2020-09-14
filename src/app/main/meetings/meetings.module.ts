@@ -38,13 +38,13 @@ const routes: Routes = [
   {
     path: 'meetings',
     component: MeetingsComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MeetingsService }
   },
   {
     path: 'meetings/:instanceId',
     component: MeetingsComponent,
-    ...canActivate(redirectUnauthorizedToLoginPage),
+    // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: MeetingsService }
   }
 ];

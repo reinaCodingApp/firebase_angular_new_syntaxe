@@ -26,7 +26,8 @@ import { DatePipe } from '@angular/common';
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'recapActivity', component: RecapActivityComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { resolve: RecapActivityService } }
+  { path: 'recapActivity', component: RecapActivityComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { resolve: RecapActivityService } }
 ];
 
 @NgModule({

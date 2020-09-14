@@ -29,7 +29,8 @@ import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/cust
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'absences', component: ActivityAbsenceComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { resolve: ActivityAbsenceService } }
+  { path: 'absences', component: ActivityAbsenceComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { resolve: ActivityAbsenceService } }
 ];
 
 @NgModule({

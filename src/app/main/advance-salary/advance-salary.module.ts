@@ -27,7 +27,8 @@ import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/cust
 
 const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
-  { path: 'advanceSalary', component: AdvanceSalaryComponent, ...canActivate(redirectUnauthorizedToLoginPage), resolve: { resolve: AdvanceSalaryService } }
+  { path: 'advanceSalary', component: AdvanceSalaryComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
+  resolve: { resolve: AdvanceSalaryService } }
 ];
 
 @NgModule({

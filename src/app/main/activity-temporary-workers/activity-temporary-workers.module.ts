@@ -41,7 +41,7 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'activity/interim',
-    component: ActivityTemporaryWorkerComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: ActivityTemporaryWorkerComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: ActivityTemporaryWorkerService }
   }
 ];

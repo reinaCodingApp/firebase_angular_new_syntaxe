@@ -43,7 +43,7 @@ const redirectUnauthorizedToLoginPage = redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
     path: 'tonnage',
-    component: TonnageComponent, ...canActivate(redirectUnauthorizedToLoginPage),
+    component: TonnageComponent, // ...canActivate(redirectUnauthorizedToLoginPage),
     resolve: { resolve: TonnageService }
   }
 ];
