@@ -33,11 +33,12 @@ export class QuickPanelComponent implements OnInit {
     this.appService.onCurentUserChanged.subscribe(user => {
       if (user) {
         this.showSettingsButton = user.customClaims.isRoot || user.customClaims.isTechAdmin;
+        this.followupSheetService.getPendingTasks().subscribe((pendingTasks) => {
+          this.pendingTasks = pendingTasks;
+        });
       }
     });
 
-    this.followupSheetService.getPendingTasks().subscribe((pendingTasks) => {
-      this.pendingTasks = pendingTasks;
-    });
+
   }
 }
