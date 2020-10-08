@@ -1,3 +1,5 @@
+import { Pole } from './pole';
+import { Sector } from './sector';
 import { Employee } from '../../../common/models/employee';
 
 export class EmployeeLevel {
@@ -16,4 +18,7 @@ export class EmployeeLevel {
   isCodirMember: boolean;
   isSuperAdmin: boolean;
   profileNumber: number;
+  sector: Sector;
+  pole: Pole;
+
 }

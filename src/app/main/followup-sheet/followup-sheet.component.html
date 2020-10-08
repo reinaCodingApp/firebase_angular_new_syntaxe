@@ -31,20 +31,12 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-raised-button color="accent" class="m-8" *ngIf="false"
-        (click)="displayPrecedentWeekForAdmin()">
-        Charger la semaine précédente
-      </button>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="end center">
       <button mat-stroked-button color="warn" class="m-8" [disabled]="!canEdit" (click)="submitOrCloseSheet()">
         <mat-icon>send</mat-icon>
         Finaliser et envoyer
-      </button>
-      <button *ngIf="false" mat-raised-button color="warn" class="m-8"
-        (click)="commonService.toggleSidebar('deadlines-sidebar')" fxHide.gt-lg>
-        Deadlines
       </button>
     </div>
   </div>
@@ -152,7 +144,7 @@
                 <div fxFlex="75" class="point-content">
                   <mat-form-field class="p-0" class="w-100-p">
                     <textarea class="pr-48 pb-4" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                      cdkAutosizeMinRows="1" name="note{{ i }}" [(ngModel)]="point.content" matInput (change)="addOrUpdatePoint(point, folderIndex, i)">
+                      cdkAutosizeMinRows="0" name="note{{ i }}" [(ngModel)]="point.content" matInput (change)="addOrUpdatePoint(point, folderIndex, i)">
                 </textarea>
                   </mat-form-field>
                   <button class="remove" mat-icon-button (click)="deletePoint(point.id, i, folder)">

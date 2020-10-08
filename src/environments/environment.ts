@@ -18,7 +18,7 @@ export const firebaseConfig = {
 };
 
 export const firebaseCloudMessagingKey = 'AIzaSyD5VWN0wLdTKoFrX2r3JCpdsBCgoP0yrfA';
-export const BASE_URL = 'https://dev.version2.api.avs.fr/';
+export const BASE_URL = 'http://localhost:14444/';
 
 /*
  * For easier debugging in development mode, you can import the following file

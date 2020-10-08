@@ -64,6 +64,9 @@ export class FollowupSheetComponent implements OnInit, OnDestroy {
         this.employeeLevelId = followupSheetViewModel.connectedEmployeeLevel.id;
         this.hierarchyLevel = followupSheetViewModel.connectedEmployeeLevel.hierarchyLevel;
         this.connectedEmployeeLevel = followupSheetViewModel.connectedEmployeeLevel;
+        if (this.isLimitedPole(this.connectedEmployeeLevel.pole)) {
+          this.notes = EmbeddedDatabase.notes.filter(n => n.noteValue === 3 || n.noteValue === 6);
+        }
         this.poles = followupSheetViewModel.poles;
         this.canEdit = followupSheetViewModel.canEdit;
         this.sheet = followupSheetViewModel.sheet;
@@ -88,7 +91,9 @@ export class FollowupSheetComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+  private isLimitedPole(pole: Pole): boolean {
+    return pole.id === 5 || pole.id === 7;
+  }
   addSimpleTask(currentSection: Section): void {
     this.dialogRef = this._matDialog.open(AddSimpletaskDialogComponent, {
       panelClass: 'mail-compose-dialog',
@@ -234,7 +239,7 @@ export class FollowupSheetComponent implements OnInit, OnDestroy {
   createNewPoint(folder: Folder): void {
     const point: Point = {
       id: 0,
-      note: 1,
+      note: this.notes[0].noteValue,
       content: '',
       ownerId: folder.ownerId,
       folderId: folder.id,

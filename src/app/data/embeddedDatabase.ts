@@ -16,12 +16,12 @@ export class EmbeddedDatabase {
   public static readonly availableClaims = ['techAdmin', 'root', 'guest', 'HrM', 'SeM', 'AdM', 'Dir'];
 
   public static readonly notes = [
-    { noteValue: 1, noteText: 'Info au Codir', title: 'CODIR' },
-    { noteValue: 2, noteText: 'Info au CA', title: 'CA' },
-    { noteValue: 3, noteText: 'Info au Management', title: 'MGT' },
-    { noteValue: 4, noteText: 'Traitement Codir', title: 'CODIR' },
+    { noteValue: 1, noteText: 'Info AVS FR', title: 'AVS FR' },
+    { noteValue: 2, noteText: 'Info CA', title: 'CA' },
+    { noteValue: 3, noteText: 'Info GEIE', title: 'GEIE' },
+    { noteValue: 4, noteText: 'Traitement AVS FR', title: 'AVS FR' },
     { noteValue: 5, noteText: 'Traitement CA', title: 'CA' },
-    { noteValue: 6, noteText: 'Traitement Manangement', title: 'MGT' }
+    { noteValue: 6, noteText: 'Traitement GEIE', title: 'GEIE' }
   ];
   public static readonly basicAccessRights = ['get', 'list', 'create', 'edit', 'delete', 'admin', 'superAdmin'];
   public static readonly modulesUniqueKeys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',

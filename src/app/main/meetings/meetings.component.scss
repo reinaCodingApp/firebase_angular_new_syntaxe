@@ -12,6 +12,7 @@
       margin: 16px;
       padding: 16px;
       border-radius: 4px;
+      height: auto;
       @include mat-elevation(1);
 
       @include media-breakpoint("xs") {
@@ -23,8 +24,9 @@
         text-decoration: none !important;
         border: 1px solid;
         border-radius: 5px;
-        margin-bottom: 8px;
+        margin-bottom: 16px;
         border-color: #0000001f;
+
       }
     }
   }

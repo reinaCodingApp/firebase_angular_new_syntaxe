@@ -44,21 +44,17 @@
               *ngFor="let sector of pole.sectors"
               (click)="changeSelectedPole(pole, sector)"
             >
-              <img [src]="sector.pictogram" style="width:15%;" class="mr-8" />
-              <span
-              [matBadge]="sector.taskItemsCount"
-              [matBadgeHidden]="sector.taskItemsCount == 0"
-              matBadgeOverlap="false"
-              >{{ sector.name }}
-            </span>
-            <span
-              [matBadge]="sector.lastWeeksTaskItemsCount"
-              [matBadgeHidden]="sector.lastWeeksTaskItemsCount == 0"
-              matBadgeOverlap="false"
-              matBadgeColor="warn"
-              style="bottom: 10px;
-              left: 20%;"
-            >
+            <div class="p-4" fxLayout="column" fxLayoutAlign="start" [matBadge]="sector.taskItemsCount" [matBadgeHidden]="sector.taskItemsCount == 0" matBadgeOverlap="false">
+              <span class="font-size-18">
+                {{ sector.name }}
+              </span>
+              <span class="m-0 mat-caption">{{sector.responsible.fullName}}</span>
+            </div>
+
+            <span [matBadge]="sector.lastWeeksTaskItemsCount"
+                  [matBadgeHidden]="sector.lastWeeksTaskItemsCount == 0"
+                  matBadgeOverlap="false"
+                  matBadgeColor="warn">
             </span>
             </mat-list-item>
           </mat-nav-list>
@@ -120,11 +116,7 @@
                               }"
                               (click)="currentSector = sector"
                             >
-                              <img
-                                [src]="sector.pictogram"
-                                style="width:12%;"
-                                class="mr-8"
-                              />
+
                               <span
                                 [matBadge]="sector.taskItemsCount"
                                 [matBadgeHidden]="sector.taskItemsCount == 0"
