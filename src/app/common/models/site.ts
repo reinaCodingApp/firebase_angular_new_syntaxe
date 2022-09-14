@@ -1,4 +1,4 @@
-import { SiteType } from '../../main/sites/models/siteType';
+import { SiteType } from './site-type';
 
 export class Site {
   id: number;

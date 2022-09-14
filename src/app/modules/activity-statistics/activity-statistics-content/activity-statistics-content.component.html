@@ -1,0 +1,176 @@
+<!-- HEADER -->
+<div class="w-full">
+  <div class="h-36 sm:h-20 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
+  " color="primary">
+    <div class="flex justify-between w-full">
+      <div class="flex items-center ">
+        <button mat-icon-button (click)="activityStatistics.drawer.toggle()" class="ml-2">
+          <mat-icon class="text-white">reorder</mat-icon>
+        </button>
+        <span class="text-white text-2xl">Paies</span>
+      </div>
+  </div>
+</div>
+    <!-- / HEADER -->
+
+ 
+    <div  *ngIf="stats != null" class="flex flex-row p-4 w-full">
+        <div class="p-3 mat-card mr-2">
+          <h1 class=" text-xl text-red-700   mt-4  mb-4">{{ stats.employeeName }}</h1>
+          <h2 class=" text-xl text-red-700  mt-4  mb-4">Statistiques sur période personnalisée</h2>
+          <h3 class="font-bold text-xl text-red-700 mb-2 mt-4 ">Temps de travail</h3>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Jours réellement travaillés :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.dayRealyWorked }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm ">
+            <div >
+              <span class="order-title">Jours de travail effectif :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.dayEffectiveWorked }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures réellement travaillées :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.hourRealyWorkedHundredth
+                : stats.hourRealyWorked
+                }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures de travail effectif:</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.hourEffectiveWorkedHundredth
+                : stats.hourEffectiveWorked
+                }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Tickets restaurants :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.mealTicket }}</span>
+            </div>
+          </div>
+          <!--Heures supplémentaires  -->
+          <h3 class="font-bold text-xl text-red-700 mb-2 mt-4 ">Heures supplémentaires</h3>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures complémentaires</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.additionalHoursHundredth
+                : stats.additionalHours
+                }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures supplémentaires +25 :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.overtime25Hundredth
+                : stats.overtime25
+                }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures supplémentaires +50 :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.overtime50Hundredth
+                : stats.overtime50
+                }}</span>
+            </div>
+          </div>
+          <!--Heures majorées  -->
+          <h3 class="font-bold text-xl text-red-700 mb-2 mt-4 ">Heures majorées</h3>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures majorées +25 :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.plusTime25Hundredth
+                : stats.plusTime25
+                }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Heures majorées +50 :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{
+                showDataCentiemeFormat
+                ? stats.plusTime50Hundredth
+                : stats.plusTime50
+                }}</span>
+            </div>
+          </div>
+          <!-- Primes & Avantages -->
+          <h3 class="font-bold text-xl text-red-700 mb-2 mt-4 ">Primes & Avantages</h3>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Panier repas : </span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.lunchBag }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Prime de trajet : </span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.travelAdvantage }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Compteur compensatoire : </span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.compensationCounter }}</span>
+            </div>
+          </div>
+          <div  class="mb-4 w-full flex flex-row  justify-between text-sm">
+            <div >
+              <span class="order-title">Prime de remplacement :</span>
+            </div>
+            <div>
+              <span class="p-2 bg-gray-100 font-bold">{{ stats.replacementAdvanage }}</span>
+            </div>
+          </div>
+        </div>
+      <div class=" w-full flex flex-col ">
+        <stats-overtime-details [statsOvertimeDetails]="stats.employeeOverTimeDetails"></stats-overtime-details>
+        <stats-mission-abroad [statsMissionAbroad]="stats.employeeMissionAbroadViewModels">
+        </stats-mission-abroad>
+      </div>
+    </div>
+  </div>
+

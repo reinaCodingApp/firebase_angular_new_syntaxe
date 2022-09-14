@@ -1,0 +1,47 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between h-16 pl-6 sm:pl-8 
+    bg-primary text-on-primary">
+    <div class="text-lg font-medium">
+      {{
+      data.mode == "edit"
+      ? "Modifier un jour férié"
+      : "Ajouter un jour férié"
+      }}
+    </div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <!-- /Header -->
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" name="composeForm" class="flex flex-col p-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Titre</mat-label>
+      <input #title="ngModel" [(ngModel)]="activityHoliday.title" placeholder="Titre" matInput name="title" required
+        minlength="3" />
+      <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">
+        Veuillez renseigner le titre (3 caractères minimum) !
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Date</mat-label>
+      <input #date="ngModel" matInput [matDatepicker]="datePicker" placeholder="Date" [(ngModel)]="activityHoliday.date"
+        name="date" required />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+      <mat-error *ngIf="date.invalid && (date.dirty || date.touched)">
+        Veuillez renseigner la date!
+      </mat-error>
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="activityHoliday.isStatic" name="isStatic">Statique ?</mat-checkbox>
+       <!-- Actions -->
+       <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+        <div class="ml-auto">
+      <button mat-raised-button color="accent" type="submit">
+        {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+        <mat-icon>check</mat-icon>
+      </button>
+    </div>
+  </div>
+  </form>
+</div>

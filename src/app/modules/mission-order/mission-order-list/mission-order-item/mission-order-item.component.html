@@ -1,0 +1,21 @@
+<div class="flex flex-col border-b-2 border-gray-100  px-7 py-4 hover:cursor-pointer">
+  <div class="flex flex-row justify-between">
+    <div class="mb-4">
+      <span>{{ missionOrder.owner.fullName | uppercase }}</span>
+      <p>{{ missionOrder.title }}</p>
+    </div>
+
+    <div *ngIf="habilitation.canEdit()">
+      <button mat-icon-button color="primary" class="mat-elevation-z1 ml-1" (click)="
+              $event.preventDefault();
+              $event.stopPropagation();
+              updateMissionOrder(missionOrder)
+            ">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="message text-truncate">
+    {{ missionOrder.date | date: 'dd/MM/yyyy HH:mm:ss' }}
+  </div>
+</div>

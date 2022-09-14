@@ -1,0 +1,39 @@
+<div class="demo-sidebar">
+  <form #f="ngForm" class="flex flex-col mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4" name="form">
+    <div>
+      <h3>Impression d'agréments</h3>
+    </div>
+    <div class="mt-8">
+      <mat-form-field appearance="outline" class="flex-auto w-full">
+        <mat-label>Sites</mat-label>
+        <mat-select [(ngModel)]="selectedSite" name="site">
+          <mat-option *ngFor="let site of sites" [value]="site">
+            {{ site.name }}
+          </mat-option>
+        </mat-select>
+        <button matSuffix mat-icon-button color="accent" (click)="$event.stopPropagation();addSiteForPrint()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="mb-8 mat-elevation-z3 custom-panel">
+      <div class=" text-center" *ngIf="selectedSites.length == 0">
+        <p class="m-8 ">Séléctionner des sites</p>
+      </div>
+      <div *ngFor="let site of selectedSites; index as i">
+        <div class="flex flex-row items-center justify-between p-2">
+
+          <p>{{ site.name }}</p>
+          <button mat-icon-button color="warn" (click)="removeSite(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+      </div>
+    </div>
+    <button mat-raised-button color="warn" (click)="printAgreement()">
+      Imprimer
+      <mat-icon class="ml-2">print</mat-icon>
+    </button>
+  </form>
+</div>

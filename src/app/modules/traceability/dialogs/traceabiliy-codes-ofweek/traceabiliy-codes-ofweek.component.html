@@ -1,0 +1,87 @@
+<div class="flex flex-col max-w-200 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">
+      Codes de la semaine
+    </div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+</div>
+ 
+
+  <div mat-dialog-content fusePerfectScrollbar class="mt-12">
+    <div>
+      <div> 
+        <div>
+          <mat-radio-group (change)="traceabilityWeekCode.code = null" class="mb-12" aria-label="Choisir une option" [(ngModel)]="codeMode">
+            <mat-radio-button class="mb-4 pr-12" value="fromCodes">Choisir depuis la liste des
+              codes</mat-radio-button>
+            <mat-radio-button value="customCode">Ajouter un code manuellement</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div *ngIf="habilitation.canCreate()" class="p-2 flex items-center">
+        <mat-form-field appearance="outline" *ngIf="codeMode == 'fromCodes'" class="mr-2">
+          <mat-label>Code</mat-label>
+          <mat-select msInfiniteScroll (infiniteScroll)="getNextCodes()" [complete]="paginationParameter.start >= total"
+            [threshold]="'30%'" name="code" [(ngModel)]="traceabilityWeekCode.code"
+            (openedChange)="openedChange($event)">
+            <mat-option>
+              <ngx-mat-select-search [(ngModel)]="searchInput" name="searchINput" (ngModelChange)="searchCode($event)"
+                placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"
+                disableScrollToActiveOnOptionsChanged="true"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let code of codes" [value]="code.code">
+              {{ code.code }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- Custom Code -->
+        <mat-form-field appearance="outline" *ngIf="codeMode == 'customCode'" class="mr-2" >
+          <mat-label>Code</mat-label>
+          <input matInput [(ngModel)]="traceabilityWeekCode.code" class="text-uppercase" minLength="3" maxLength="3" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Forme</mat-label>
+          <mat-select name="shape" required [(ngModel)]="traceabilityWeekCode.shape">
+            <mat-option *ngFor="let shape of shapes" [value]="shape.shape">
+              {{ shape.shape }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button class="p-0"  type="submit" mat-icon-button color="accent"  (click)="addCode()"
+          [disabled]="
+            !(
+              traceabilityWeekCode?.code &&
+              traceabilityWeekCode?.shape
+            )
+          ">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <!-- TAMPON LIST -->
+      <div *ngFor="
+          let traceabilityWeekCode of traceabilityPlanification.traceabilityWeekCodes;
+          index as i
+        ">
+        <div class="flex items-center justify-center">
+          <p class="m-4">
+            {{ traceabilityWeekCode.code }}
+          </p>
+          <p class="m-4" >
+            {{ traceabilityWeekCode.shape }}
+          </p>
+          <div>
+            <button *ngIf="habilitation.canDelete()" mat-icon-button color="warn"
+              (click)="deleteTraceabilityWeekCode(traceabilityWeekCode)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

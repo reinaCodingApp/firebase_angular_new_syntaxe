@@ -1,0 +1,56 @@
+<!-- SIDEBAR CONTENT -->
+<div class="mt-10 p-4 pt-10  pl-0" fusePerfectScrollbar>
+  <div class="flex flex-col items-center justify-center mb-6">
+    <button mat-raised-button class="" aria-label="Compose" color="primary" (click)="addTicket()">
+      Nouvelle demande
+    </button>
+  </div>
+  <div class="flex flex-col">
+    <div>
+      <a class="flex flex-row items-center p-2 pl-4 mr-3 w-full"
+        [ngClass]="{ 'bg-indigo-600 text-white rounded-r-full': 
+        currentUrl == 'admin-tickets/pending' }" 
+        [routerLink]="'/tickets/admin-tickets/pending'">
+        <mat-icon class="pr-1" [ngClass]="{ 'text-white':
+         currentUrl == 'admin-tickets/pending' }">email</mat-icon>
+        <span>
+          En cours
+        </span>
+      </a>
+    </div>
+    <div>
+      <a class="flex flex-row items-center p-2 pl-4 mr-3 w-full" [ngClass]="{ 'bg-indigo-600 text-white rounded-r-full':
+         currentUrl == 'admin-tickets/urgent' }" matRipple [routerLink]="'/tickets/admin-tickets/urgent'">
+        <mat-icon class="pr-1 text-red-600">label_outline</mat-icon>
+        <span>Urgent</span>
+      </a>
+    </div>
+    <div class="my-4 font-bold pl-3">SERVICES</div>
+    <div *ngFor="let service of services">
+      <a class="flex flex-row items-center p-2  pl-4 mr-3 w-full" [ngClass]="{
+          'bg-indigo-600 text-white rounded-r-full': currentUrl 
+          == 'admin-tickets/filter/' + service.id
+        }" [routerLink]="'/tickets/admin-tickets/filter/' + service.id" matRipple>
+        <mat-icon class="pr-1" [ngClass]="{ 'text-white':
+         currentUrl == 'admin-tickets/filter/' + service.id }">folder</mat-icon>
+        <span class="text-capitalized">{{ service.title }}</span>
+      </a>
+    </div>
+    <div class="my-4 font-bold pl-3">HISTORIQUE</div>
+    <div>
+      <a class="flex flex-row items-center p-2 mr-3  pl-4 w-full" [ngClass]="{ 'bg-indigo-600 text-white rounded-r-full': 
+        currentUrl == 'admin-tickets/closed' }" matRipple [routerLink]="'/tickets/admin-tickets/closed'">
+        <mat-icon class="pr-1 text-green-600" [ngClass]="{ 'text-white':
+         currentUrl == 'admin-tickets/closed' }">playlist_add_check</mat-icon>
+        <span>Clôturées</span>
+      </a>
+    </div>
+    <div *ngIf="inSearchMode === true">
+      <a class="p-2  pl-3 mr-3 bg-indigo-600 text-white rounded-r-full items-center flex flex-row" matRipple>
+        <mat-icon class="pr-1 text-green-600">search</mat-icon>
+        <span>Rechercher</span>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- / SIDEBAR CONTENT -->

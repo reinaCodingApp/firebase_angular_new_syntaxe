@@ -17,10 +17,12 @@ export class MainTools {
     return result;
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public static getFileSizeToString(size: number) {
     if (size < 8) {
       return size + ' bits';
     } else {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const size_on_octets = Math.round(size * 100 / 8) / 100;
       if (size_on_octets <= 1024) {
         return size_on_octets + ' octets';
@@ -41,7 +43,6 @@ export class MainTools {
     const myPrintContent = document.getElementById(contentToPrint);
     const printWindow = window.open();
     printWindow.document.write('<html><head><title></title>');
-    printWindow.document.write('<link rel="stylesheet" href="assets/printStyles/styles.css"" type="text/css" />');
     printWindow.document.write('</head><body >');
     printWindow.document.write(myPrintContent.innerHTML);
     printWindow.document.getElementById('hidden_div').style.display = 'block';
@@ -49,7 +50,7 @@ export class MainTools {
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
-    printWindow.onafterprint = (event) => {
+    printWindow.onafterprint = () => {
       printWindow.close();
     };
   }
@@ -107,10 +108,12 @@ export class MainTools {
 
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function resizeImage(file: File, expectedWidth: number, expectedHeight: number, keepAspectRatio: boolean = false): Promise<Blob> {
   return new Promise((resolve, reject) => {
       const image = new Image();
       image.src = URL.createObjectURL(file);
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       image.onload = () => {
           const originWidth = image.width;
           const originHeight = image.height;

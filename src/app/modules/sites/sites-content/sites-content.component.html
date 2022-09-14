@@ -1,0 +1,124 @@
+<!-- HEADER -->
+<div class="w-full">
+  <div class="h-36 sm:h-20 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
+  " color="primary">
+    <div class="flex justify-between w-full">
+      <div class="flex items-center ">
+        <button mat-icon-button (click)="sitesComponent.drawer.toggle()" class="ml-2">
+          <mat-icon class="text-white">reorder</mat-icon>
+        </button>
+        <span class="text-white text-2xl">Gestion des sites</span>
+      </div>
+  
+       <!-- Add btn for sm screen-->
+       <div class="flex sm:hidden m-0 sm:my-2" *ngIf="habilitation.canCreate()">
+        <button mat-icon-button matTooltip="Ajouter un site" class=" bg-red-500"
+         (click)="addSite()">
+          <mat-icon class=" text-white">add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+     <!-- SEARCH -->
+     <div class="sm:w-2/3 w-full mx-2 my-1 rounded-2xl shadow bg-indigo-100 flex items-center ">
+      <mat-icon class="text-dark h-2 pl-2 ">search</mat-icon>
+    
+      <input class="border-0 p-2  flex" placeholder="Rechercher" name="search" [(ngModel)]="siteFilter.filter"
+        (keyup.enter)="getFiltredSites()" />
+    </div> 
+    <!-- Add btn for lg screen-->
+    <div class="mr-4 hidden sm:flex " *ngIf="habilitation.canCreate()">
+      <button mat-icon-button matTooltip="Ajouter un site" class="items-end sm:items-start bg-red-500"
+       (click)="addSite()">
+        <mat-icon class=" text-white">add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div>
+    <!-- / HEADER -->
+   
+    <div class="p-4" [hidden]="!dataSource || dataSource.data.length === 0">
+      <mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>NOM</mat-header-cell>
+          <mat-cell *matCellDef="let site" class="text-white" [ngClass]="{
+        'bg-green-500': site.active,
+        'bg-red-400': !site.active
+      }">
+              {{ site.name }}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="city">
+          <mat-header-cell *matHeaderCellDef mat-sort-header 
+          class="">VILLE</mat-header-cell>
+          <mat-cell *matCellDef="let site" 
+          class="pl-2">
+              {{ site.city }}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="zipCode">
+          <mat-header-cell class="hidden sm:table-cell pt-4" *matHeaderCellDef mat-sort-header>CP</mat-header-cell>
+          <mat-cell class="hidden sm:table-cell pl-2" *matCellDef="let site"  >
+              {{ site.zipCode }}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>ACTIONS</mat-header-cell>
+          <mat-cell *matCellDef="let site">
+            <span class="job-title">
+              <button mat-button [matMenuTriggerFor]="actionsMenu">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #actionsMenu="matMenu">
+                <button mat-menu-item (click)="getSiteDetails(site)">
+                  <mat-icon color="primary">remove_red_eye</mat-icon>
+                  Details
+                </button>
+                <button mat-menu-item (click)="updateSite(site)" *ngIf="habilitation.canEdit()">
+                  <mat-icon color="accent">edit</mat-icon>
+                  Modifier
+                </button>
+                <button mat-menu-item (click)="setRestaurantVoucher(site)" *ngIf="habilitation.isAdmin()">
+                  <span [ngClass]="{
+                'text-green-600': site.isRestaurantVoucher,
+                'text-red-600': !site.isRestaurantVoucher
+              }">TR</span>
+                </button>
+                <button mat-menu-item (click)="setActivityMealBonus(site)" *ngIf="habilitation.isAdmin()">
+                  <span [ngClass]="{
+                'text-green-600': site.isActivityMealBag,
+                'text-red-600': !site.isActivityMealBag
+              }">PR</span>
+                </button>
+                <button mat-menu-item (click)="setIncludedInTraceability(site)" *ngIf="habilitation.isAdmin()">
+                  <span [ngClass]="{
+                'text-green-600': site.isIncludedInTraceability,
+                'text-red-600': !site.isIncludedInTraceability
+              }">TRACA</span>
+                </button>
+                <button mat-menu-item (click)="enableOrDisableSite(site)" *ngIf="habilitation.isAdmin()">
+                  <mat-icon color="warn">{{
+                    site.active ? "close" : "check"
+                    }}</mat-icon>
+                  {{ site.active ? "Résilier" : "Réactiver" }}
+                </button>
+              </mat-menu>
+            </span>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let site; columns: displayedColumns" class="activity">
+        </mat-row>
+      </mat-table>
+      <mat-paginator
+      [pageIndex]="pageIndex"
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 100]"
+      (page)="pageChanged($event)"
+    >
+    </mat-paginator>
+    </div>
+    <div [hidden]="dataSource && dataSource.data.length > 0">
+      <p class="p-6 w-full text-center text-gray-600 text-lg">Aucun élément à afficher</p>
+    </div>

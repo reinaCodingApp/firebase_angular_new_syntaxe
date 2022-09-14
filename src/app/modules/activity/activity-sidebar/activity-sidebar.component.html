@@ -1,0 +1,103 @@
+  <form
+    #f="ngForm"
+    (ngSubmit)="getActivities(f)"
+    class="flex flex-col mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4 pb-1" 
+    name="form"
+  >
+      <mat-form-field appearance="outline">
+        <mat-label>Sélection secteur</mat-label>
+        <mat-select
+          (selectionChange)="getEmployeesForDepartment()"
+          [(ngModel)]="selectedDepartment"
+          name="department"
+        >
+          <mat-option
+            *ngFor="let department of departments"
+            [value]="department"
+          >
+            {{ department.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Sélection salariés</mat-label>
+        <mat-select
+          multiple
+          required
+          [(ngModel)]="activityParameters.employees"
+          name="employees"
+        >
+          <mat-option>
+            <ngx-mat-select-search
+              ngModel
+              name="searchINput"
+              (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option
+            *ngFor="let employee of filtredEmployees"
+            [value]="employee"
+          >
+            {{ employee.fullName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Début</mat-label>
+        <input
+          required
+          matInput
+          [matDatepicker]="startDatePicker"
+          placeholder="Du"
+          [(ngModel)]="activityParameters.startDate"
+          name="startDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fin</mat-label>
+        <input
+          required
+          matInput
+          [matDatepicker]="endDatePicker"
+          placeholder="Au"
+          [(ngModel)]="activityParameters.endDate"
+          name="endDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+      <button type="submit" mat-raised-button color="accent" class="mb-2">
+        Afficher
+        <mat-icon class="ml-1">filter_list</mat-icon>
+      </button>
+      
+      <mat-checkbox class="my-3"
+        [(ngModel)]="displaySimpleList"
+        name="displaySimpleList"
+        (change)="changeDisplayMode($event.checked)"
+        >Mode tableau simplifié
+      </mat-checkbox>
+ 
+      <div class="legend ">
+        <label class="mat-body-2">Légende</label>
+        <ul>
+          <li class="flex items-center"><span class="inline-block w-4 h-4 mr-2 rounded-full bg-green-400"></span>Pointage terminé</li>
+          <li class="flex items-center"><span class="inline-block w-4 h-4 mr-2 rounded-full bg-red-400"></span>Congé / Absence</li>
+          <li class="flex items-center"><span class="inline-block w-4 h-4 mr-2 rounded-full bg-yellow-500"></span>Pointage non terminé</li>
+          <li class="flex items-center"><span class="inline-block w-4 h-4 mr-2 rounded-full bg-blue-500"></span>Absence récupération</li>
+          <li class="flex items-center"><span class="inline-block w-4 h-4 mr-2 rounded-full bg-purple-500"></span>Mission à l'étranger</li>
+          <li  class="flex items-center"><span class="inline-block w-4 h-4 mr-2 rounded-full
+             bg-gray-400"></span>Donnée manquante</li>
+        </ul>
+    </div>
+  </form>

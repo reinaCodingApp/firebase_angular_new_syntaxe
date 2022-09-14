@@ -1,0 +1,62 @@
+<!-- HEADER -->
+<div class="w-full">
+  <div class="h-30 p-6 sm:p-0 sm:h-20 items-center bg-indigo-600 flex 
+  justify-between flex-col sm:flex-row " color="primary">
+    <div class="flex items-center">
+      <span class="text-white text-2xl pl-0 sm:pl-10 ">Gestion des codes</span>
+    </div>
+    <!-- SEARCH -->
+    <div class="w-full sm:w-1/3 mx-10 my-1 rounded-3xl shadow bg-indigo-100 flex items-center ">
+      <div class="flex items-center">
+        <mat-icon class="text-dark h-2 pl-2">search</mat-icon>
+
+        <input [(ngModel)]="requestParameter.filter" (change)="getCodes()" #filter placeholder="Rechercher"
+          class="border-0 p-2 flex" />
+      </div>
+    </div>
+    <!-- / SEARCH -->
+  </div>
+  <div>
+    <!-- / CONTENT HEADER -->
+    <div class="p-4 px-10" [hidden]="!dataSource || dataSource.data.length === 0">
+      <table mat-table class="w-full" [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell class="pl-3 hidden sm:table-cell sm:w-1/12 w-2/12" *matHeaderCellDef mat-sort-header> Date </th>
+          <td mat-cell *matCellDef="let element" class="hidden  sm:table-cell pl-3">
+            {{element.date}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="code">
+          <th mat-header-cell class="pl-3 sm:pl-1 w-1/12" *matHeaderCellDef mat-sort-header> Code </th>
+          <td mat-cell *matCellDef="let element" class="pl-3 sm:pl-1">
+            {{element.code}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isAnExceptionCode">
+          <th mat-header-cell class="sm:w-2/12 w-3/12 hidden sm:table-cell"  *matHeaderCellDef mat-sort-header> Code exceptionnel ? </th>
+          <td mat-cell *matCellDef="let element" class="hidden sm:table-cell">
+            {{ element.isAnExceptionCode ? "Oui" : "Non" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="site">
+          <th mat-header-cell class="w-2/12" *matHeaderCellDef mat-sort-header> Site </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.site}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+
+      </table>
+      <mat-paginator  
+      (page)="pageChanged($event)"
+      [length]="totalElements"
+      [pageIndex]="pageNumber" 
+      [pageSize]="pageSize"
+      aria-label="sélectionner une page"></mat-paginator>
+
+    </div>
+    <div [hidden]="dataSource && dataSource.data.length > 0">
+      <p class="p-6 w-full text-center text-gray-600 text-lg">Aucun élément à afficher</p>
+    </div>

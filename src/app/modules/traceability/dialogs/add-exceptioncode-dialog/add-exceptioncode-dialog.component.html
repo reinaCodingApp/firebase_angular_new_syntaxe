@@ -1,0 +1,74 @@
+<div class="flex flex-col max-w-200 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">
+      Ajouter code exceptionel
+    </div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+</div>
+ 
+
+  <div mat-dialog-content  fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="addExceptionCode(f)"
+      name="exceptionCodeForm"
+      class="flex flex-col flex-auto p-2 sm:p-3 mt-8 overflow-y-auto"
+
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Code</mat-label>
+        <input
+          #code="ngModel"
+          matInput
+          name="code"
+          [(ngModel)]="exceptionalCode.code"
+          required
+          minLength="3"
+          maxLength="3"
+          class="text-uppercase"
+        />
+        <mat-error *ngIf="code.invalid && (code.dirty || code.touched)">
+          Veuillez renseigner le code !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="40">
+        <mat-label>Forme</mat-label>
+        <mat-select
+          #shape="ngModel"
+          name="shape"
+          required
+          [(ngModel)]="exceptionalCode.materialId"
+        >
+          <mat-option *ngFor="let shape of shapes" [value]="shape.id">
+            {{ shape.shape }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="shape.invalid && (shape.dirty || shape.touched)">
+          Veuillez renseigner la forme !
+        </mat-error>
+      </mat-form-field>
+      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+
+        <div
+          mat-dialog-actions
+          class="ml-auto"
+        >
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          [disabled]="exceptionalCode?.code?.length !== 3"
+        >
+          Ajouter
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+    </form>
+  </div>
+ 

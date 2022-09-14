@@ -1,0 +1,316 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">Détails site</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+
+
+  <div fusePerfectScrollbar>
+    <ng-template #addForm>
+      <form name="composeForm"  class="flex flex-col flex-auto  overflow-y-auto p-2" >
+        <mat-form-field appearance="outline">
+          <mat-label>Nom</mat-label>
+          <input
+            [(ngModel)]="site.name"
+            placeholder="Nom de site"
+            matInput
+            name="name"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Adresse</mat-label>
+          <input
+            [(ngModel)]="site.address"
+            placeholder="Adresse de site"
+            matInput
+            name="address"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Ville</mat-label>
+          <input
+            [(ngModel)]="site.city"
+            placeholder="Ville de site"
+            matInput
+            name="city"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Code postal</mat-label>
+          <input
+            [(ngModel)]="site.zipCode"
+            placeholder="Code postal"
+            matInput
+            name="zipCode"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Pays</mat-label>
+          <input
+            [(ngModel)]="site.country"
+            placeholder="Pays"
+            matInput
+            name="country"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Les coordonnées GPS</mat-label>
+          <input
+            [value]="'Lat. :' + site.latitude + 'Lon. :' + this.site.longitude"
+            placeholder="Les coordonnées GPS"
+            matInput
+            name="siteCoordonate"
+            readonly
+          />
+          <button class="mb-10"
+            type="button"
+            mat-raised-button
+            matSuffix
+            (click)="openGoogleMaps()"
+          >
+            Géolocaliser
+          </button>
+          <button            
+            mat-icon-button
+            type="button"
+            matSuffix
+            (click)="openGoogleMaps()"
+          >
+            <mat-icon>gps_fixed</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Téléphone</mat-label>
+          <input
+            [(ngModel)]="site.phone"
+            placeholder="Téléphone"
+            matInput
+            name="phone"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Fax</mat-label>
+          <input
+            [(ngModel)]="site.fax"
+            placeholder="Fax"
+            matInput
+            name="fax"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Numéro d'agrément</mat-label>
+          <input
+            [(ngModel)]="site.agreementNumber"
+            placeholder="Numéro d'agrément"
+            matInput
+            name="agreementNumber"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Date d"entrée</mat-label>
+          <input
+            [ngModel]="site.entryDate | date :'dd/MM/yyyy'"
+            placeholder="Date d'entrée"
+            matInput
+            name="entryDate"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="!site.active">
+          <mat-label>Date de sortie</mat-label>
+          <input
+            [ngModel]="site.releaseDate | date :'dd/MM/yyyy'"
+            placeholder="Date de sortie"
+            matInput
+            name="releaseDate"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Contact</mat-label>
+          <input
+            [(ngModel)]="site.contact"
+            placeholder="Contact"
+            matInput
+            name="contact"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            [(ngModel)]="site.email"
+            placeholder="Email"
+            matInput
+            name="email"
+            readonly
+          />
+        </mat-form-field>
+        <mat-checkbox
+          [(ngModel)]="site.displayInTheWebSite"
+          name="displayInTheWebSite"
+          readonly
+          disabled
+          class="pb-20"
+          >Afficher sur le site
+        </mat-checkbox>
+        <mat-form-field appearance="outline">
+          <mat-label>Raison Social</mat-label>
+          <input
+            [(ngModel)]="site.companyName"
+            placeholder="Raison Social"
+            matInput
+            name="companyName"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Site internet</mat-label>
+          <input
+            [(ngModel)]="site.webSite"
+            placeholder="Site internet"
+            matInput
+            name="webSite"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Estampille vétérinaire</mat-label>
+          <input
+            [(ngModel)]="site.veterinaryStamp"
+            placeholder="Estampille vétérinaire"
+            matInput
+            name="veterinaryStamp"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Remarques</mat-label>
+          <input
+            [(ngModel)]="site.comment"
+            placeholder="Remarques"
+            matInput
+            name="comment"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Departement</mat-label>
+          <input
+            [(ngModel)]="site.department.name"
+            matInput
+            name="departments"
+            readonly
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Types du partenaire</mat-label>
+          <mat-select
+            name="siteTypes"
+            [(ngModel)]="site.siteTypes"
+            multiple
+            readonly
+            disabled
+          >
+            <mat-option
+              *ngFor="let siteType of site.siteTypes"
+              [value]="siteType"
+            >
+              {{ siteType.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </ng-template>
+    <ng-template #completeRestaurant>
+      <mat-tab-group mat-align-tabs="center" mat-stretch-tabs class="p-2">
+        <mat-tab label="Site">
+          <div class="tab-content">
+            <ng-container *ngTemplateOutlet="addForm"></ng-container>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Restaurant">
+          <div class="tab-content">
+            <form
+              name="restaurantForm"             
+              class="flex flex-col flex-auto overflow-y-auto"
+            >
+              <mat-form-field appearance="outline">
+                <mat-label>Horaires d'ouverture</mat-label>
+                <input
+                  [(ngModel)]="site.openingTime"
+                  placeholder="Horaires d'ouverture"
+                  matInput
+                  name="openingTime"
+                  readonly
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Jours de fermeture</mat-label>
+                <input
+                  [(ngModel)]="site.closingDays"
+                  placeholder="Jours de fermeture"
+                  matInput
+                  name="closingDays"
+                  readonly
+                />
+              </mat-form-field>
+              <mat-checkbox
+                [(ngModel)]="site.isBookingPrefered"
+                name="isBookingPrefered"
+                readonly
+                disabled
+                >Réservation conseillée ?
+              </mat-checkbox>
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre de places</mat-label>
+                <input
+                  [(ngModel)]="site.numberOfSeats"
+                  placeholder="Nombre de places"
+                  matInput
+                  type="number"
+                  name="numberOfSeats"
+                  readonly
+                />
+              </mat-form-field>
+              <custom-chip-list
+                [allItems]="[]"
+                [labelTitle]="'Types de restaurants'"
+                [selectedItems]="site.restaurantTypes"
+                [removable]="false"
+              ></custom-chip-list>
+              <custom-chip-list
+                [allItems]="[]"
+                [labelTitle]="'Options'"
+                [selectedItems]="site.restaurantOptions"
+                [removable]="false"
+              ></custom-chip-list>
+              <custom-chip-list
+                [allItems]="[]"
+                [labelTitle]="'Spécialités'"
+                [selectedItems]="site.restaurantSpecialies"
+                [removable]="false"
+              ></custom-chip-list>
+            </form>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-template>
+    <ng-container *ngIf="!showRestaurantExtra(site); else completeRestaurant">
+      <ng-container *ngTemplateOutlet="addForm"> </ng-container>
+    </ng-container>
+  </div>
+</div>

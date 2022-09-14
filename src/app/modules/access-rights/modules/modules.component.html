@@ -1,0 +1,60 @@
+<div class="flex flex-col w-full ">
+  <!-- HEADER -->
+  <div class="bg-indigo-700 text-white p-6 flex flex-row items-center">
+    <div class="flex justify-between w-full">
+      <div class="flex items-center ">
+        <button matTooltip="Retour à la liste des utilisateurs" mat-icon-button [routerLink]="'/settings'">
+          <mat-icon class="text-white">arrow_back</mat-icon>
+        </button>
+
+        <span class="text-white text-2xl">
+          Gestion de modules
+
+        </span>
+      </div>
+
+      <button mat-fab color="warn" (click)="addOrUpdateModule(null, null, 'new')">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- / HEADER -->
+ 
+    <div class="m-5 columns-1 md:columns-3 ">
+  <div class="break-inside-avoid mb-3" *ngFor="let m of modules">
+    <div class=" bg-white border-2 border-gray-50 shadow-lg w-full ">
+      <div class="p-3 flex flex-row items-center justify-between">
+        <div class="font-bold text-lg">{{ m.title }}</div>
+        <div>
+          <button mat-button [matMenuTriggerFor]="actionsMenu">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+          <mat-menu #actionsMenu="matMenu">
+            <button *ngIf="m.type === 'collapsable'" mat-menu-item (click)="addOrUpdateModule(m, null, 'new')">
+              <mat-icon color="primary">add</mat-icon>
+              Ajouter
+            </button>
+            <button mat-menu-item (click)="addOrUpdateModule(m, null, 'edit')">
+              <mat-icon color="accent">edit</mat-icon>
+              Modifier
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      <table class="w-full pr-2 ">
+        <thead>
+          <tr class="border-b-2  border-b-gray-100">
+            <th class="text-right p-5">Name</th>
+            <th class="text-right p-5">Key</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b-2  border-b-gray-100" *ngFor="let child of m.children" (click)="addOrUpdateModule(m, child, 'edit')">
+            <td class="p-3 pl-6">{{ child.title }}</td>
+            <td class="p-3 pr-6 text-right">{{ child.key }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div></div>                       

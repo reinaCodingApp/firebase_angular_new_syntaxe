@@ -1,0 +1,123 @@
+<div class=" w-full">
+  <!-- HEADER -->
+  <div class="flex flex-row p-6 items-center bg-gray-700 text-white text-xl">
+    <button matTooltip="Retour à mes tickets" mat-icon-button class="mr-4" [routerLink]="'/tickets/employee-tickets'">
+      <mat-icon class="text-white">arrow_back</mat-icon>
+    </button>
+    <h1> {{ ticket.title }} </h1>
+  </div>
+  <!-- / HEADER -->
+  <div class=" p-6">
+    <div class="mat-card">
+      <header class="flex flex-row items-center p-4">
+        <div class="w-8 h-8 text-center pt-1.5 rounded-full bg-primary-200 mr-2">
+          {{ ticket.ownerFirstName[0] }}</div>
+        <div class="p-1 w-full">
+          <div>
+            <span class="username">{{
+              ticket.ownerLastName + " " + ticket.ownerFirstName
+              }}</span>
+          </div>
+          <div>
+            {{ ticket.date }} {{ ticket.time }}
+          </div>
+        </div>
+      </header>
+      <div class="p-4">
+        <div class="message" [innerHTML]="ticket.details"></div>
+        <div class="flex flex-row items-center" *ngIf="ticket.hasAttachments" >
+          <ul  class="mr-2" *ngFor="let attachment of ticket.attachments">
+            <li >
+              <a class="cursor-pointer text-blue-500 hover:underline" (click)="downloadAttachment(attachment)">
+                {{ attachment.fileName }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <footer>
+        <div class="p-4 flex flex-row items-center">
+          {{ ticket.comments ? ticket.comments.length : 0 }}
+          commentaires
+          <mat-icon class="text-sm">keyboard_arrow_down</mat-icon>
+        </div>
+        <div class="" *ngIf="ticket.comments && ticket.comments.length > 0">
+          <div class="flex flex-row items-center p-4" *ngFor="let comment of ticket.comments">
+    <div class="w-8 h-8 text-center pt-1.5 rounded-full bg-primary-200 mr-2">
+      {{ comment.owner[0] }}</div>
+
+            <div class="p-1 w-full">
+              <div>
+                <span class="username">
+                  {{ comment.owner | uppercase }}
+                </span>
+                <span class="time">
+                  {{ comment.date }} {{ comment.time }}
+                </span>
+              </div>
+              <div class="bg-indigo-600 text-white max-w-100 p-3 rounded" [innerHTML]="comment.content"></div>
+              <div class="flex flex-row items-center"  *ngIf="comment.hasAttachments">
+                <ul   class="mr-2" *ngFor="let attachment of comment.attachments">
+                  <li>
+                    <a class="cursor-pointer text-blue-500 hover:underline" (click)="downloadAttachment(attachment)">
+                      {{ attachment.fileName }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="flex flex-row items-center" *ngIf="ticket.hasAttachments" >
+                <ul  class="mr-2" *ngFor="let attachment of ticket.attachments">
+                  <li >
+                    <a class="cursor-pointer text-blue-500 hover:underline" (click)="downloadAttachment(attachment)">
+                      {{ attachment.fileName }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-row p-4" *ngIf="!ticket.isResolved">
+   
+          <div class="w-8 h-8 text-center pt-1.5 rounded-full bg-primary-200 mr-2">
+            {{ ticket.ownerFirstName[0] }}</div>
+      
+          <form class="w-full flex flex-col">
+            <textarea class="p-1 w-full border-2 border-gray-400 rounded-md" [(ngModel)]="newComment" rows="4"
+              name="commentMsg" placeholder=" Commentaire ..."></textarea>
+            <div class="mt-6 flex flex-row items-center justify-between">
+              <button (click)="addComment()" mat-raised-button color="accent" class="post-comment-button"
+                aria-label="Post Comment">
+                Envoyer
+              </button>
+
+              <div class="file-uploader">
+                <input hidden #file type="file" name="file" id="file" multiple="multiple" class="inputfile"
+                  (change)="preview(file.files)" />
+                <button mat-fab color="warn" type="button" (click)="file.click()">
+                  <mat-icon>attachment</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-row items-end place-content-end">
+              <div *ngFor="let file of filesToUpload" class="flex flex-row items-center">
+                <span>{{ file.name }}</span>
+                <button mat-icon-button (click)="removeFile(file)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div *ngIf="ticket.isResolved">
+          <button mat-raised-button>
+            Ce ticket a été clôturé
+          </button>
+        </div>
+      </footer>
+    </div>
+
+
+  </div>
+</div>

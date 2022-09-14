@@ -1,0 +1,143 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">{{
+      data.mode == "edit"   ? "Modifier niveau d'employé"
+      : "Ajouter un niveau d'employé"
+      }}</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  
+<!-- content -->
+
+ 
+ 
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSubmit(f)"
+      name="composeForm"
+      class="flex flex-col flex-auto p-6 overflow-y-auto">
+    
+      <mat-form-field appearance="outline">
+        <mat-label>Employé</mat-label>
+        <mat-select
+          #employee="ngModel"
+          name="employee"
+          required
+          [(ngModel)]="employeeLevel.employee.id"
+          [disabled]="data.mode == 'edit'"
+        >
+          <mat-option>
+            <ngx-mat-select-search
+              ngModel
+              name="searchINput"
+              (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option
+            *ngFor="let employee of filtredEmployees"
+            [value]="employee.id"
+          >
+            {{ employee.fullName }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+        >
+          Veuillez choisir un employé !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Responsable</mat-label>
+        <mat-select
+          #resposible="ngModel"
+          name="resposible"
+          required
+          [(ngModel)]="employeeLevel.responsible.id"
+        >
+          <mat-option>
+            <ngx-mat-select-search
+              ngModel
+              name="searchINput"
+              (ngModelChange)="searchResponsible($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option
+            *ngFor="let responsible of filtredResponsibles"
+            [value]="responsible.id"
+          >
+            {{ responsible.fullName }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="resposible.invalid && (resposible.dirty || resposible.touched)"
+        >
+          Veuillez choisir un responsable !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Niveau hiérarchique</mat-label>
+        <mat-select
+          #hierarchyLevel="ngModel"
+          name="hierarchyLevel"
+          required
+          [(ngModel)]="employeeLevel.hierarchyLevel"
+        >
+          <mat-option
+            *ngFor="let hierarchyLevel of hierarchyLevels"
+            [value]="hierarchyLevel.value"
+          >
+            {{ hierarchyLevel.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            hierarchyLevel.invalid &&
+            (hierarchyLevel.dirty || hierarchyLevel.touched)
+          "
+        >
+          Veuillez choisir un niveau hiérarchique !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Titre par default</mat-label>
+        <input
+          #sectionDefaultTitle="ngModel"
+          [(ngModel)]="employeeLevel.sectionDefaultTitle"
+          placeholder="Titre par default"
+          matInput
+          name="sectionDefaultTitle"
+          required
+          minlength="3"
+        />
+        <mat-error
+          *ngIf="
+            sectionDefaultTitle.invalid &&
+            (sectionDefaultTitle.dirty || sectionDefaultTitle.touched)
+          "
+        >
+          Veuillez renseigner le titre de la section (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+        <div class="ml-auto">
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+        >
+          {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+          <mat-icon class="ml-1">check</mat-icon>
+        </button>
+      </div>
+    </div>
+    </form>
+  
+</div>

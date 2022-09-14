@@ -1,0 +1,59 @@
+<form #f="ngForm" class="mat-card flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" name="form"
+  (ngSubmit)="updateEmployeeDepartments(f)">
+ <p>
+  <span class=" block sm:hidden mb-4 text-2xl font-bold">
+    Employé - Département
+  </span>
+  <span  class="hidden sm:block mb-2 text-2xl font-bold">
+    Associer un employé à un département
+  </span>
+ </p>
+  <mat-form-field appearance="outline">
+    <mat-label>Sélection employé</mat-label>
+    <mat-select (selectionChange)="selectedEmployeeChanged()" required [(ngModel)]="selectedEmployee" name="employee">
+      <mat-option>
+        <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchEmployee($event)"
+          placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let employee of filtredEmployees" [value]="employee">
+        {{ employee.fullName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-chip-list #chipList required>
+      <mat-chip *ngFor="let department of selectedDepartments; let indx = index" [selectable]="selectable"
+        [removable]="removable" (removed)="remove(indx)">
+        {{ department.name }}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Ajouter departement" #departmentInput [formControl]="departmentCtrl" [matAutocomplete]="auto"
+        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur" />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let department of filteredDepartments | async" [value]="department">
+        {{ department.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <h3>
+    Merci de sélectionner la zone par défault de l'utilisateur
+  </h3>
+  <mat-form-field appearance="outline">
+    <mat-label>Zone par défault</mat-label>
+    <mat-select required name="department" [(ngModel)]="defaultDepartment" [disabled]="!habilitation.isAdmin()">
+      <mat-option *ngFor="let department of selectedDepartments" [value]="department">
+        {{ department.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div *ngIf="habilitation.isAdmin()" class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+    <div class="ml-auto">
+      <button type="submit" mat-raised-button color="primary">
+        Mettre à jour
+        <mat-icon class="ml-1">check</mat-icon>
+      </button>
+    </div>
+  </div>
+</form>

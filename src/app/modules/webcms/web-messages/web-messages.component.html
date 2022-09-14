@@ -1,0 +1,68 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" 
+    [mode]="drawerMode" [disableClose]="disableClose"
+      [opened]="drawerOpened" #drawer>
+      <mail-main-sidebar></mail-main-sidebar>
+
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content class="flex flex-col">
+      <!-- CONTENT HEADER -->
+
+      <div class="flex justify-between items-center bg-indigo-600">
+        <div class="flex justify-between w-full h-40" >
+          <div class="flex items-center ">
+            <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
+              <mat-icon class="text-white">reorder</mat-icon>
+            </button>
+            <span class="text-white text-2xl">Boite de réception</span>
+          </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="w-full m-1  p-2 rounded-2xl shadow bg-indigo-100 flex items-center ">
+          <div class="flex w-full items-center justify-between ">
+            <div class="flex flex-row items-center ">
+              <mat-icon>search</mat-icon>
+              <input [(ngModel)]="searchInput" placeholder="Rechercher" (keyup.enter)="searchDiscussions($event)" />
+
+            </div>
+            <mat-icon (click)="searchDiscussions(null)" class="cursor-pointer">close</mat-icon>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- / CONTENT HEADER -->
+
+      <!-- CONTENT CARD -->
+      <div class="" [ngClass]="{ 'bg-gray-300': currentMail }">
+        <!-- CONTENT TOOLBAR -->
+        <div class="toolbar">
+          <div *ngIf="currentMail" class="block sm:hidden">
+            <button mat-icon-button (click)="currentMail = null">
+              <mat-icon class="secondary-text">arrow_back</mat-icon>
+            </button>
+          </div>
+        </div>
+        <!-- / CONTENT TOOLBAR -->
+        <!-- CONTENT -->
+        <div class="flex flex-wrap m-4 bg-white rounded-lg border border-gray-200 shadow-md">    
+          <mail-list class="w-full mt-1 sm:w-1/3 h-100 border-r-2 border-gray-300 overflow-scroll" infiniteScroll
+            [infiniteScrollDistance]="3" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
+             [scrollWindow]="false"
+            fusePerfectScrollbar [isScrolling]="isScrolling"
+            [completed]="paginatedDiscussions.discussions.length >= paginatedDiscussions.total" (getMore)="onScroll()">
+          </mail-list>
+          <mail-details fusePerfectScrollbar class="w-full sm:w-2/3"></mail-details>
+        </div>
+        <!-- / CONTENT -->
+      </div>
+      <!-- / CONTENT CARD -->
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

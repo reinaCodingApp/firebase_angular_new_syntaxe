@@ -1,0 +1,103 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">  Ajouter Prime</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon  class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <!-- / Header -->
+  <div mat-dialog-content fusePerfectScrollbar>
+    <mat-tab-group mat-align-tabs="center" mat-stretch-tabs  class="mt-4">
+      <mat-tab label="Prime Trajet">
+        <form
+          #f="ngForm"
+          (ngSubmit)="updateBonusCategory(f)"
+          name="composeForm"
+          class="flex flex-col flex-auto p-6 overflow-y-auto">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Prime Trajet</mat-label>
+            <mat-select
+              #bonusCategory="ngModel"
+              name="bonusCategory"
+              [(ngModel)]="activity.bonusCategory.id"
+              required
+            >
+              <mat-option
+                *ngFor="let bonusCategory of bonusCategories"
+                [value]="bonusCategory.id"
+              >
+                {{ bonusCategory.fullTitle }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                bonusCategory.invalid &&
+                (bonusCategory.dirty || bonusCategory.touched)
+              "
+            >
+              Veuillez choisir une prime !
+            </mat-error>
+          </mat-form-field>
+          <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+            <div class="ml-auto">
+            <button mat-raised-button color="accent" type="submit">
+              Valider
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
+        </div>
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Prime Remplacement">
+        <form
+          #f2="ngForm"
+          (ngSubmit)="updateReplacementBonusCategory(f2)"
+          name="composeForm"
+          class="flex flex-col flex-auto p-6 overflow-y-auto">
+        
+          <mat-form-field appearance="outline">
+            <mat-label>Prime Remplacement</mat-label>
+            <mat-select
+              #replacementBonusCategory="ngModel"
+              name="replacementBonusCategory"
+              [(ngModel)]="activity.replacementBonusCategory.id"
+              required
+            >
+              <mat-option
+                *ngFor="
+                  let replacementBonusCategory of replacementBonusCategories
+                "
+                [value]="replacementBonusCategory.id"
+              >
+                {{ replacementBonusCategory.fullTitle }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                replacementBonusCategory.invalid &&
+                (replacementBonusCategory.dirty ||
+                  replacementBonusCategory.touched)
+              "
+            >
+              Veuillez choisir une prime !
+            </mat-error>
+          </mat-form-field>
+          <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+            <div class="ml-auto">
+            <button mat-raised-button color="accent" type="submit">
+              Valider
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
+        </div>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  </div>
+
+ 

@@ -1,0 +1,120 @@
+
+<!-- RECAP -->
+<div
+  *ngIf="recap != null"
+  id="invoice"
+  class="w-full m-4 p-8"
+>
+  <div class="invoice-container">
+    <div class="flex flex-row justify-between items-center">
+      <button
+        
+        matTooltip="Retour à la liste des fiches de suivi"
+        mat-icon-button
+        [routerLink]="'/followupSheet'"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <mat-form-field class="w-40">
+        <mat-select
+          name="service"
+          [(ngModel)]="selectedSheet"
+          (selectionChange)="getFollowupSheet()"
+        >
+          <mat-option
+            *ngFor="let sheetHistory of sheetsHistory"
+            [value]="sheetHistory"
+          >
+            {{ "SEMAINE " + sheetHistory.weekNumber }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- INVOICE -->
+    <div class="mat-card p-6">
+      <div class="content" *ngIf="recap.length > 0">
+        <div>
+          <h1  class="text-3xl text-center">
+            <u>Synthèse fiches de suivi {{ recap[0].instanceName }}</u>
+          </h1>
+          <h2  class="text-xl text-center mt-4">
+            <u>{{ "SEMAINE " + recap[0].weekNumber + " Année " + recap[0].year }}</u>
+          </h2>
+
+          <ul class="p-0 list-none">
+            <li *ngFor="let item of recap">
+              <div >
+                <h1 class=" text-2xl my-4">
+                  {{ item.sector.name }}
+                  {{
+                    item.responsibleName
+                      ? item.responsibleName.replace(",", "")
+                      : ""
+                  }}
+                </h1>
+                <ul class="p-0 list-none">
+                  <li *ngFor="let section of item.sections">
+                    <h2  class="text-2xl p-2 mb-3 text-white bg-gray-500">
+                      {{ section.ownerName + " - " + section.title }}
+                    </h2>
+                    <ul class="p-0 list-none">
+                      <li *ngFor="let folder of section.folders">
+                        <div >
+                          <h2   class=" text-2xl
+                            bg-gray-300 p-2 mb-2">
+                            {{ folder.title }}
+                          </h2>
+                          <ul class="p-0 m-0">
+                            <li class="m-4" *ngFor="let point of folder.points">
+                              <p [innerHTML]="point.contentLevelThree" class="font-size-16 m-0 point" ></p>
+                              <span *ngIf="point.noteLevelThree > 3" fxLayoutAlign="end" class="warn-900-fg" style="line-height: 1.6em;" >
+                                <mat-icon class="mr-4">supervised_user_circle</mat-icon>
+                                {{'Á TRAITER AU ' + recap[0].instanceName}}</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- FICHE VIDE -->
+      <div class="content" *ngIf="recap.length == 0" >
+        <div >
+          <h1 >
+            Synthèse vide
+          </h1>
+          <h2 >
+            Il n'y a pas eu de points à traiter ni d'informations destinés à cette instance cette semaine.
+          </h2>
+        </div>
+      </div>
+    </div>
+    <!-- / INVOICE -->
+  </div>
+</div>
+<!-- ERROR PAGE -->
+<div
+  *ngIf="recap == null"
+  id="error-500"
+  
+  
+>
+  <div class="content"  >
+    <div class="error-code">400</div>
+
+    <div class="message">
+      Vous n'avez pas les droits nécessaires pour accèder à cette ressource.
+    </div>
+
+    <div class="sub-message">
+      Détails de la ressource : Récapitulatif fiches de suivi : aucun secteur
+      n'est valide
+    </div>
+  </div>
+</div>

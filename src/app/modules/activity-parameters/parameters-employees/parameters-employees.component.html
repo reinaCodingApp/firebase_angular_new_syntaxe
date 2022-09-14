@@ -1,0 +1,34 @@
+<form #f="ngForm" class="mat-card flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+  name="form">
+ <div class=" mb-4 text-2xl font-bold">
+  Heures supplémentaires
+
+ </div>
+ 
+    <mat-form-field appearance="outline">
+      <mat-label>Sélection employé</mat-label>
+      <mat-select required [(ngModel)]="selectedEmployee" name="employee">
+        <mat-option>
+          <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchEmployee($event)"
+            placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let employee of filtredEmployees" [value]="employee">
+          {{ employee.fullName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="selectedEmployee">
+      <mat-checkbox [(ngModel)]="selectedEmployee.excludeFromPlusAndOverComputeTime"
+        name="excludeFromPlusAndOverComputeTime">
+        Exclure du calcule d'heures supplémentaires?
+      </mat-checkbox>
+    </div>
+  <div *ngIf="habilitation.isAdmin()" class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+    <div class="ml-auto">
+      <button type="submit" mat-raised-button color="accent" (click)="excludeEpmloyeeFromOvertimeComputing()">
+        Mettre à jour
+        <mat-icon class="ml-1">check</mat-icon>
+      </button>
+    </div>
+  </div>
+</form>

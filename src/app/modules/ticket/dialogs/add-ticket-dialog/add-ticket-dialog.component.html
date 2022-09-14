@@ -1,0 +1,146 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium"> Nouveau ticket</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div> 
+  <div mat-dialog-content  fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="addTicket(f)"
+      name="composeForm"
+      class="flex flex-col flex-auto p-6 overflow-y-auto">
+      <mat-form-field appearance="outline">
+        <mat-label>Titre</mat-label>
+        <input
+          #title="ngModel"
+          [(ngModel)]="newTicket.title"
+          placeholder="Titre votre demande"
+          matInput
+          name="title"
+          required
+          minlength="3"
+        />
+        <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">
+          Veuillez renseigner le titre (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="outline">
+        <mat-label>Niveau d'urgence</mat-label>
+        <mat-select
+          #emergencyLevel="ngModel"
+          name="emergencyLevel"
+          required
+          [(ngModel)]="newTicket.emergencyLevel"
+        >
+          <mat-option
+            *ngFor="let emergencyLevel of emergencyLevels"
+            [value]="emergencyLevel.id"
+          >
+            {{ emergencyLevel.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            emergencyLevel.invalid &&
+            (emergencyLevel.dirty || emergencyLevel.touched)
+          "
+        >
+          Veuillez indiquer le niveau d'urgence !
+        </mat-error>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="outline">
+        <mat-label>Type de demande</mat-label>
+        <mat-select
+          #service="ngModel"
+          name="service"
+          [(ngModel)]="newTicket.toServiceId"
+          required
+        >
+          <mat-option *ngFor="let service of services" [value]="service.id">
+            {{ service.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="service.invalid && (service.dirty || service.touched)"
+        >
+          Veuillez indiquer le service destinataire !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Details</mat-label>
+        <textarea
+          #details="ngModel"
+          name="details"
+          [(ngModel)]="newTicket.details"
+          placeholder="Décrivez votre demande"
+          matInput
+          rows="4"
+          required
+          minlength="10"
+        >
+        </textarea>
+        <mat-error
+          *ngIf="details.invalid && (details.dirty || details.touched)"
+        >
+          Veuillez renseigner le champ décrivant votre demande (10 caractères
+          minimum) !
+        </mat-error>
+      </mat-form-field>
+      <!-- <div fxLayout="column">
+        <div >
+            <h3>Demande privée</h3>
+            <mat-slide-toggle
+              name="isPrivate"
+              color="warn"
+              [(ngModel)]="newTicket.isPrivate"
+            >
+            </mat-slide-toggle>
+        </div>
+      </div> -->
+      <div class="flex flex-col sm:flex-row  items-center place-content-center " >
+        <h3>Déposer une pièce jointe</h3>
+        <input
+          hidden
+          #file
+          type="file"
+          name="file"
+          id="file"
+          multiple="multiple"         
+          (change)="preview(file.files)"
+        />
+        <button
+          mat-fab
+          color="warn"
+          type="button"
+          class="ml-2"
+          (click)="file.click()"
+        >
+          <mat-icon>attachment</mat-icon>
+        </button>
+      </div>
+      <div class="flex flex-row items-center" >
+        <div class="flex flex-row items-center"
+          *ngFor="let file of filesToUpload"   >
+          <span >{{ file.name }}</span>
+          <button mat-icon-button (click)="removeFile(file)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+     <!-- Actions -->
+     <div class="mt-1 flex flex-col sm:flex-row sm:items-end items-end justify-between">
+      <div class="ml-auto">
+        <button mat-raised-button color="accent" type="submit">
+          Créer <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>

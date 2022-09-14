@@ -1,0 +1,32 @@
+    <div class="p-5 w-full">
+      <mat-tab-group>
+        <mat-tab label="Page d'accueil">
+          <ng-template matTabContent>
+            <div class="tab-content">
+              <welcome-page></welcome-page>
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Rubriques statiques">
+          <ng-template matTabContent>
+            <div class="tab-content">
+              <posts></posts>
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Actualités">
+          <ng-template matTabContent>
+            <div class="tab-content">
+              <news></news>
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Les focus">
+          <ng-template matTabContent>
+            <div class="tab-content">
+              <focus></focus>
+            </div>
+          </ng-template>
+        </mat-tab>      
+      </mat-tab-group>
+    </div>

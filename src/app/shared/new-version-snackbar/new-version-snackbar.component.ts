@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-version-snackbar',
-  templateUrl: './new-version-snackbar.component.html',
-  styleUrls: ['./new-version-snackbar.component.scss']
+  templateUrl: './new-version-snackbar.component.html'
 })
 export class NewVersionSnackbarComponent implements OnInit {
 

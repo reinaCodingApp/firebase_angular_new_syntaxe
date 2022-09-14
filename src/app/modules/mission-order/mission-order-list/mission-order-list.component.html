@@ -1,0 +1,22 @@
+<div *ngIf="missionOrders.length === 0">
+  <span class="no-messages-text hint-text">Pas de resultats</span>
+</div>
+
+<div class=" max-h-140 w-full border-t-2 border-gray-100">
+  <div *ngFor="let missionOrder of missionOrders"
+    [ngClass]="{ 'bg-gray-200': missionOrder?.id == currentMissionOrder?.id }">
+    <mission-order-item [missionOrder]="missionOrder" (click)="readMail(missionOrder)">
+    </mission-order-item>
+  </div>
+
+  <div *ngIf="!isScrolling" class="mt-2 block sm:hidden">
+    <button *ngIf="!completed" mat-raised-button color="warn" (click)="getMore.emit()">
+      <mat-icon>expand_more</mat-icon>
+      Afficher plus
+      <mat-icon>expand_more</mat-icon>
+    </button>
+  </div>
+  <div class="my-4" class="text-center place-content-center">
+    <mat-spinner [diameter]="30" *ngIf="isScrolling"></mat-spinner>
+  </div>
+</div>

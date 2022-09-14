@@ -1,0 +1,40 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium"> Cloner permissions</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+
+
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" name="composeForm" class="flex flex-col flex-auto p-6 overflow-y-auto">
+    <mat-form-field appearance="outline">
+      <mat-label>Utilisateur</mat-label>
+      <mat-select #user="ngModel" name="user" required [(ngModel)]="selectedUserUid">
+        <mat-option>
+          <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchUser($event)"
+            placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+        </mat-option>
+        <ng-container *ngFor="let user of filtredUsers">
+          <mat-option [value]="user.uid" *ngIf="user.uid != data.currentUser.uid">
+            {{ user.displayName }}
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error *ngIf="user.invalid && (user.dirty || user.touched)">
+        Veuillez choisir un utilisateur !
+      </mat-error>
+    </mat-form-field>
+
+    <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+      <div class="ml-auto">
+        <button mat-raised-button color="accent" type="submit">
+          Cloner
+          <mat-icon class="ml-1">check</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

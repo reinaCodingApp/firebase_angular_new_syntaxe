@@ -1,7 +1,14 @@
 {
+  "targets": {
+    "dev-p00001": {
+      "hosting": {
+        "fuse": [
+          "dev-p00001"
+        ]
+      }
+    }
+  },
   "projects": {
-    "default": "dev-p00001",
-    "staging": "staging-p00001",
-    "prod": "p00001-7b66f"
+    "default": "dev-p00001"
   }
 }

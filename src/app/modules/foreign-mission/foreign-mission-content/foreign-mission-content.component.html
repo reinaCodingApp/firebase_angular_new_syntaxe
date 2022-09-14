@@ -1,0 +1,71 @@
+<!-- HEADER -->
+<div class="w-full">
+  <div class="h-30 bg-indigo-600 flex  items-center justify-between">
+    <div class="flex items-center">
+      <button mat-icon-button (click)="foreignMissionComponent.drawer.toggle()" class="ml-2">
+        <mat-icon class="text-white">reorder</mat-icon>
+      </button>
+      <span class="text-white text-2xl">
+        Missions à l'étranger
+      </span>
+    </div>
+    <div class="mr-4" *ngIf="habilitation.canCreate()">
+      <button mat-icon-button matTooltip="Ajouter un acompte" class="bg-red-500" (click)="addForeignMission()">
+        <mat-icon class="text-white">add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div>
+    <!-- / HEADER -->
+    <!-- CONTENT -->
+    <div class="p-6" [hidden]="!dataSource || dataSource.data.length === 0">
+      <table mat-table class="w-full" [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="employee.fullName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-1/5"> Salarié </th>
+          <td mat-cell *matCellDef="let element" class="px-7 bg-rose-700 text-white">
+            {{element.employee.fullName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="site.name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="   w-1/5"> Site </th>
+          <td mat-cell *matCellDef="let element" class="px-4"> {{element.site.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="departingDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="  w-1/5"> Départ </th>
+          <td mat-cell *matCellDef="let element" class="px-4"> {{element.departingDate}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="returningDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="hidden sm:table-cell w-1/5"> Arrivée </th>
+          <td mat-cell *matCellDef="let element" class="hidden sm:table-cell px-4"> {{element.returningDate}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class=" w-2/5"> Actions </th>
+          <td mat-cell *matCellDef="let element">
+
+            <div class="flex flex-row items-center">
+              <button *ngIf="habilitation.isAdmin()" mat-icon-button matTooltip="Modifier" color="primary"
+                class="mat-elevation-z1 " (click)="updateForeignMission(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button *ngIf="habilitation.isAdmin()" mat-icon-button matTooltip="Supprimer" color="warn"
+                class="mat-elevation-z1 ml-2" (click)="deleteForeignMission(element)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 25, 100]"   ></mat-paginator>
+
+    </div>
+    <div [hidden]="dataSource && dataSource.data.length > 0">
+      <p class="p-6 w-full text-center text-gray-600 text-lg">Aucun élément à afficher</p>
+    </div>

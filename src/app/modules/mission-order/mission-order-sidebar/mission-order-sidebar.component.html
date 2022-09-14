@@ -1,0 +1,28 @@
+<form class="flex flex-col mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4" name="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select [(ngModel)]="selectedStatus" name="status">
+      <mat-option *ngFor="let status of missionOrderstatus" [value]="status.value">
+        {{ status.title }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Salarié</mat-label>
+    <mat-select [(ngModel)]="employeeId" name="employeeId">
+      <mat-option>
+        <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchEmployee($event)"
+          placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option [value]="0">Tous</mat-option>
+      <mat-option *ngFor="let employee of filtredEmployees" [value]="employee.id">
+        {{ employee.fullName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="getMissionOrders()">
+    Afficher
+    <mat-icon class="ml-1">filter_list</mat-icon>
+  </button>
+
+</form>

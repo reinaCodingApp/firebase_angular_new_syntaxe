@@ -1,0 +1,151 @@
+  <div class="flex flex-col sm:flex-row items-end mb-3 mr-6">
+    <div class="ml-auto">
+      <button mat-raised-button color="warn" (click)="save()">Sauvegarder</button>
+    </div>
+   </div>
+    <div class="">
+    <div cdkDropList  (cdkDropListDropped)="drop($event)" class="mat-card min-w-full sm:min-w-120">
+      <div class="cursor-move" *ngFor="let c of homeSettingsToDisplay" cdkDrag
+        [cdkDragDisabled]="c.componentId == 'highlightPost' || c.componentId == 'newsLetter'">
+        <div class="flex flex-row justify-between items-center p-4" [ngClass]="{'bg-gray-200': c.displayOrder == 0}">
+          <div class="w-2/3" >
+            <!-- HighlightPost -->
+            <div *ngIf="c.displayOrder == 0" class="   cursor-pointer" matTooltip="Choisir un titre">
+              <div [satPopoverAnchor]="highlightPostTitlePopover" (click)="highlightPostTitlePopover.toggle()">
+                {{ c.title }}
+                <div *ngIf="c.highlightPostTitle">
+                  {{ c.highlightPostTitle }}
+                </div>
+              </div>
+              <div>
+                <sat-popover #highlightPostTitlePopover hasBackdrop>
+                  <div class="mat-card text-md p-4 min-w-100">
+                    <div class="flex flex-col">
+                      <mat-radio-group class="flex flex-col mb-3" (change)="
+                          highlightPostTitle = null; selectedPost = null
+                        " aria-label="Choisir une option" [(ngModel)]="highlightPostTitleMode">
+                        <mat-radio-button class="mb-2" value="fromPosts">Choisir depuis la liste des
+                          articles</mat-radio-button>
+                        <mat-radio-button value="customTitle">Ajouter un titre manuellement</mat-radio-button>
+                      </mat-radio-group>
+                      <mat-form-field *ngIf="highlightPostTitleMode == 'fromPosts'" appearance="outline">
+                        <mat-label>Choisir un article</mat-label>
+                        <mat-select name="posts" [(ngModel)]="selectedPost" (selectionChange)="postChanged($event)">
+                          <mat-option *ngFor="let post of posts" [value]="post">
+                            {{ post.title }} -
+                            {{ post.timestamp | date: "dd/MM/yyyy" }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field *ngIf="highlightPostTitleMode == 'customTitle'" appearance="outline">
+                        <mat-label>Ajouter un titre</mat-label>
+                        <input matInput [(ngModel)]="highlightPostTitle" minLength="20" />
+                      </mat-form-field>
+
+                      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+                        <div class="ml-auto">
+                          <button mat-raised-button color="warn" (click)="saveHighlightPostTitle()"
+                            [disabled]="!isHighlightTitleValid()">
+                            Sauvegarder
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </sat-popover>
+              </div>
+            </div>
+            <!-- Our Services -->
+            <div *ngIf="c.componentId == 'ourServices'"
+              class=" flex flex-row justify-between items-center  cursor-pointer" matTooltip="Modifier nos services">
+              <div [satPopoverAnchor]="ourServicesPopover" (click)="ourServicesPopover.toggle()">
+                {{ c.title }}
+              </div>
+              <div>
+                <sat-popover #ourServicesPopover hasBackdrop>
+                  <div class="min-w-10 max-w-100 mat-card  text-center  text-md p-6">
+                    <div *ngFor="let item of serviceItems" class="border-b-2">
+                      <h2 class="m-2 font-semibold" contenteditable="true" [textContent]="item.title"
+                        (input)="item.title = $event.target.textContent" (blur)="updateOurServices(item)">
+                        {{ item.title }}
+                      </h2>
+                      <p contenteditable="true" [textContent]="item.description"
+                        (input)="item.description = $event.target.textContent" (blur)="updateOurServices(item)">
+                        {{ item.description }}
+                      </p>
+
+                    </div>
+                  </div>
+                </sat-popover>
+              </div>
+            </div>
+            <!-- Our Mission -->
+            <div *ngIf="c.componentId == 'ourMission'" class="cursor-pointer" matTooltip="Modifier notre mission">
+              <div [satPopoverAnchor]="ourMissionPopover" (click)="ourMissionPopover.toggle()">
+                {{ c.title }}
+              </div>
+              <div>
+                <sat-popover #ourMissionPopover hasBackdrop>
+                  <div class="mat-card  text-center  text-md p-4 min-w-10 max-w-100  ">
+                    <div *ngFor="let item of missionItems" class="border-b-2">
+                      <h2 class="m-2" contenteditable="true" [textContent]="item.title"
+                        (input)="item.title = $event.target.textContent" (blur)="updateOurMission(item)">
+                        {{ item.title }}
+                      </h2>
+                      <p contenteditable="true" [textContent]="item.description"
+                        (input)="item.description = $event.target.textContent" (blur)="updateOurMission(item)">
+                        {{ item.description }}
+                      </p>
+                      <mat-divider></mat-divider>
+                    </div>
+                  </div>
+                </sat-popover>
+              </div>
+            </div>
+            <!-- Testimonials -->
+            <div *ngIf="c.componentId == 'testimonials'" class="cursor-pointer" matTooltip="Modifier témoignages">
+              <div [satPopoverAnchor]="testimonialsPopover" (click)="testimonialsPopover.toggle()">
+                {{ c.title }}
+              </div>
+              <div>
+                <sat-popover #testimonialsPopover hasBackdrop>
+                  <div class="mat-card min-w-10 max-w-100  text-center  text-md p-4">
+                    <div *ngFor="let item of testimonials" class="border-b-2">
+                      <p contenteditable="true" [textContent]="item.author"
+                        (input)="item.author = $event.target.textContent" (blur)="updateTestimonials(item)">
+                        {{ item.author }}
+                      </p>
+                      <p contenteditable="true" [textContent]="item.profession"
+                        (input)="item.profession = $event.target.textContent" (blur)="updateOurMission(item)">
+                        {{ item.profession }}
+                      </p>
+                      <p contenteditable="true" [textContent]="item.company"
+                        (input)="item.company = $event.target.textContent" (blur)="updateTestimonials(item)">
+                        {{ item.company }}
+                      </p>
+                      <p contenteditable="true" [textContent]="item.content"
+                        (input)="item.content = $event.target.textContent" (blur)="updateTestimonials(item)">
+                        {{ item.content }}
+                      </p>
+                      <mat-divider></mat-divider>
+                    </div>
+                  </div>
+                </sat-popover>
+              </div>
+            </div>
+            <div *ngIf="
+              c.componentId != 'highlightPost' &&
+              c.componentId != 'ourServices' &&
+              c.componentId != 'ourMission' &&
+              c.componentId != 'testimonials'
+            ">
+              {{ c.title }}
+            </div>
+          </div>
+          <div>
+            <mat-slide-toggle [(ngModel)]="c.show"></mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,15 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer 
+            class="max-w-64 dark:bg-gray-900"
+            [mode]="drawerMode"
+            [disableClose]="disableClose"
+            [opened]="drawerOpened"
+            #drawer>
+            <foreign-mission-sidebar></foreign-mission-sidebar>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+      <router-outlet></router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

@@ -1,0 +1,105 @@
+<form #f="ngForm" (ngSubmit)="filterStatistics(f)" class="flex flex-col 
+mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Sélection secteur</mat-label>
+    <mat-select (selectionChange)="getEmployeesForDepartment()" [(ngModel)]="selectedDepartment" name="department"
+      required>
+      <mat-option *ngFor="let department of departments" [value]="department">
+        {{ department.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Sélection salariés</mat-label>
+    <mat-select required name="employees" [(ngModel)]="selectedEmployeeId" name="employee">
+      <mat-option>
+        <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchEmployee($event)"
+          placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let employee of filtredEmployees" [value]="employee.id" [ngClass]="{
+              'disabled-employee': showDisableEmployee && !employee.isActive
+            }">
+        {{ employee.fullName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-checkbox [(ngModel)]="showDisableEmployee" name="showDisableEmployee" (change)="getEmployeesForDepartment()">
+    Afficher les salariés désactivés
+  </mat-checkbox>
+  <mat-checkbox (change)="changeDataCentiemeFormat()">Afficher les données au format centième
+  </mat-checkbox>
+
+
+  <h3 class="mb-1">Période d'affichage</h3>
+  <div class="flex flex-row justify-between text-sm  flex-wrap">  
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Mois</mat-label>
+      <mat-select [(ngModel)]="startMonth" name="month">
+        <mat-option *ngFor="let month of months" [value]="month.id">
+          {{ month.name | uppercase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Année</mat-label>
+      <mat-select [(ngModel)]="startYear" name="year">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="flex flex-row justify-between flex-wrap">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Mois</mat-label>
+      <mat-select [(ngModel)]="endMonth" name="month">
+        <mat-option *ngFor="let month of months" [value]="month.id">
+          {{ month.name | uppercase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Année</mat-label>
+      <mat-select [(ngModel)]="endYear" name="year">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+
+  <button type="submit" mat-raised-button color="accent">
+    Afficher
+    <mat-icon class="ml-1">filter_list</mat-icon>
+  </button>
+ 
+</form>
+<div class="flex flex-col mat-card mat-elevation-z4 p-4 pt-6 mx-2 my-4">
+
+
+  <h3 matsubheader>Récapitulatif mensuel pour l'ensemble des salariés</h3>
+  <mat-form-field appearance="outline">
+    <mat-label>Mois</mat-label>
+    <mat-select [(ngModel)]="statsMonth" name="month">
+      <mat-option *ngFor="let month of months" [value]="month.id">
+        {{ month.name | uppercase }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Année</mat-label>
+    <mat-select [(ngModel)]="statsYear" name="year">
+      <mat-option *ngFor="let year of years" [value]="year">
+        {{ year }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <button type="button" mat-raised-button color="warn" (click)="generateStats()">
+    Générer
+    <mat-icon class="ml-1">arrow_downward</mat-icon>
+  </button>
+</div>

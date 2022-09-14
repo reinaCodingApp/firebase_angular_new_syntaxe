@@ -1,0 +1,141 @@
+<div class="flex flex-col max-w-140 md:min-w-160 max-h-screen -m-6">
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 bg-primary text-on-primary">
+      <div class="text-lg font-medium">{{
+          data.mode == "edit" ? "Modifier une mission" : "Ajouter une mission"
+      }}</div>
+      <button
+          mat-icon-button
+          (click)="matDialogRef.close()"
+          [tabIndex]="-1">
+          <mat-icon
+              class="text-current"
+              [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      </button>
+  </div>
+
+ <div class="p-10">
+  <form
+  
+  #f="ngForm"
+  (ngSubmit)="onSubmit(f)"
+  name="composeForm"
+  class="compose-form">
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Salariés</mat-label>
+    <mat-select
+      #employee="ngModel"
+      name="employee"
+      required
+      [(ngModel)]="foreignMission.employee.id"
+    >
+      <mat-option>
+        <ngx-mat-select-search
+          ngModel
+          name="searchINput"
+          (ngModelChange)="searchEmployee($event)"
+          placeholderLabel="Rechercher"
+          noEntriesFoundLabel="pas de resultats"
+        ></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let employee of filtredEmployees" [value]="employee.id">
+        {{ employee.fullName }}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+    >
+      Veuillez choisir un salarié !
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Sites</mat-label>
+    <mat-select
+      #site="ngModel"
+      name="site"
+      required
+      [(ngModel)]="foreignMission.site.id"
+    >
+      <mat-option *ngFor="let site of sites" [value]="site.id">
+        {{ site.name }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+      Veuillez choisir un site !
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Début de mission</mat-label>
+    <input
+      #departingDate="ngModel"
+      matInput
+      [matDatepicker]="departingDatePicker"
+      placeholder="Début de la mission"
+      [(ngModel)]="foreignMission.departingDate"
+      name="departingDatePicker"
+      required
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="departingDatePicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker
+      type="datetime"
+      timeInterval="5"
+      #departingDatePicker
+    ></mat-datepicker>
+    <mat-error
+      *ngIf="
+        departingDate.invalid &&
+        (departingDate.dirty || departingDate.touched)
+      "
+    >
+      Veuillez renseigner la date début de la mission !
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Fin de la mission</mat-label>
+    <input
+      #returningDate="ngModel"
+      matInput
+      [matDatepicker]="returningDatePicker"
+      placeholder="Début de la mission"
+      [(ngModel)]="foreignMission.returningDate"
+      name="returningDatePicker"
+      required
+      [min]="foreignMission.departingDate"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="returningDatePicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker
+      type="datetime"
+      openOnFocus="true"
+      timeInterval="5"
+      #returningDatePicker
+    ></mat-datepicker>
+    <mat-error
+      *ngIf="
+        returningDate.invalid &&
+        (returningDate.dirty || returningDate.touched)
+      "
+    >
+      Veuillez renseigner la date de fin de la mission !
+    </mat-error>
+  </mat-form-field>
+  <!-- Actions -->
+  <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+    <div class="ml-auto">
+    
+    <button    
+      mat-raised-button color="primary" type="submit">
+        {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+        <mat-icon>check</mat-icon>      
+  </button>
+  </div>
+</div>
+</form>
+ </div>
+</div>

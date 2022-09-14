@@ -1,0 +1,91 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">Nouvel utilisateur</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <div fusePerfectScrollbar>
+    <form   #f="ngForm" name="userForm" class="flex flex-col flex-auto p-6 overflow-y-auto">
+      <mat-form-field appearance="outline">
+        <mat-label>Adresse émail</mat-label>
+        <input [readonly]="action==='edit'" #email="ngModel" [(ngModel)]="user.email" placeholder="adresse émail"
+          matInput type="email" name="email" required minlength="3" />
+        <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+          Veuillez renseigner une adresse émail correcte
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input #displayName="ngModel" [(ngModel)]="user.displayName" placeholder="pseudo" matInput name="displayName"
+          required minlength="3" />
+        <mat-error *ngIf="displayName.invalid && (displayName.dirty || displayName.touched)">
+          Veuillez renseigner le nom d'utilisateur (3 caractères minimum) !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input #password="ngModel" [(ngModel)]="user.password" placeholder="mot de passe" matInput name="password"
+          required type="password" minlength="6" />
+        <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+          Veuillez renseigner un mot de passe correct (supérieur à 6 caractères)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Associer un employé</mat-label>
+        <mat-select name="employees" [(ngModel)]="selectedEmployeeId">
+          <mat-option>
+            <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let e of filtredEmployees" [value]="e.id">
+            {{ e.fullName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Claims selection">
+          <mat-chip *ngFor="let claim of claims" [selectable]="selectable" [removable]="removable"
+            (removed)="remove(claim)">
+            {{claim}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="claim..." #claimInput [formControl]="claimsCtrl" [matAutocomplete]="auto"
+            [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let claim of filteredClaims | async" [value]="claim">
+            {{claim}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <ul class="list-disc py-2 px-6">
+        <li>SeM (Responsable de secteur) : visiblité sur ses propres régions et les employés associés.</li>
+        <li>AdM (Responsable administratif) : visiblité complète sur tous les secteurs et tous les employés dans les
+          modules administratifs (acomptes, tonnagtes, pointages, ordres de mission ...etc).</li>
+        <li>HrM (Responsable RH) : visiblité complète sur tous les secteurs et tous les employés dans les modules liés
+          au ressources humaiens (pointages, absences, paies, acomptes ...etc).</li>
+        <li>Dir (Membre de la directeur) : visiblité complète sur tous les secteurs et tous les employés.</li>
+        <li>TechAdmin (Administrateur technique métier) : accès à tous les paramétrages métiers ainsi qu'au module
+          gestion des utilisateurs.</li>
+        <li>Root (Racine) : accès resérvé aux paramétrages techniques.</li>
+      </ul>
+
+      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+        <div class="ml-auto">
+          <button mat-raised-button color="accent"
+            (click)="matDialogRef.close({user: user, claims: claims, employeeId:selectedEmployeeId, action: action})"
+            class="save-button" [disabled]="!f.valid" aria-label="SAVE">
+            VALIDER
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

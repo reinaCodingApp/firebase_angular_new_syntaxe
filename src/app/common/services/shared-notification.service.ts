@@ -36,7 +36,7 @@ export class SharedNotificationService {
   }
 
   showStandarError(): void {
-    this._snackBar.open(`une erreur s'est produite veuillez réessayer ultérieurement`, '', {
+    this._snackBar.open('une erreur s\'est produite veuillez réessayer ultérieurement', '', {
       duration: 4000,
       horizontalPosition: 'end',
       verticalPosition: 'bottom',

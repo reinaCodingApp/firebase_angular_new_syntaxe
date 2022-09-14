@@ -1,12 +1,15 @@
 import { ReplaceLineBreaksPipe } from './replaceLineBreaks.pipe';
 import { NgModule } from '@angular/core';
+import { HtmlToPlaintextPipe } from './htmlToPlaintext.pipe';
 
 @NgModule({
   declarations: [
-    ReplaceLineBreaksPipe
+    ReplaceLineBreaksPipe,
+    HtmlToPlaintextPipe
   ],
   exports: [
-    ReplaceLineBreaksPipe
+    ReplaceLineBreaksPipe,
+    HtmlToPlaintextPipe
   ]
 })
 export class SharedPipesModule { }

@@ -1,0 +1,43 @@
+<div class="w-full flex flex-col ">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer class="w-1/2 max-w-72" [mode]="drawerMode" [disableClose]="disableClose"
+      [opened]="drawerOpened" #drawer>
+      <contacts-main-sidebar></contacts-main-sidebar>
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content>
+      <div class="h-36 sm:h-20 sm:p-0  p-4 items-center bg-gray-50 flex flex-col sm:flex-row justify-between" 
+      color="primary">
+        <div class="flex justify-between w-full">
+          <div class="flex items-center ">
+            <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
+              <mat-icon class="text-gray-600">reorder</mat-icon>
+            </button>
+          </div>
+      
+           <!-- Add btn for sm screen-->
+           <div class="flex sm:hidden m-0 sm:my-2" *ngIf="habilitation.canCreate()">
+            <button class="add-post-btn"  mat-fab color="warn" title="Ajouter un nouvel article"
+            routerLink="posts" [queryParams]="{ mode: 'new', isNews: false}">
+            <mat-icon>add</mat-icon>
+          </button>
+          </div>
+        </div>
+         <!-- SEARCH -->
+         <div class="sm:w-2/3 w-full mx-2 my-1 rounded-2xl shadow
+          bg-white flex items-center ">
+          <mat-icon class="text-dark h-2 pl-2 ">search</mat-icon>        
+          <input class="border-0 p-2 flex" placeholder="Rechercher article" name="search"/>
+        </div> 
+        <!-- Add btn for lg screen-->
+        <div class="mr-4 hidden sm:flex">
+          <button class="add-post-btn" *ngIf="habilitation.canCreate()" mat-fab color="warn" title="Ajouter un nouvel article"
+          routerLink="posts" [queryParams]="{ mode: 'new', isNews: false}">
+          <mat-icon>add</mat-icon>
+        </button>
+        </div>
+      </div>
+      <posts-list></posts-list>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

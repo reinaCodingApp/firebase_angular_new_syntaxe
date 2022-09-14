@@ -1,19 +1,12 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
-import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { BASE_URL } from 'environments/environment';
 import { HttpClient, HttpBackend } from '@angular/common/http';
 import { Employee } from 'app/common/models/employee';
-import { Department } from 'app/main/webcms/web-messages/models/department';
-import { Attachment } from 'app/common/models/attachment';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Department } from '../models/department';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
-import { Habilitation } from 'app/main/access-rights/models/habilitation';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from 'app/main/settings/models/user';
-import { AccessRightsService } from 'app/main/access-rights/access-rights.service';
-import { Service } from 'app/main/ticket/models/service';
+import { Observable } from 'rxjs';
+import { AccessRightsService } from 'app/modules/access-rights/access-rights.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +19,6 @@ export class CommonService {
   private GET_EMPLOYEES_BY_DEPARTMENT_URI = 'activity/all_employees';
 
   constructor(
-    private fuseSidebarService: FuseSidebarService,
     private httpClient: HttpClient,
     private httpBackend: HttpBackend,
     private angularFireAuth: AngularFireAuth,
@@ -34,11 +26,11 @@ export class CommonService {
     private accessRightsService: AccessRightsService) { }
 
   toggleSidebar(name): void {
-    this.fuseSidebarService.getSidebar(name).toggleOpen();
+      // code deleted
   }
 
   closeSidebar(name): void {
-    this.fuseSidebarService.getSidebar(name).close();
+      // code deleted
   }
 
   getEmployeesByDepartment(department: Department): Promise<Employee[]> {

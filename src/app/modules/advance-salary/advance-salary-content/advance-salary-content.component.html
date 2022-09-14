@@ -1,0 +1,96 @@
+
+  <!-- HEADER -->
+  <div class="w-full">
+    <div class="h-20 items-center bg-indigo-600 flex justify-between" color="primary">    
+    <div class="flex items-center">
+      <button mat-icon-button (click)="advanceSalaryComponent.drawer.toggle()" class="ml-2">
+        <mat-icon class="text-white" >reorder</mat-icon> 
+      </button>
+      <span class="text-white text-2xl">Acomptes salariés</span>
+    </div>
+    <div class="mr-4" *ngIf="habilitation.canCreate()">
+      <button mat-icon-button 
+      matTooltip="Ajouter un acompte"
+      class=" bg-red-500"  (click)="addAdvanceSalary()">
+        <mat-icon class=" text-white">add</mat-icon>
+      </button> 
+    </div>
+    </div>
+  <div>
+<!-- / HEADER -->
+<!-- CONTENT --> 
+<div class="p-4" [hidden]="!dataSource || dataSource.data.length === 0" >
+ <table mat-table class="w-full" [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="employee.fullName">
+        <th mat-header-cell  *matHeaderCellDef mat-sort-header class="sm:w-4/12 w-4/12">Nom </th>
+        <td mat-cell *matCellDef="let element" class="p-1 bg-amber-500 text-white">
+           {{element.employee.fullName}} </td>
+ 
+      </ng-container>
+
+      <ng-container matColumnDef="requestAmount">
+        <th mat-header-cell class="pl-1 sm:w-1/12 w-2/12"  *matHeaderCellDef mat-sort-header> Demandé </th>
+        <td mat-cell *matCellDef="let element" class="pl-1">
+           {{element.requestAmount}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestAwarded">
+        <th mat-header-cell class="hidden sm:table-cell w-1/12"  *matHeaderCellDef mat-sort-header> Accordés </th>
+        <td mat-cell  class="hidden sm:table-cell" *matCellDef="let element" > {{element.requestAwarded}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestDate">
+        <th mat-header-cell class="sm:w-2/12 w-3/12" *matHeaderCellDef mat-sort-header> Date </th>
+        <td mat-cell  *matCellDef="let element"> {{element.requestDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="advanceSalaryStatus.name">
+        <th mat-header-cell  class="hidden sm:table-cell w-2/12" *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell  class="hidden sm:table-cell" *matCellDef="let element"> {{element.advanceSalaryStatus.name}} </td>
+      </ng-container>
+
+      
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell  class="sm:w-4/12 w-3/12" *matHeaderCellDef> Actions </th>
+        <td mat-cell  class="sm:w-4/12 w-3/12" *matCellDef="let element">
+          <div
+          class="buttons-row"
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+        >
+          <button
+            *ngIf="habilitation.isAdmin()"
+            mat-icon-button
+            matTooltip="Modifier"
+
+            color="accent"
+            class="mat-elevation-z1 mx-1"
+            (click)="updateAdvanceSalary(element)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            *ngIf="habilitation.isAdmin()"
+            mat-icon-button
+            matTooltip="Supprimer"
+            color="warn"
+            class="mat-elevation-z1 mx-1"
+            (click)="deleteAdvanceSalary(element)"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+  
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="sélectionner une page"></mat-paginator>
+
+</div>
+<div [hidden]="dataSource && dataSource.data.length > 0">
+  <p class="p-6 w-full text-center text-gray-600 text-lg" >Aucun élément à afficher</p>
+</div>
+
+

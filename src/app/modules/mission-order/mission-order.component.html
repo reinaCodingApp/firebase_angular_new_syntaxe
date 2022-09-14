@@ -1,0 +1,62 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer class="max-w-64 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+      [opened]="drawerOpened" #drawer>
+      <mission-order-sidebar></mission-order-sidebar>
+
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content class="flex flex-col">
+
+      <!-- HEADER -->
+      <div class="h-30 min-h-30  bg-indigo-600 flex items-center justify-center">
+        <div class="flex justify-between w-full">
+          <div class="flex items-center ">
+            <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
+              <mat-icon class="text-white">reorder</mat-icon>
+            </button>
+            <span class="text-white text-2xl">
+              Ordres de missions
+            </span>
+          </div>
+          <div class="flex mr-4" *ngIf="habilitation.canCreate()">
+            <button mat-icon-button matTooltip="Ajouter" class=" bg-red-500" (click)="addMissionOrder()">
+              <mat-icon class=" text-white">add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- / HEADER -->
+
+      <!-- CONTENT CARD -->
+      <div class="content-card m-3">
+        <!-- CONTENT TOOLBAR -->
+        <div class="hidden">
+          <div class="toolbar px-24 py-8 hidden sm:block">
+            <div *ngIf="currentMail" class="hidden sm:block">
+              <button mat-icon-button
+               (click)="currentMail = null">
+                <mat-icon class="secondary-text">arrow_back</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- / CONTENT TOOLBAR -->
+        <!-- CONTENT -->
+        <div 
+        class="flex flex-wrap my-3 mx-1 bg-white rounded-lg border border-gray-200 shadow-md ">
+          <mission-order-list fusePerfectScrollbar 
+          id="non-printable" infiniteScroll [infiniteScrollDistance]="3"
+            [infiniteScrollThrottle]="50" (scrolled)="onScroll()" [scrollWindow]="false"
+          class="w-full mt-1 sm:w-1/3 h-140 border-r-2 border-gray-300 overflow-scroll">
+          [isScrolling]="isScrolling" 
+            [completed]="paginatedMissionOrders.missionOrders.length >= paginatedMissionOrders.total"
+            (getMore)="onScroll()"></mission-order-list>
+          <mission-order-details fusePerfectScrollbar class="w-full sm:w-2/3"></mission-order-details>
+        </div>
+        <!-- / CONTENT -->
+      </div>
+      <!-- / CONTENT CARD -->
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

@@ -1,0 +1,13 @@
+<div class="pt-3 overflow-y-auto w-full h-40 sm:h-screen">
+  <h2 class="text-center text-gray-400 p-6 text-xl border-b-2 border-gray-100 ">
+    Relevés de tonnages
+  </h2>
+  <div *ngIf="tonnages.length === 0" class="text-center text-gray-400 p-6 text-xl">
+    Pas de resultats
+  </div>
+  <div class="flex flex-col flex-1 relative">
+    <tonnage-item matRipple *ngFor="let tonnage of tonnages" [tonnage]="tonnage" (click)="getTonnageDetails(tonnage)"
+      [ngClass]="{ 'bg-gray-100': tonnage?.id == currentTonnage?.id }">
+    </tonnage-item>
+  </div>
+</div>

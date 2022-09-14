@@ -1,0 +1,23 @@
+<div class="flex justify-between py-4 px-4 hover:cursor-pointer items-center w-full">
+  
+  <div>
+    <div>{{ client.name }}</div>
+  </div>
+  <div>
+    <div>
+      <button
+        *ngIf="habilitation.canEdit()"
+        mat-icon-button
+        class="mat-elevation-z1"
+        (click)="
+          $event.preventDefault();
+          $event.stopPropagation();
+          updateClient(client)
+        "
+      >
+        <mat-icon class="text-blue-600">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<hr class="p-0 m-0 -mx-8"/>

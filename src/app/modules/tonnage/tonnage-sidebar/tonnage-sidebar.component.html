@@ -1,0 +1,51 @@
+<form class="flex flex-col mat-card p-4 pt-6 mx-2 mt-4" #f="ngForm" (ngSubmit)="getTonnages(f)"
+  name="form">
+  <div class="flex flex-col">
+    <mat-form-field appearance="outline">
+      <mat-label>Sélectionner un site</mat-label>
+      <mat-select required [(ngModel)]="tonnageFilterViewModel.siteId" name="site"
+        (selectionChange)="getPartnersForSite()">
+        <mat-option>
+          <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchSite($event)"
+            placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let site of filtredSites" [value]="site.id">
+          {{ site.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Sélectionner un partenaire</mat-label>
+      <mat-select required [(ngModel)]="tonnageFilterViewModel.partnerId" name="client">
+        <mat-option *ngIf="tonnageFilterViewModel.siteId" [value]="0">
+          Tous
+        </mat-option>
+        <mat-option *ngFor="let partner of partnersForSelectedSite" [value]="partner.id">
+          {{ partner.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Début</mat-label>
+      <input required matInput [matDatepicker]="startDatePicker" placeholder="Du"
+        [(ngModel)]="tonnageFilterViewModel.startDate" name="startDate" />
+      <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #startDatePicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fin</mat-label>
+      <input required matInput [matDatepicker]="endDatePicker" placeholder="Au"
+        [(ngModel)]="tonnageFilterViewModel.endDate" name="endDate" />
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <button type="submit" mat-raised-button color="accent" class="mb-2">
+    Afficher
+    <mat-icon class="ml-1">filter_list</mat-icon>
+  </button>
+  <button type="button" mat-raised-button color="warn" (click)="exportToExcel()">
+    Exporter un excel
+    <mat-icon class="ml-1">arrow_downward</mat-icon>
+  </button>
+</form>

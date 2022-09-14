@@ -1,0 +1,135 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+  <!-- Header  -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium"> Ajouter Pause</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <!-- / Header  -->
+  <form #f="ngForm" (ngSubmit)="updateBreaksActivity(f)" name="composeForm"
+    class="flex flex-col flex-auto p-6 overflow-y-auto">
+    <div class="flex flex-row items-center justify-between ">
+      <div class="w-full">
+        <mat-label class="font-bold">Heure de début</mat-label>
+        <ngx-mat-timepicker-field [(ngModel)]="activityBreaks[0].startTime" [format]="24" name="startTimePickerOne"
+          required></ngx-mat-timepicker-field>
+      </div>
+
+      <div class="mx-2 w-full">
+        <mat-label class="font-bold">Heure de fin</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[0].endTime" name="endTimePickerOne"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <button type="button" mat-icon-button (click)="resetActivityBreak(0)" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="mt-2 flex flex-row items-center justify-between">
+      <div class="w-full">
+        <mat-label class="font-bold">Heure de début</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[1].startTime" name="startTimePickerTwo"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <div class="w-full mx-2">
+        <mat-label class="font-bold">Heure de fin</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[1].endTime" name="endTimePickerTwo"
+          required>
+        </ngx-mat-timepicker-field>
+
+      </div>
+      <button type="button" mat-icon-button (click)="resetActivityBreak(1)" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="flex flex-row items-center justify-between">
+
+      <div class="w-full">
+        <mat-label class="font-bold">Heure de début</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[2].startTime" name="startTimePickerThree">
+        </ngx-mat-timepicker-field>
+
+      </div>
+      <div class="w-full mx-2">
+        <mat-label class="font-bold">Heure de fin</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[2].endTime" name="endTimePickerThree">
+        </ngx-mat-timepicker-field>
+
+      </div>
+      <button type="button" mat-icon-button (click)="resetActivityBreak(2)" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="flex flex-row items-center justify-between">
+
+      <div class="w-full">
+        <mat-label class="font-bold">Heure de début</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[3].startTime" name="startTimePickerFour"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <div class="mx-2 w-full">
+        <mat-label class="font-bold">Heure de fin</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[3].endTime" name="endTimePickerFour"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <button type="button" mat-icon-button (click)="resetActivityBreak(3)" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+
+    <div class="flex flex-row items-center justify-between">
+      <div class="w-full">
+        <mat-label class="font-bold">Heure de début</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[4].startTime" name="startTimePickerFive"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <div class="w-full mx-2">
+        <mat-label class="font-bold">Heure de fin</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[4].endTime" name="endTimePickerFive"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <button type="button" mat-icon-button (click)="resetActivityBreak(4)" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="flex flex-row items-center justify-between">
+
+      <div class="w-full">
+        <mat-label class="font-bold">Heure de début</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[5].startTime" name="startTimePickerSix"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <div class="mx-2 w-full">
+        <mat-label class="font-bold">Heure de fin</mat-label>
+        <ngx-mat-timepicker-field [format]="24" [(ngModel)]="activityBreaks[5].endTime" name="endTimePickerSix"
+          required></ngx-mat-timepicker-field>
+
+      </div>
+      <button type="button" mat-icon-button (click)="resetActivityBreak(5)" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+
+
+
+    <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+      <div class="ml-auto">
+        <button mat-raised-button color="accent" type="submit">
+          Valider
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

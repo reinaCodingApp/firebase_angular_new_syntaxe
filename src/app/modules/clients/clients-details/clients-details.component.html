@@ -1,0 +1,136 @@
+<div class="px-4 pt-3 overflow-y-auto max-h-100 w-full ">
+  <div *ngIf="!client">
+    <span>
+      <h2 class="pt-48 text-center text-gray-500 text-2xl">Veuillez sélectionner un partenaire</h2>
+    </span>
+  </div>
+  <div *ngIf="client" class="w-full" >
+    <div>
+      <h2 class="text-center text-2xl mb-4">{{ client.name }}</h2>
+    </div>
+    <mat-tab-group mat-align-tabs="center" class="items-center" class="w-full">
+      <mat-tab label="Details">
+        <div class="tab-content overflow-x-auto relative">
+          <table class="text-center clsient-detail w-full">
+            <tr class="">
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Nom</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.name }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Raison sociale</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.entrepriseName }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Code postal</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.zipCode }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Ville</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.city }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Pays</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.country }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Téléphone 1</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.phone }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Téléphone 2</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.phone2 }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Fax</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.fax }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Numéro RCS</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.rcsNumber }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Numéro TVA</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.vatNumber }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Email</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.email }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Site Web</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.webSite }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">Contact</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.contact }}</td>
+            </tr>
+            <tr>
+              <td class="w-1/2 font-bold border border-gray-200 p-2">infos complémentaires</td>
+              <td class="w-1/2 border border-gray-200 p-2">{{ client.comments }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Sites associés">
+        <div class="tab-content p-8 p-md-24 text-center">
+          <div *ngIf="habilitation.canEdit()">
+            <form #f="ngForm" (ngSubmit)="addSiteToClient(f)" name="form">
+              <mat-form-field appearance="outline" class="pr-4">
+                <mat-label>Sites</mat-label>
+                <mat-select name="site" [(ngModel)]="selectedSite" required>
+                  <mat-option *ngFor="let site of sites" [value]="site.id">
+                    {{ site.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button type="submit" mat-icon-button color="accent" class="mat-elevation-z1 mb-20"
+                [disabled]="siteAlreadyExist()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </form>
+          </div>
+          <mat-table [dataSource]="client.sites" class="text-center w-full">
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+              <mat-cell *matCellDef="let site">
+                <span class="job-title">
+                  {{ site.name }}
+                </span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="city">
+              <mat-header-cell *matHeaderCellDef>Ville</mat-header-cell>
+              <mat-cell *matCellDef="let site">
+                <span class="job-title">
+                  {{ site.city }}
+                </span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="zipCode">
+              <mat-header-cell *matHeaderCellDef>Code postal</mat-header-cell>
+              <mat-cell *matCellDef="let site">
+                <span class="job-title">
+                  {{ site.zipCode }}
+                </span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let site">
+                <span class="job-title" *ngIf="habilitation.canDelete()">
+                  <button mat-icon-button class="mat-elevation-z1" (click)="removeSiteFromClient(site)">
+                    <mat-icon class="text-red-600">delete_outline</mat-icon>
+                  </button>
+                </span>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let site; columns: displayedColumns" class="activity">
+            </mat-row>
+          </mat-table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

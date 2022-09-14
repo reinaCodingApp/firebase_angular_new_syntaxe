@@ -1,0 +1,35 @@
+<div class="absolute  print:relative inset-0 flex flex-col print:flex-row min-w-full" 
+style="print-color-adjust: exact;-webkit-print-color-adjust: exact;">
+
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer class=" print:hidden w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+      [opened]="drawerOpened" #drawer>
+      <recap-activity-sidebar></recap-activity-sidebar>
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content class="flex flex-col">
+
+      <!-- HEADER -->
+      <div class="w-full print:hidden">
+        <div class="h-36 sm:h-20 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
+  " color="primary">
+          <div class="flex justify-between w-full">
+            <div class="flex items-center ">
+              <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
+                <mat-icon class="text-white">reorder</mat-icon>
+              </button>
+              <span class="text-white text-2xl">Récapitulatif activité par secteur</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- / HEADER -->
+      <!-- CONTENT -->
+      <div  class="p-4 print:p-0 flex flex-col  w-full">
+        <recap-activity-content></recap-activity-content>
+      </div>
+      <!-- / CONTENT -->
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

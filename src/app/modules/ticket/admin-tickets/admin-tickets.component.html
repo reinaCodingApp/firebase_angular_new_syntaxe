@@ -1,0 +1,60 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+      [opened]="drawerOpened" #drawer>
+      <admin-tickets-sidebar></admin-tickets-sidebar>
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content class="flex flex-col">
+      <!-- CONTENT HEADER -->
+      <div class="flex flex-col sm:flex-row justify-between items-center bg-indigo-600 p-2 sm:p-0 h-30 sm:h-40">
+        <div class="flex justify-between w-full">
+          <div class="flex items-center">
+            <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
+              <mat-icon class="text-white">reorder</mat-icon>
+            </button>
+            <span class="text-white text-2xl">Tickets techniques</span>
+          </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="w-full m-1  p-2 rounded-2xl shadow bg-indigo-100 flex items-center ">
+          <div class="flex w-full items-center justify-between ">
+            <div class="flex flex-row items-center ">
+              <mat-icon>search</mat-icon>
+              <input [(ngModel)]="searchInput" placeholder="Rechercher"
+              (keyup.enter)="searchDiscussions($event)" />
+            </div>
+            <mat-icon (click)="searchDiscussions(null)" class="cursor-pointer">close</mat-icon>
+          </div>
+        </div>
+      </div>
+      <!-- / CONTENT HEADER -->
+      <!-- CONTENT CARD -->
+      <div>
+        <!-- CONTENT TOOLBAR -->
+          <div class="pl-4 pt-4 block sm:hidden">
+            <div *ngIf="currentTicket" class=" block sm:hidden">
+            <button mat-icon-button (click)="currentTicket = null">
+              <mat-icon class="secondary-text">arrow_back</mat-icon>
+            </button>
+          </div>
+        </div>
+        <!-- / CONTENT TOOLBAR -->
+        <!-- CONTENT -->
+        <div class="flex flex-col sm:flex-row m-1 bg-white rounded-lg border border-gray-200 shadow-md">
+          <tickets-list infiniteScroll [infiniteScrollDistance]="3" [infiniteScrollThrottle]="50"
+            (scrolled)="onScroll()" [scrollWindow]="false" fusePerfectScrollbar [isScrolling]="isScrolling" [completed]="
+            paginatedTickets.tickets.length >=
+            paginatedTickets.total
+          " (getMore)="onScroll()"
+          class="sm:w-1/3 border-r-2 border-gray-300 h-100 overflow-scroll">
+          </tickets-list>
+          <ticket-details fusePerfectScrollbar  class="w-full sm:w-2/3"></ticket-details>
+        </div>
+        <!-- / CONTENT -->
+      </div>
+      <!-- / CONTENT CARD -->
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div> 

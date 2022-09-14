@@ -1,0 +1,128 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">{{
+      data.mode == "edit" ? "Modifier une absence" : "Ajouter une absence"
+
+
+      }}</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <!-- / Header -->
+  <div mat-dialog-content fusePerfectScrollbar>
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSubmit(f)"
+      name="composeForm" class="flex flex-col flex-auto p-6 overflow-y-auto"
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Salariés</mat-label>
+        <mat-select
+          #employee="ngModel"
+          name="employee"
+          required
+          [(ngModel)]="activityAbsence.employee.id"
+          [disabled]="data.mode == 'edit'"
+        >
+        <mat-option>
+          <ngx-mat-select-search
+            ngModel
+            name="searchINput"
+            (ngModelChange)="searchEmployee($event)"
+            placeholderLabel="Rechercher"
+            noEntriesFoundLabel="pas de resultats"
+          ></ngx-mat-select-search>
+        </mat-option>
+          <mat-option *ngFor="let employee of filtredEmployees" [value]="employee.id">
+            {{ employee.fullName }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="employee.invalid && (employee.dirty || employee.touched)"
+        >
+          Veuillez choisir un salarié !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Type d'absence</mat-label>
+        <mat-select
+          #absenceType="ngModel"
+          name="absenceType"
+          required
+          [(ngModel)]="activityAbsence.absenceType.id"
+        >
+          <mat-option
+            *ngFor="let absenceType of activityAbsenceTypes"
+            [value]="absenceType.id"
+          >
+            {{ absenceType.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            absenceType.invalid && (absenceType.dirty || absenceType.touched)
+          "
+        >
+          Veuillez choisir un type d'absence !
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Début</mat-label>
+        <input
+          #startDate="ngModel"
+          matInput
+          [matDatepicker]="startDatePicker"
+          placeholder="Début"
+          [(ngModel)]="activityAbsence.startDate"
+          name="startDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+        <mat-error
+          *ngIf="startDate.invalid && (startDate.dirty || startDate.touched)"
+        >
+          Veuillez renseigner la date début de l'absence!
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fin</mat-label>
+        <input
+          #endDate="ngModel"
+          matInput
+          [matDatepicker]="endDatePicker"
+          placeholder="Fin"
+          [(ngModel)]="activityAbsence.endDate"
+          name="endDate"
+          [min]="activityAbsence.startDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+        <mat-error
+          *ngIf="endDate.invalid && (endDate.dirty || endDate.touched)"
+        >
+          Veuillez renseigner la date fin de l'absence!
+        </mat-error>
+      </mat-form-field>
+      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+        <div class="ml-auto">
+        <button mat-raised-button color="accent" type="submit">
+          {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+          <mat-icon class="ml-1">check</mat-icon>
+        </button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="pt-3 overflow-y-auto max-h-100 w-full">
+  <h2 class="select-message-text hint-text text-center text-gray-500 text-xl mb-2">
+    Clients
+  </h2>
+  <mat-checkbox class="mb-2 p-4"  (change)="getClients()" [(ngModel)]="includeDisabledClients"
+    name="includeDisabledClients">
+    Inclure les clients désactivés
+  </mat-checkbox>
+
+  <div *ngIf="clients.length === 0">
+    <span class="no-messages-text hint-text">Pas de resultats</span>
+  </div>
+  <div >
+    <clients-item *ngFor="let client of clients" [client]="client" 
+     (click)="getClientDetails(client)"
+      class="flex w-full border-b-2"
+      [ngClass]="{'bg-gray-100': client?.id === currentClient?.id }"
+      ></clients-item>
+  </div>
+
+</div>

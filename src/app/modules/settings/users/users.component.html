@@ -1,0 +1,92 @@
+<div class="flex flex-col w-full">
+  <div class="p-4 px-7 flex flex-row items-center justify-between bg-indigo-600">
+    <div class="flex flex-col">
+      <div class="">
+        <div class="text-xl text-white">
+          GESTION DES UTILISATEURS
+        </div>
+        <div class="text-white secondary-text">
+          <span>Profils, droits et permissions</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="connectedUser" class="flex flex-col sm:flex-row items-center">
+      <a *ngIf="connectedUser.customClaims.isRoot" [routerLink]="'/access-rights/settings/modules'"
+        class="text-white hidden sm:block hover:underline text-lg font-semibold mr-2">Gestion des modules
+      </a>
+      <button *ngIf="connectedUser.customClaims.isRoot || connectedUser.customClaims.isTechAdmin"
+        (click)="popup(null, 'new')" mat-fab color="warn" class="add-file-button">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class=" flex flex-col p-4" fusePerfectScrollbar>
+    <div class="my-3 flex flex-row items-center place-content-center">
+      <div class="w-full sm:w-2/3 rounded-2xl shadow bg-white  flex items-center ">
+        <button mat-icon-button class="secondary-text">
+          <mat-icon>search</mat-icon>
+        </button>
+        <input placeholder="Rechercher utilisateur" name="search" (keyup)="searchUser($event)" />
+      </div>
+    </div>
+    <table *ngIf="filtredUsers && filtredUsers.length > 0" mat-table [dataSource]="filtredUsers" matSort>
+      <!-- Date Column -->
+      <ng-container matColumnDef="displayName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Pseudo
+        </th>
+        <td mat-cell *matCellDef="let u">{{ u.displayName }}</td>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="email">
+        <th class="hidden sm:table-cell" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Émail
+        </th>
+        <td class="hidden sm:table-cell" mat-cell *matCellDef="let u">{{ u.email }}</td>
+      </ng-container>
+
+      <!-- Value Column -->
+      <ng-container matColumnDef="customClaims">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Privilèges
+        </th>
+        <td mat-cell *matCellDef="let u" class="w-auto">
+          <div *ngIf="u && u.customClaims">
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isRoot">root</span>
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isTechAdmin">techAdmin</span>
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isGuest">guest</span>
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isHrM">HrM</span>
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isSeM">SeM </span>
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isAdM">AdM </span>
+            <span  class="mr-2 rounded-full p-2 bg-gray-200"  *ngIf="u.customClaims.isDir">Dir</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="buttons">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let u">
+          <button mat-icon-button [matMenuTriggerFor]="card20Menu" aria-label="more">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #card20Menu="matMenu">
+            <button [routerLink]="['/access-rights', u.uid]" mat-menu-item aria-label="edit" target="_blank">
+              <mat-icon>blur_linear</mat-icon>
+              <span>Permissions</span>
+            </button>
+            <button (click)="popup(u, 'edit')" mat-menu-item aria-label="edit" target="_blank">
+              <mat-icon>account_circle</mat-icon>
+              <span>Éditer</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+    </table>
+  </div>
+
+</div>

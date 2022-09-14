@@ -1,0 +1,239 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer [ngClass]="{ 'w-1/2 max-w-72': hierarchyLevel == 3  , 'hidden': hierarchyLevel != 3   }"
+      [mode]="drawerMode" [disableClose]="disableClose" [opened]="drawerOpened" #drawer>
+      <!-- sidebar -->
+      <!-- POLES -->
+      <div *ngIf="hierarchyLevel == 3">
+        <!-- POLES -->
+        <fuse-sidebar class="sidebar" name="poles-sidebar" position="left" lockedOpen="gt-lg">
+          <div class="content" fusePerfectScrollbar>
+            <div class="sidebar-content">
+              <div class="card">
+                <div class="content p-2" fusePerfectScrollbar>
+                  <div *ngFor="let pole of poles">
+                    <div class="py-4 px-2 ">
+                      <span class="font-bold text-lg">{{ pole.name }}</span>
+                    </div>
+                    <div>
+                      <div class="cursor-pointer p-2 m-1 border-2 border-gray-200 hover:text-black hover:bg-gray-200"
+                        [ngClass]="{'bg-indigo-400 text-white': selectedSector == sector.responsibleId }"
+                        *ngFor="let sector of pole.sectors">
+                        <a (click)="getSectionsForAdmin(sector.responsibleId)"
+                          [matTooltip]="sector.responsible.fullName">
+                          <div>
+                            <div>
+                              {{ sector.name }}
+                            </div>
+                            <div>
+                              <mat-icon *ngIf="sector.submitted && sector.responsibleId"
+                                [ngStyle]="{ 'color': selectedSector == sector.responsibleId ? 'white': '#039be5' }">
+                                assignment
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fuse-sidebar>
+
+      </div>
+      <!-- /sidebar -->
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content class=" flex flex-col">
+      <!-- HEADER -->
+      <div 
+      [ngClass]="{ ' ': hierarchyLevel == 3  , 'p-10 ': hierarchyLevel != 3   }"  
+      
+      class="px-4 h-25 sm:h-20 items-start sm:items-center bg-indigo-600 flex flex-col
+       sm:flex-row justify-evenly sm:justify-between " color="primary">
+        <div class="flex flex-row items-center">
+          <button *ngIf="hierarchyLevel == 3" mat-icon-button (click)="drawer.toggle()">
+            <mat-icon class="text-white">menu</mat-icon>
+          </button>
+          <span class="text-white text-xl pl-1">
+            Fiches de suivi
+          </span>
+        </div>
+        <div>
+          <span class="text-white">{{ "SEMAINE " + sheet.weekNumber + " - " }}</span>
+          <span class="text-white">{{sheet.date}}</span>
+        </div>
+      </div>
+      <div 
+      [ngClass]="{ ' h-20 ': hierarchyLevel == 3  , 'h-40 sm:h-20': hierarchyLevel != 3   }"  
+      
+      class="px-4 pb-7 pt-4 sm:py-1  items-center bg-white
+      shadow-yellow-50 flex flex-col sm:flex-row justify-between" color="primary">
+        <mat-form-field *ngIf="hierarchyLevel != 3" class="w-full sm:w-50 text-md">
+          <mat-select name="service" [(ngModel)]="selectedSheetId" (selectionChange)="getFollowupSheet()">
+            <mat-option *ngFor="let sheetHistory of sheetsHistory" [value]="sheetHistory.id">
+              {{ "SEMAINE " + sheetHistory.weekNumber }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button class="ml-auto mb-1 mt-0  sm:my-0" mat-stroked-button color="warn" [disabled]="!canEdit"
+          (click)="submitOrCloseSheet()">
+          <mat-icon class="mr-1">send</mat-icon>
+          Finaliser et envoyer
+        </button>
+
+      </div>
+      <!-- / HEADER -->
+      <!-- content -->
+
+      <div class="w-full">
+        <div class="p-4 flex flex-col sm:flex-row">
+          <!-- 1ere colonne -->
+          <!-- SECTIONS -->
+          <div class="mb-2" *ngIf="currentSection">
+            <div *ngFor="let section of sheet.sections" class="mat-card rounded-md"
+              [ngClass]="{ 'bg-red-400': section?.id == currentSection?.id }" (click)="getCurrentSction(section)">
+              <div class="text-white p-2">
+                {{ section.title }}</div>
+              <hr class=" p-0 m-0 bg-gray-100 h-0.5" />
+              <div class="text-white p-2 ">{{ section.ownerName }}</div>
+            </div>
+          </div>
+          <!-- 2 colonne -->
+          <div class="w-full -mt-2">
+            <!-- FOLDERS -->
+            <!-- EDIT MODE -->
+            <div class="flex flex-col" *ngIf="canEdit">
+              <div *ngIf="currentSection">
+                <div class="mat-card m-3 " *ngFor="let folder of currentSection.folders; index as folderIndex">
+                  <div class="flex flex-row justify-between items-center p-4 border-2 border-gray-100">
+                    <input class="text-xl " [(ngModel)]="folder.title" name="title" maxlength="50"
+                      (change)="renameSimpleTask(folder, folderIndex)" />
+                    <button mat-button (click)="deleteSimpleTask(folder, folderIndex)">
+                      <mat-icon color="warn">delete_outline</mat-icon>
+                    </button>
+                  </div>
+                  <div class=" p-4 border-2 border-gray-100">
+                    <div class="flex flex-row justify-between text-md" *ngFor="let point of folder.points; index as i">
+                      <mat-form-field appearance="outline" class="w-50">
+                        <mat-label>Instance</mat-label>
+                        <mat-select name="note" [(ngModel)]="point.note"
+                          (selectionChange)="addOrUpdatePoint(point, folderIndex, i)">
+                          <mat-select-trigger>
+                            <span class="flex flex-row items-center">
+                              <mat-icon [ngClass]="point.note > 3 ? 'text-red-700' : 'text-amber-500'">
+                                label_important
+                              </mat-icon>
+                              <label class="pl-1">{{ getNoteTitle(point.note) }}</label>
+                            </span>
+                          </mat-select-trigger>
+                          <mat-option *ngFor="let note of notes" [value]="note.noteValue">
+                            {{ note.noteText }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field class="ml-2 w-full h-auto ">
+                        <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="0"
+                          name="note{{ i }}" [(ngModel)]="point.content" matInput
+                          (change)="addOrUpdatePoint(point, folderIndex, i)">
+                          </textarea>
+                        <button mat-icon-button (click)="deletePoint(point.id, i, folder)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </mat-form-field>
+
+                    </div>
+                    <div class="flex flex-row items-center justify-center">
+                      <button mat-flat-button (click)="createNewPoint(folder)">
+                        <mat-icon color="warn">add</mat-icon>
+                      </button>
+                    </div>
+
+                  </div>
+
+                  <div class="p-1 flex flex-row">
+                    <div class="file-uploader">
+                      <input hidden #file type="file" name="file" id="file" class="inputfile" multiple="multiple"
+                        (change)="uploadAttachments(file.files, folder, folderIndex)" />
+                      <button matTooltip="Joindre des documents" mat-button color="primary" type="button"
+                        (click)="file.click()">
+                        <mat-icon>attach_file</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="folder.attachments.length > 0" class="flex flex-row">
+                      <div class="flex flex-row items-center " *ngFor="
+                              let attachment of folder.attachments;
+                              index as attachmentIndex
+                            ">
+                        <span class="cursor-pointer text-md" (click)="downloadAttachment(attachment)">{{
+                          attachment.fileName
+                          }}</span>
+                        <button type="button" mat-icon-button color="warn" (click)="
+                                removeAttachment(attachment, folder, attachmentIndex)
+                              " *ngIf="attachment.fileName">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-wrap justify-center content-center">
+                <button mat-raised-button color="accent" (click)="addSimpleTask(currentSection)" [disabled]="!canEdit"
+                  *ngIf="currentSection" matTooltip="Nouveau dossier">
+                  <mat-icon class="mr-4">add</mat-icon>
+                  <mat-icon>folder</mat-icon>
+                </button>
+              </div>
+            </div>
+            <!-- DISPLAY MODE -->
+            <div *ngIf="!canEdit">
+              <div *ngIf="currentSection" class="m-2">
+                <div class="mat-card mb-2" *ngFor="let folder of currentSection.folders; index as folderIndex">
+                  <div class="p-4 border-2 border-gray-100">
+                    {{ folder.title }}
+                  </div>
+                  <div class="p-2 flex flex-row" *ngFor="let point of folder.points; index as i">
+                    <div class="p-4">
+                      <span class="text-white p-2" [ngClass]="point.note > 3 ? 'bg-red-700' : 'bg-amber-500'">{{
+                        getNoteTitle(point.note) }}</span>
+                    </div>
+                    <div class="text-md justify-content">
+                      <div class="h4" [outerHTML]="point.content | replaceLineBreaks"></div>
+                    </div>
+                  </div>
+                  <div *ngIf="folder.attachments && folder.attachments.length > 0" class=" border-2 border-gray-100">
+                  </div>
+                  <div *ngIf="folder.attachments && folder.attachments.length > 0" class="p-4">
+                    <div class="flex flex-row" *ngIf="folder.attachments.length > 0">
+                      <mat-icon class="ml-2" color="accent">attach_file</mat-icon>
+                      <div class="flex flex-row" *ngFor="let attachment of folder.attachments;" color="accent">
+                        <span color="accent" class="mr-2 cursor-pointer" (click)="downloadAttachment(attachment)">
+                          {{ attachment.fileName }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NO SECTION, NO SUBMITTED FOLLOWUPSHEET  -->
+        <div *ngIf="!currentSection" class="text-center">
+          <p class="p-8 grid place-content-center">
+            Aucune fiche de suivi
+          </p>
+        </div>
+      </div>
+
+
+      <!-- /content -->
+
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

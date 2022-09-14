@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFireMessaging } from '@angular/fire/messaging';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { AngularFireMessaging } from '@angular/fire/compat/messaging';
+import { Observable } from 'rxjs';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firebaseCloudMessagingKey } from 'environments/environment';
 
@@ -14,12 +14,13 @@ export class FcmMessagingService {
     private angularFireMessaging: AngularFireMessaging,
     private angularFireFunctions: AngularFireFunctions,
     private httpClient: HttpClient) {
-    this.angularFireMessaging.messaging.subscribe(
-      (messaging) => {
-        messaging.onMessage = messaging.onMessage.bind(messaging);
-        messaging.onTokenRefresh = messaging.onTokenRefresh.bind(messaging);
-      }
-    );
+    // todo : manage messaging with fcm
+    // this.angularFireMessaging.messaging.subscribe(
+    //   (messaging) => {
+    //     messaging.onMessage = messaging.onMessage.bind(messaging);
+    //     messaging.onTokenRefresh = messaging.onTokenRefresh.bind(messaging);
+    //   }
+    // );
   }
 
   requestPermission(): void {
@@ -41,17 +42,19 @@ export class FcmMessagingService {
   }
 
   sendMessage(token: string): void {
-    const sendMessageFn = this.angularFireFunctions.functions.httpsCallable('sendMessage');
-    sendMessageFn({ token: token }).then(response => {
-      console.log('message sent');
-    });
+      // todo :
+    // const sendMessageFn = this.angularFireFunctions.functions.httpsCallable('sendMessage');
+    // sendMessageFn({ token: token }).then(response => {
+    //   console.log('message sent');
+    // });
   }
 
   subscribeToTopic(token: string): void {
-    const sendNotificationFn = this.angularFireFunctions.functions.httpsCallable('subscribeToTopic');
-    sendNotificationFn({ registrationTokens: [token], topic: 'allDevices' }).then(response => {
-      console.log('subscribe done');
-    });
+      // todo :
+    // const sendNotificationFn = this.angularFireFunctions.functions.httpsCallable('subscribeToTopic');
+    // sendNotificationFn({ registrationTokens: [token], topic: 'allDevices' }).then(response => {
+    //   console.log('subscribe done');
+    // });
   }
 
   sendNotification(notification: any): Observable<any> {

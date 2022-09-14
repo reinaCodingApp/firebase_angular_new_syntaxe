@@ -1,0 +1,102 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">{{
+      data.mode == "edit" ? "Modifier une activité" : "Ajouter une activité"
+
+      }}</div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <!-- / Header -->
+  <div mat-dialog-content fusePerfectScrollbar>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)" 
+    name="composeForm" class="flex flex-col flex-auto p-6 overflow-y-auto">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Séléection salarié</mat-label>
+        <mat-select #employee="ngModel" name="employee" required [(ngModel)]="activity.employee.id"
+          [disabled]="data.mode == 'edit'">
+          <mat-option>
+            <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let employee of filtredEmployees" [value]="employee.id">
+            {{ employee.fullName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="employee.invalid && (employee.dirty || employee.touched)">
+          Veuillez choisir un salarié !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Séléection site</mat-label>
+        <mat-select #site="ngModel" name="site" required [(ngModel)]="activity.site.id">
+          <mat-option>
+            <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchSite($event)"
+              placeholderLabel="Rechercher" noEntriesFoundLabel="pas de resultats"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let site of filtredSites" [value]="site.id">
+            {{ site.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="site.invalid && (site.dirty || site.touched)">
+          Veuillez choisir un site !
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input #day="ngModel" matInput [matDatepicker]="dayPicker" placeholder="Date" [(ngModel)]="activity.startDate"
+          name="day" required [disabled]="data.mode == 'edit'" />
+        <mat-datepicker-toggle matSuffix [for]="dayPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dayPicker></mat-datepicker>
+        <mat-error *ngIf="day.invalid && (day.dirty || day.touched)">
+          Veuillez renseigner la date de l'activité'!
+        </mat-error>
+      </mat-form-field>
+
+
+      <div class="flex flex-row items-baseline">
+        <mat-form-field class="w-1/2 mr-1">
+          <mat-label>Heure de début</mat-label>
+          <input #startTime="ngModel" format="24" matInput placeholder="HH:mm" [(ngModel)]="activity.startTime"
+            name="startTimePicker" required [ngxMatTimepicker]="startTimePicker" />
+          <mat-icon matSuffix (click)="startTimePicker.open()">watch_later
+          </mat-icon>
+          <ngx-mat-timepicker #startTimePicker></ngx-mat-timepicker>
+          <mat-error *ngIf="startTime.invalid && (startTime.dirty || startTime.touched)">
+            Veuillez renseigner l'heure de début!
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-1/2">
+          <mat-label>Heure de fin</mat-label>
+          <input #endTime="ngModel" format="24"  matInput [ngxMatTimepicker]="endTimePicker" placeholder="HH:mm"
+            [(ngModel)]="activity.endTime" name="endTimePicker" />
+            <mat-icon matSuffix (click)="endTimePicker.open()">watch_later
+            </mat-icon>
+            <ngx-mat-timepicker #endTimePicker></ngx-mat-timepicker>
+          <mat-error *ngIf="endTime.invalid && (endTime.dirty || endTime.touched)">
+            Veuillez renseigner l'heure de fin!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Remarque</mat-label>
+        <textarea matInput name="title" [(ngModel)]="activity.title" rows="4">
+          </textarea>
+      </mat-form-field>
+
+      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+        <div class="ml-auto">
+          <button mat-raised-button color="accent" type="submit">
+            {{ data.mode == "edit" ? "Modifier" : "Créer" }}
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<!-- Button -->
+<button
+    mat-icon-button
+    [matMenuTriggerFor]="userActions">
+    <span class="relative">
+        <img
+            class="w-7 h-7 rounded-full"
+            *ngIf="false"
+            [src]="user.photoURL">
+        <mat-icon
+            [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        <span
+            class="absolute right-0 bottom-0 w-2 h-2 rounded-full mr-px mb-px"
+        ></span>
+    </span>
+</button>
+
+<mat-menu
+    [xPosition]="'before'"
+    #userActions="matMenu">
+    <button *ngIf="user" mat-menu-item>
+        <span class="flex flex-col leading-none text-center">
+            <span class="mt-1 text-md font-medium">{{user.displayName}}</span>
+            <span class="mt-1.5 text-md font-medium">{{user.email}}</span>
+        </span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button
+        mat-menu-item
+        (click)="signOut()">
+        <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+        <span>Déconnexion</span>
+    </button>
+</mat-menu>
+

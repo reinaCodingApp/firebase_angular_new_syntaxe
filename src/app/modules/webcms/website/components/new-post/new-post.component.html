@@ -1,0 +1,73 @@
+<div *ngIf="post" class="p-6 flex flex-col w-full">
+  <div class="flex flex-row items-center">
+    <button matTooltip="Gestion de contenu" mat-icon-button class="back" [routerLink]="'/website'">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2 *ngIf="mode == 'new'" class="pl-4 text-lg font-bold">{{ isNews ? "Nouvelle actualité" : "Nouveau article"}}</h2>
+    <h2 *ngIf="mode == 'edit'" class="pl-4 text-lg font-bold">{{ isNews ? "Modifier actualité" : "Modifier article"}}
+    </h2>
+  </div>
+  <div class="w-full flex gap-1 flex-col-reverse sm:flex-row p-4">
+    <div class="w-full sm:w-3/4 ">
+      <form #f="ngForm" name="addPostForm" (ngSubmit)="onSubmit(f)" class="p-4 mat-card flex flex-col">
+        <mat-form-field appearance="outline">
+          <mat-label>Titre</mat-label>
+          <input #title="ngModel" [(ngModel)]="post.title" name="title" matInput required minlength="10" />
+          <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">
+            Veuillez renseigner le titre (10 caractères minimum) !
+          </mat-error>
+        </mat-form-field>
+        <ckeditor [editor]="editor" [config]="config" [(ngModel)]="post.content" name="editor"
+          (ready)="onEditorReady($event)">
+        </ckeditor>
+      </form>
+    </div>
+
+
+    <div class="w-full sm:w-1/4">
+      <div class="flex flex-row items-center place-content-center">
+        <button mat-raised-button (click)="onSubmit(f)" color="accent" aria-label="SAVE" type="submit">
+          {{ mode === "new" ? "Créer" : "Modifier" }}
+        </button>
+      </div>
+
+      <div *ngIf="!isNews" class="p-4 mb-2 m-4 mat-card flex flex-col items-center place-content-center">
+        <div class="font-semibold text-left text-lg  mb-2 ">Catégories</div>
+        <mat-form-field class="w-full">
+          <mat-select name="catégories" [(ngModel)]="post.categoryId">
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{ category.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="mat-card p-4 mb-2 m-4 flex flex-col items-center place-content-center ">
+        <div class="font-semibold text-left text-lg">Image</div>
+        <div>
+          <!-- <div class="message-box mb-12" >
+              Ajouter une image avec cette résolution : 320x380
+            </div> -->
+          <div class="mt-2">
+            <img *ngIf="post.src" [src]="post.src?.medium" />
+          </div>
+          <div class="mt-4 flex flex-row items-center place-content-center">
+            <button mat-fab color="warn" type="button" class="upload" (click)="file.click()">
+              <!-- <mat-icon>{{
+                post.src?.medium ? "edit" : "add_photo_alternatet"
+                }}</mat-icon> -->
+              <mat-icon *ngIf="post.src?.medium">edit</mat-icon>
+              <mat-icon *ngIf="!post.src?.medium" svgIcon="mat_outline:image"></mat-icon>
+            </button>
+            <input (change)="filePicked($event)" type="file" #file hidden accept="image/*" />
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="mode == 'edit'" class="mt-4 flex flex-row items-center place-content-center">
+        <button mat-raised-button (click)="disablePost()" color="warn" aria-label="SAVE" type="submit">
+          Désactiver
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

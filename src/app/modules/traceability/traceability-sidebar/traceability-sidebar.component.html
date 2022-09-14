@@ -1,0 +1,77 @@
+<div class="p-2">
+  <div class="mat-card text-center p-3">
+    <div>
+      <h3 class="mb-0">Codes de la semaine</h3>
+    </div>
+    <div>
+      <div *ngFor="let code of traceabilityPlanification?.traceabilityWeekCodes">
+        <h3 class="pr-12">{{code.code}} </h3>
+      </div>
+      <h3 *ngIf="traceabilityPlanification?.traceabilityWeekCodes?.length == 0">Pas encore des codes</h3>
+    </div>
+    <div *ngIf="habilitation.canEdit()">
+      <button [disabled]="!traceabilityPlanification" mat-fab color="primary" class="mt-1"
+        (click)="managTraceabilityCodesOfWeek()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+  </div>
+  <form class="mat-card text-center p-3 my-3" name="form">
+    <div>
+      <h3 class="mb-0">Code MEL de la semaine</h3>
+      <h2  class="font-semibold text-xl">
+        {{
+        traceabilityPlanification
+        ? traceabilityPlanification.mel
+        : "Non définie"
+        }}
+      </h2>
+    </div>
+    <div class="flex flex-row flex-wrap my-2">
+      <div class="mr-1" *ngFor="let color of colors">
+        <button mat-mini-fab class="mb-1"
+         *ngIf="color !== 'Non définie'" [ngStyle]="{ 'background-color': getColor(color) }"
+          (click)="changeSelectedColor(color)"></button>
+      </div>
+    </div>
+    <div>
+      <h2  class="font-semibold text-xl" *ngIf="traceabilityPlanification">
+        {{ traceabilityPlanification.color }}
+      </h2>
+      <h2 class="font-semibold text-xl" *ngIf="!traceabilityPlanification">
+        {{ selectedColor }}
+      </h2>
+    </div>
+    <div class="w-full mt-2" *ngIf="habilitation.canEdit()">
+      <button mat-raised-button color="primary" class="block w-full" (click)="updateOrAddPlanification()">
+        Affecter la couleur
+      </button>
+    </div>
+
+  </form>
+
+  <form class="mat-card text-center p-3 my-3" name="form">
+    <mat-form-field appearance="outline" class="flex-auto w-full">
+      <mat-label>Semaine</mat-label>
+      <mat-select [(ngModel)]="requestParameter.week" name="week" (selectionChange)="getTraceabilityPlanification()">
+        <mat-option *ngFor="let week of weeks" [value]="week">
+          {{ week }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="flex-auto w-full">
+      <mat-label>Année</mat-label>
+      <mat-select [(ngModel)]="requestParameter.year" name="year" (selectionChange)="getTraceabilityPlanification()">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-divider class="mb-5"></mat-divider>
+    <button mat-raised-button class="block w-full" color="warn" (click)="printWeeks()">
+      Impression semaines
+      <mat-icon class="ml-1">print</mat-icon>
+    </button>
+  </form>
+</div>

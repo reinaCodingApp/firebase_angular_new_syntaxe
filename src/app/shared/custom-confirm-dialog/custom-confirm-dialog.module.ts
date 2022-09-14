@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseSidebarModule } from '@fuse/components';
+import { SharedModule } from '../../shared/shared.module';
+
 import { CustomConfirmDialogComponent } from './custom-confirm-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
@@ -15,8 +15,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    FuseSidebarModule,
-    FuseSharedModule,
+    SharedModule,
   ],
   exports: [
     CustomConfirmDialogComponent

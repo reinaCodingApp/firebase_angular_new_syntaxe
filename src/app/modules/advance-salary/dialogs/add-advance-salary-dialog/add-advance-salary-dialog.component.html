@@ -1,0 +1,142 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+      <div class="text-lg font-medium">{{
+        mode == "add" ? "Nouvel Acompte" : "Modifier Acompte"
+      }}</div>
+      <button
+          mat-icon-button
+          (click)="matDialogRef.close()"
+          [tabIndex]="-1">
+          <mat-icon
+              class="text-current"
+              [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      </button>
+  </div>
+
+  <form
+      class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+      [formGroup]="newAdvanceSalaryForm">
+
+      <mat-form-field appearance="outline" *ngIf="mode === 'add'">
+        <mat-label>Sélection salarié</mat-label>
+        <mat-select formControlName="employee" name="employee">
+          <mat-option>
+            <ngx-mat-select-search
+              formControlName="searchInput"
+              name="searchInput"
+              (ngModelChange)="searchEmployee($event)"
+              placeholderLabel="Rechercher"
+              noEntriesFoundLabel="pas de resultats"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option
+            *ngFor="let employee of filtredEmployees"
+            [value]="employee.id"
+          >
+            {{ employee.fullName }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Salarié est obligatoire!</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="mode == 'edit'">
+        <mat-label>Salarié</mat-label>
+        <input
+          matInput
+          formControlName="employee"
+          name="employee"
+          [value]="data.employee.fullName"
+          type="text"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="mode == 'edit'">
+        <mat-label>En date du</mat-label>
+        <input
+          matInput
+          formControlName="requestDate"
+          name="requestDate"
+          [value]="data.requestDate"
+          type="text"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="mode == 'edit'">
+        <mat-label>Status</mat-label>
+        <mat-select
+          (valueChange)="onStatusChange($event)"
+          formControlName="advanceSalaryStatus"
+          name="advanceSalaryStatus"
+        >
+          <mat-option
+            *ngFor="let advanceSalaryStatus of advanceSalariesStatus"
+            [value]="advanceSalaryStatus.id"
+          >
+            {{ advanceSalaryStatus.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Montant de l'acompte</mat-label>
+        <input
+          type="number"
+          matInput
+          name="requestAmount"
+          formControlName="requestAmount"
+        />
+        <mat-error>Montant de l'acompte obligatoire!</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="mode == 'edit'">
+        <mat-label>Montant accordé</mat-label>
+        <input
+          type="number"
+          matInput
+          name="requestAwarded"
+          formControlName="requestAwarded"
+        />
+        <mat-error>Veuillez vérifier ce champ!</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Observation</mat-label>
+        <textarea
+          matInput
+          name="observations"
+          formControlName="observations"
+          rows="4"
+        >
+        </textarea>
+      </mat-form-field>
+
+
+    
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+          <div class="ml-auto">
+              <button
+                  class="sm:mx-3"
+                  mat-stroked-button
+                  *ngIf="mode == 'add'"
+                  type="submit"
+                  (click)="addAdvanceSalary()"
+                  >
+                  <span>Créer</span>
+              </button>
+              <button
+                  class="order-first sm:order-last"
+                  mat-flat-button
+                  [color]="'primary'"
+                  *ngIf="mode == 'edit'"
+                  (click)="updateAdvanceSalary()"
+                  type="submit"
+                  >
+                  Mettre à jour
+              </button>
+          </div>
+      </div>
+  </form>
+</div>

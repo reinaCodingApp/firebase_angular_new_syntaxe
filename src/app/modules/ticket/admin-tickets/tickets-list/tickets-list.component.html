@@ -1,0 +1,20 @@
+<div *ngIf="tickets.length === 0">
+  <span class="flex flex-row items-center justify-center h-100">Il n'y a pas de ticket!</span>
+</div>
+
+<div class="p-3 pt-0  w-full">
+  <ticket-list-item *ngFor="let ticket of tickets" [ticket]="ticket" 
+  (click)="getTicketDetails(ticket.id)" 
+    [ngClass]="{ 'bg-gray-200': ticket?.id == currentTicket?.id }">
+  </ticket-list-item> 
+  <div *ngIf="!isScrolling" class="mt-3 block sm:hidden">
+    <button *ngIf="!completed" mat-raised-button color="warn" (click)="getMore.emit()">
+      <mat-icon>expand_more</mat-icon>
+      Afficher plus
+      <mat-icon>expand_more</mat-icon>
+    </button>
+  </div>
+  <div class="my-3">
+    <mat-spinner [diameter]="30" *ngIf="isScrolling"></mat-spinner>
+  </div>
+</div>

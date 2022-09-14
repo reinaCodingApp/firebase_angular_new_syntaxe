@@ -1,5 +1,6 @@
 export class FirebaseErrors {
-    static Parse(errorCode: string): string {  
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    static Parse(errorCode: string): string {
       let message: string;
       switch (errorCode) {
         case 'auth/wrong-password':
@@ -38,10 +39,14 @@ export class FirebaseErrors {
         case 'auth/cannot-delete-own-user-account':
           message = 'Vous ne pouvez pas supprimer votre propre compte utilisateur';
           break;
-         default:
-          message = 'Une erreur inconnue s\'est produite, veuillez réessayer';
-          break;
-      }  
+          case 'auth/weak-password':
+            message = 'Le mot de passe doit comporter au moins 6 caractères';
+            break;
+            default:
+              message = 'Une erreur inconnue s\'est produite, veuillez réessayer (Code erreur : '
+              +errorCode+')';
+              break;
+      }
       return message;
     }
   }

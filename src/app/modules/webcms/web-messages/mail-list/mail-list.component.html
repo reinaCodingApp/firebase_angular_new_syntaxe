@@ -1,0 +1,19 @@
+<div *ngIf="discussions.length === 0">
+  <span class="grid h-100 place-items-center">Il n'y a pas de message!</span>
+</div>
+
+<div class="pt-3   max-h-100 w-full">
+  <mail-list-item *ngFor="let discussion of discussions" [mail]="discussion" (click)="readMail(discussion.id)"
+    [ngClass]="{ 'current-mail': discussion?.id == currentDiscussion?.id }">
+  </mail-list-item>
+  <div *ngIf="!isScrolling" class="mt-12 block sm:hidden" >
+    <button *ngIf="!completed" mat-raised-button color="warn" (click)="getMore.emit()">
+      <mat-icon>expand_more</mat-icon>
+      Afficher plus
+      <mat-icon>expand_more</mat-icon>
+    </button>
+  </div>
+  <div class="my-2">
+    <mat-spinner [diameter]="30" *ngIf="isScrolling"></mat-spinner>
+  </div>
+</div>

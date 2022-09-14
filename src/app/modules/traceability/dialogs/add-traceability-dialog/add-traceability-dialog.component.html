@@ -1,0 +1,213 @@
+<div class="flex flex-col max-w-200 md:min-w-160 max-h-screen -m-6">
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">{{ mode == "edit" ? "Édition codes traçabilité" : "Création lignes traçabilité" }}
+    </div>
+    <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+      <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content fusePerfectScrollbar>
+    <ng-template #addMode>
+      <div>
+        <div class="p-6">
+          <button mat-raised-button color="accent" type="button" (click)="addTraceabilityForPreviousWeekSites()">
+            <span class="hidden sm:block">Génération des sites de la semaine précédente</span>
+            <span class="block sm:hidden">Génération semaine précédente</span>
+          </button>
+          <blockquote class="mt-3 p-2">
+            <p>
+              Cette opération génère des lignes de traçabilité pour tous les sites de la semaine précédente qui ne
+              figurent pas dans le tableau de traçabilité.
+            </p>
+          </blockquote>
+        </div>
+        <mat-divider class="my-4 "></mat-divider>
+        <div class="p-6 flex flex-col">
+
+          <h3>Choisir un site dans la liste</h3>
+          <mat-form-field appearance="outline" class="flex-auto w-full">
+            <mat-label>Site</mat-label>
+            <mat-select name="site" required [(ngModel)]="traceability.site.id">
+              <mat-option *ngFor="let site of sites" [value]="site.id"
+                >
+                <span [ngClass]="{ 'text-green-600': siteAlreadyExist(site) }">
+                {{ site.name }}
+                </span>
+              </mat-option>
+            </mat-select>
+            <button matSuffix mat-icon-button color="accent" type="button" class="ml-2 mat-elevation-z1"
+              (click)="$event.stopPropagation(); addTraceability()" [disabled]="siteAlreadyExist(traceability.site)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
+
+        </div>
+      </div>
+
+    </ng-template>
+    <ng-template #editMode>
+      <div class="pt-3">
+        <mat-tab-group mat-align-tabs="center" mat-stretch-tabs>
+          <mat-tab label="Tampons et bagues">
+            <div class="tab-content mt-2">
+              <!-- TAMPON -->
+              <div>
+                <div>
+                  <h2>Tampons</h2>
+                </div>
+                <div *ngIf="habilitation.canCreate()" class="w-full flex">
+                  <mat-form-field appearance="outline" class="mr-1">
+                    <mat-label>Code</mat-label>
+                    <mat-select msInfiniteScroll (infiniteScroll)="getNextCodes()"
+                      [complete]="paginationParameter.start >= total" [threshold]="'30%'" name="code"
+                      [(ngModel)]="traceabilityItem.code" (openedChange)="openedChange($event)">
+                      <mat-option>
+                        <ngx-mat-select-search [(ngModel)]="searchInput" name="searchINput"
+                          (ngModelChange)="searchCode($event)" placeholderLabel="Rechercher"
+                          noEntriesFoundLabel="pas de resultats" disableScrollToActiveOnOptionsChanged="true">
+                        </ngx-mat-select-search>
+                      </mat-option>
+                      <mat-option *ngFor="let code of codes" [value]="code">
+                        {{ code.code }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Forme</mat-label>
+                    <mat-select name="shape" required [(ngModel)]="traceabilityItem.material.id"
+                      (selectionChange)="updateDefaultShape()">
+                      <mat-option *ngFor="let shape of shapes" [value]="shape.id">
+                        {{ shape.shape }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <button type="submit" mat-icon-button color="accent" class="ml-2 mat-elevation-z1"
+                    (click)="addTraceabilityItem()" [disabled]="
+                      !(
+                        traceabilityItem?.material?.id &&
+                        traceabilityItem?.code.id
+                      )
+                    ">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+                <!-- TAMPON LIST -->
+                <div *ngFor="
+                    let traceabilityItem of traceability.traceabilityItems;
+                    index as i
+                  ">
+                  <div *ngIf="!traceabilityItem.isRing" class="flex items-center justify-center">
+                    <p class="m-4" *ngIf="!checkEditionMode(traceabilityItem)">
+                      {{ traceabilityItem.itemTitle }}
+                    </p>
+                    <p class="m-4" *ngIf="checkEditionMode(traceabilityItem)">
+                      {{ traceabilityItem.code.code }}
+                    </p>
+                    <mat-form-field appearance="outline" *ngIf="checkEditionMode(traceabilityItem)">
+                      <mat-label>Forme</mat-label>
+                      <mat-select name="shape" required [(ngModel)]="selectedTraceabilityItem.material.id">
+                        <mat-option *ngFor="let shape of shapes" [value]="shape.id">
+                          {{ shape.shape }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <div *ngIf="!checkEditionMode(traceabilityItem)">
+                      <button *ngIf="habilitation.canEdit()" mat-icon-button color="accent" (click)="
+                          enableUpdateTraceabilityItemMode(traceabilityItem)
+                        ">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button *ngIf="habilitation.canDelete()" mat-icon-button color="warn"
+                        (click)="deleteTraceabilityItem(traceabilityItem)">
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </div>
+
+                    <div *ngIf="checkEditionMode(traceabilityItem)" >
+                      <button type="button" mat-icon-button color="warn" (click)="disableUpdateTraceabilityItemMode()">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <button type="button" mat-icon-button color="accent" (click)="updateTraceabilityItem()">
+                        <mat-icon>check</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- BAGUE -->
+              <div>
+                <h2>Bagues</h2>
+                <div *ngIf="habilitation.canCreate()" class=" flex">
+                  <mat-form-field appearance="outline" class="flex-auto w-full">
+                    <mat-label>Code</mat-label>
+                    <input [(ngModel)]="ringTraceabilityItem.code.code" placeholder="Code" matInput name="ringCode"
+                      maxlength="3" class="text-uppercase" />
+                  </mat-form-field>
+                  <button type="button" mat-icon-button color="accent" class="ml-2 mat-elevation-z1"
+                    (click)="addRingTraceabilityItem()" [disabled]="ringTraceabilityItem?.code?.code?.length <= 1">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+                <div *ngFor="
+                    let traceabilityItem of traceability.traceabilityItems;
+                    index as i
+                  ">
+                  <div class="flex items-center justify-center" *ngIf="traceabilityItem.isRing">
+                    <p class="m-8">{{ traceabilityItem.itemTitle }}</p>
+                    <button *ngIf="habilitation.canDelete()" mat-icon-button color="warn"
+                      (click)="deleteTraceabilityItem(traceabilityItem)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Couleur et commentaires" *ngIf="habilitation.isAdmin()">
+            <div class="tab-content mt-2">
+              <div name="traceabilityForm" class="flex flex-col flex-auto p-2 sm:p-3 mt-8 overflow-y-auto">
+                <mat-form-field appearance="outline">
+                  <mat-label>Site</mat-label>
+                  <mat-select name="site" required [(ngModel)]="traceability.site.id" disabled>
+                    <mat-option *ngFor="let site of sites" [value]="site.id">
+                      {{ site.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Couleur</mat-label>
+                  <mat-select name="color" [(ngModel)]="traceability.color">
+                    <mat-option *ngFor="let color of colors" [value]="color">
+                      {{ color }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Commentaires</mat-label>
+                  <input [(ngModel)]="traceability.description" placeholder="Un commentaire" matInput
+                    name="description" />
+                </mat-form-field>
+                <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+                  <div mat-dialog-actions class="ml-auto">
+                    <button mat-raised-button color="accent" (click)="updateColorAndComment()">
+                      Mettre à jour
+                      <mat-icon>check</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="mode == 'new'">
+      <ng-container *ngTemplateOutlet="addMode"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="mode == 'edit'">
+      <ng-container *ngTemplateOutlet="editMode"></ng-container>
+    </ng-container>
+  </div>

@@ -1,0 +1,173 @@
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NgForm } from '@angular/forms';
+import { SharedNotificationService } from 'app/common/services/shared-notification.service';
+import { Employee } from 'app/common/models/employee';
+import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
+import { FollowupSheetService } from 'app/modules/followup-sheet/followup-sheet.service';
+import { EmployeeLevel } from 'app/modules/followup-sheet/models/employeeLevel';
+
+@Component({
+  selector: 'app-add-employeelevel-dialog',
+  templateUrl: './add-employeelevel-dialog.component.html'
+})
+export class AddEmployeelevelDialogComponent implements OnInit {
+  employees: Employee[];
+  filtredEmployees: Employee[];
+  responsibles: Employee[];
+  filtredResponsibles: Employee[];
+  employeesLevels: EmployeeLevel[];
+  employeeLevel: EmployeeLevel;
+  hierarchyLevels: any[];
+
+  constructor(
+    public matDialogRef: MatDialogRef<AddEmployeelevelDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _followupSheetService: FollowupSheetService,
+    private _notificationService: SharedNotificationService
+  ) {
+    if (data.mode === 'edit') {
+      this.employeeLevel = data.employeeLevel;
+    } else {
+      this.employeeLevel = new EmployeeLevel();
+    }
+
+  }
+
+  ngOnInit(): void {
+    this.hierarchyLevels = [...EmbeddedDatabase.hierarchyLevels];
+    this._followupSheetService.onEmployeesChanged.subscribe((employees) => {
+      this.employees = employees;
+      this.filtredEmployees = employees;
+    });
+    this._followupSheetService.onResponsiblesChanged.subscribe((responsibles) => {
+      this.responsibles = responsibles;
+      this.filtredResponsibles = responsibles;
+    });
+    this._followupSheetService.onEmployeeLevelsChanged.subscribe((employeesLevels) => {
+      this.employeesLevels = employeesLevels;
+    });
+    this.filterResponsibles();
+  }
+
+  addEmployeeLevel(): void {
+    if (this.employeeAlreadyExist()) {
+      this._notificationService.showWarning('Cet employé déja existe!');
+      return;
+    }
+    if (this.checkResponsibleHierarchyLevel()) {
+      this._notificationService.showWarning(`Le responsable d'un salarié de niveau 2 ne peut être que de niveau 3`);
+      return;
+    }
+    if (this.employeeLevel.sectionDefaultTitle.trim().length > 3) {
+      this._followupSheetService.addEmployeeLevel(this.employeeLevel)
+        .subscribe((createdEmployeeLevelId) => {
+          this.matDialogRef.close();
+          const employee = this.employees.find(e => {
+            return e.id === this.employeeLevel.employee.id;
+          });
+          const responsible = this.responsibles.find(e => {
+            return e.id === this.employeeLevel.responsible.id;
+          });
+          this.employeeLevel.id = createdEmployeeLevelId;
+          this.employeeLevel.employee = employee;
+          this.employeeLevel.responsible = responsible;
+          this.employeesLevels.push(this.employeeLevel);
+          this._followupSheetService.onEmployeeLevelsChanged.next(JSON.parse(JSON.stringify(this.employeesLevels)));
+          this._notificationService.showSuccess('Ajout terminé avec succès');
+        }, (err) => {
+          console.log(err);
+          this._notificationService.showStandarError();
+        });
+    }
+  }
+
+  updateEmployeeLevel(): void {
+    if (this.checkResponsibleHierarchyLevel()) {
+      this._notificationService.showWarning(`Le responsable d'un salarié de niveau 2 ne peut être que de niveau 3`);
+      return;
+    }
+    this._followupSheetService.updateEmployeeLevel(this.employeeLevel)
+      .subscribe((response) => {
+        if (response) {
+          this.matDialogRef.close();
+          this._notificationService.showSuccess('Modification terminé avec succès');
+          const foundIndex = this.employeesLevels.findIndex(x => x.id === this.employeeLevel.id);
+          const employee = this.employees.find(e => {
+            return e.id === this.employeeLevel.employee.id;
+          });
+          const responsible = this.responsibles.find(e => {
+            return e.id === this.employeeLevel.responsible.id;
+          });
+          this.employeesLevels[foundIndex] = this.employeeLevel;
+          this.employeesLevels[foundIndex].employee = employee;
+          this.employeesLevels[foundIndex].responsible = responsible;
+          this._followupSheetService.onEmployeeLevelsChanged.next(JSON.parse(JSON.stringify(this.employeesLevels)));
+        } else {
+          this._notificationService.showStandarError();
+        }
+      }, (err) => {
+        console.log(err);
+        this._notificationService.showStandarError();
+      });
+  }
+
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.data.mode === 'edit') {
+        this.updateEmployeeLevel();
+      } else {
+        this.addEmployeeLevel();
+      }
+    }
+  }
+
+  employeeAlreadyExist(): boolean {
+    const employee = this.employeesLevels.find(e => {
+      return e.employee.id === this.employeeLevel.employee.id;
+    });
+    return employee !== undefined;
+  }
+
+  checkResponsibleHierarchyLevel(): boolean {
+    const responsibleEmployeeLevel = this.employeesLevels.find(r => {
+      return r.employee.id === this.employeeLevel.responsible.id;
+    });
+    return this.employeeLevel.hierarchyLevel === 2 && responsibleEmployeeLevel.hierarchyLevel < 3;
+  }
+
+
+  searchEmployee(searchInput): void {
+    if (!this.employees) {
+      return;
+    }
+    searchInput = searchInput.toLowerCase();
+    this.filtredEmployees = this.employees.filter(d => d.fullName.toLowerCase().indexOf(searchInput) > -1);
+  }
+
+  searchResponsible(searchInput): void {
+    if (!this.responsibles) {
+      return;
+    }
+    searchInput = searchInput.toLowerCase();
+    this.filtredResponsibles = this.responsibles.filter(d => d.fullName.toLowerCase().indexOf(searchInput) > -1);
+  }
+
+  filterResponsibles(): void {
+    const responsibleHierarchyLevel = this.employeeLevel.hierarchyLevel === 1 ? 2 : 3;
+    const availableResponsibles: Employee[] = [];
+    const employeeLevelResponsibles = this.employeesLevels.filter(r => r.hierarchyLevel === responsibleHierarchyLevel);
+    employeeLevelResponsibles.forEach(element => {
+      const availableResponsible = this.responsibles.find(r => r.id === element.employee.id);
+      if (availableResponsible) {
+        availableResponsibles.push(element.employee);
+      }
+    });
+    this.responsibles = availableResponsibles;
+    this.filtredResponsibles = availableResponsibles;
+  }
+
+}
+
+
+

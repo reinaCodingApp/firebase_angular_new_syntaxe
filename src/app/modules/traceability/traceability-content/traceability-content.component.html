@@ -1,0 +1,207 @@
+<!-- HEADER -->
+<div class="w-full">
+  <div class="h-20 items-center bg-indigo-600 flex justify-between" color="primary">
+    <div class="flex items-center">
+      <button mat-icon-button (click)="traceabilityComponent.drawer.toggle()" class="ml-2">
+        <mat-icon class="text-white">reorder</mat-icon>
+      </button>
+      <span class="text-white text-2xl">Traçabilité descendante</span>
+    </div>
+    <div class="mr-4" *ngIf="habilitation.canCreate()">
+      <button mat-icon-button matTooltip="Créer un nouvel audit" [disabled]="!traceabilityPlanification"
+        class=" bg-red-500" (click)="addTraceability()">
+        <mat-icon class="text-white">add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="p-4">
+      <div class="p-8 mb-2 bg-white">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <button type="button" mat-icon-button color="primary" (click)="changeWeekNumber(-1)"
+              [disabled]="requestParameter.week == 1">
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <h3>Sem. {{ getDateforCurrentYearAndWeek() }}</h3>
+            <button type="button" mat-icon-button color="primary" (click)="changeWeekNumber(1)"
+              [disabled]="requestParameter.week == 52">
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+          </div>
+
+          <div class="flex">
+            <button mat-icon-button (click)="printTraceabilitySites()" matTooltip="Imprimer les codes de la semaine">
+              <mat-icon>print</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+
+        <mat-table [dataSource]="traceabilityPlanification.items" 
+        *ngIf="traceabilityPlanification" class="p-4">
+          <ng-container matColumnDef="site">
+            <mat-header-cell *matHeaderCellDef class="block pt-4 text-gray-600 text-sm">
+              SITE</mat-header-cell>
+            <mat-cell *matCellDef="let traceability">
+              <span>
+                {{ traceability.site.name }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="stamp">
+            <mat-header-cell *matHeaderCellDef class="block pt-4  text-gray-600 text-sm">
+              TAMPON</mat-header-cell>
+            <mat-cell *matCellDef="let traceability" class="text-indigo-400">
+              <div>
+                <div *ngFor="let item of traceability.traceabilityItems">
+                  <span *ngIf="!item.isRing"> {{ item.itemTitle }} . </span>
+                </div>
+              </div>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="ring">
+            <mat-header-cell *matHeaderCellDef class="block pt-4  text-gray-600 text-sm">
+              BAGUE</mat-header-cell>
+            <mat-cell *matCellDef="let traceability" class="ring-cell-color">
+              <div>
+                <div *ngFor="let item of traceability.traceabilityItems">
+                  <span *ngIf="item.isRing"> {{ item.itemTitle }}. </span>
+                </div>
+              </div>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="color">
+            <mat-header-cell *matHeaderCellDef class="hidden sm:table-cell pt-4  text-gray-600 text-sm">
+              COULEUR</mat-header-cell>
+            <mat-cell *matCellDef="let traceability"  class="hidden sm:table-cell">
+              <span  *ngIf="traceability.color">
+                {{
+                traceability.color + " ( " + traceabilityPlanification.mel + " ) "
+                }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef  class="hidden sm:table-cell pt-4  text-gray-600 text-sm">
+              COMMENTAIRES</mat-header-cell>
+            <mat-cell *matCellDef="let traceability"  class="hidden sm:table-cell">
+              <span >
+                {{ traceability.description }}
+              </span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef class="w-2/3"></mat-header-cell>
+            <mat-cell *matCellDef="let traceability" class="w-2/3">
+              <div class="hidden sm:flex ">
+                <button matTooltip="Gérer les codes" *ngIf="habilitation.canCreate()" 
+                type="button" mat-icon-button
+                  color="primary" class="mat-elevation-z1 mr-1" (click)="updateTraceability(traceability)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button matTooltip="Ajouter manuellement un code exceptionnel" *ngIf="habilitation.isAdmin()"
+                  type="button" mat-icon-button color="accent" class="mat-elevation-z1  mr-1"
+                  (click)="addExceptionCode(traceability)">
+                  <mat-icon>assignment_late</mat-icon>
+                </button>
+                <button matTooltip="Supprimer la ligne de traçabilité" *ngIf="habilitation.isAdmin()" type="button"
+                  mat-icon-button color="warn" class="mat-elevation-z1 "
+                  [disabled]="traceability.traceabilityItems?.length > 0" (click)="deleteTraceability(traceability)">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </div>
+              <span class="block sm:hidden">
+                <button mat-button [matMenuTriggerFor]="actionsMenu">
+                  <mat-icon>more_horiz</mat-icon>
+                </button>
+                <mat-menu #actionsMenu="matMenu">
+                  <button color="accent" mat-menu-item (click)="updateTraceability(traceability)"
+                    *ngIf="habilitation.canCreate()">
+                    <mat-icon color="primary">edit</mat-icon>
+                    Gérer les codes
+                  </button>
+                  <button color="primary" mat-menu-item *ngIf="habilitation.isAdmin()"
+                    (click)="addExceptionCode(traceability)">
+                    <mat-icon color="primary">gesture</mat-icon>
+                    Ajouter un code exceptionnel
+                  </button>
+                  <button color="warn" mat-menu-item *ngIf="habilitation.isAdmin()"
+                    (click)="deleteTraceability(traceability)" [disabled]="traceability.traceabilityItems?.length > 0">
+                    <mat-icon color="primary">delete_outline</mat-icon>
+                    Supprimer la ligne de traçabilité
+                  </button>
+                </mat-menu>
+              </span>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let traceability; columns: displayedColumns" class="activity" matRipple>
+          </mat-row>
+        </mat-table>
+      </div>
+
+      <!-- TEMPLATE TO PRINT -->
+      <div id="printSitesContent" *ngIf="traceabilityPlanification">
+        <div id="hidden_div" hidden style="max-width: 700px; margin:auto">
+          <div>
+            <div style="text-align: center">
+              <h3  >
+                PLANIFICATION DES CODES DE LA SEMAINE
+              </h3>
+            </div>
+              <div >
+                <p style="float:left; width:50%;" >Service Traçabilité AVS <br />
+                  Mohamed MELLOUK <br />
+                  06 25 01 52 46 - tracabilite@avs.fr
+                </p>
+                <div style="float:right">
+                  <img src="assets/images/logos/logoavs.jpg" />
+                </div>
+              </div>
+            <div style="clear:both; margin-top: 25px;">
+              <h5>
+                Planification de la semaine : {{ requestParameter.week }} / Année :
+                {{ requestParameter.year }}
+              </h5>
+            </div>
+            <div>
+                <h6>Semaine du {{ getDateforCurrentYearAndWeek() }} Couleur programmée :
+                  {{ traceabilityPlanification.color }}</h6>
+                  
+            </div>
+            <div>
+              <table style="width: 100%; border:1px solid black; border-collapse: collapse;">
+                <tr style="text-align:left; font-weight:bold; border-bottom: 2px solid black;">
+                  <th style="border:1px solid black; border-collapse: collapse; padding: 5px;"  >Site</th>
+                  <th>Tampon(s)</th>
+                  <th>Bague(s)</th>
+                </tr>
+                <tr *ngFor="let traceability of traceabilityPlanification.items">
+                  <td style="border:1px solid black; border-collapse: collapse; padding: 5px;">{{ traceability.site.name }}</td>
+                  <td style="border:1px solid black; border-collapse: collapse; padding: 3px;">
+                    <div>
+                      <div *ngFor="let item of traceability.traceabilityItems;index as i">
+                        <span *ngIf="!item.isRing"> {{ item.itemTitle }} - </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="border:1px solid black; border-collapse: collapse; padding: 3px;">
+                    <div>
+                      <div *ngFor="let item of traceability.traceabilityItems">
+                        <span *ngIf="item.isRing"> {{ item.itemTitle }} - </span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

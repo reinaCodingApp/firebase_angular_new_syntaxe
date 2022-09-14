@@ -1,0 +1,168 @@
+<div *ngIf="!discussion" 
+class="pt-3 overflow-y-auto max-h-100 w-full">
+  <div class="flex flex-col h-100 place-items-center">
+    <div class="flex flex-col flex-auto items-center justify-center">
+      <mat-icon role="img" class="mat-icon notranslate icon-size-20 mat-icon-no-color" aria-hidden="true">
+        email
+      </mat-icon>
+      <div class="mt-2 p-4 text-center text-2xl font-semibold tracking-tight text-secondary">
+        Veuillez sélectionner une discussion dans la liste
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="discussion" class="p-4 overflow-y-auto max-h-100 w-full">
+
+  <div class="pb-3  border-b-2 border-gray-200">
+    <div>
+      <div class="font-bold text-xl mb-2">{{ discussion.subject }}</div>
+      <div class="flex flex-row ">
+        <div class="mr-4 flex flex-row items-center p-2 bg-gray-200 rounded-lg">
+          <div class="rounded-full w-3 h-3 mr-1" style="background-color: #039be5;"></div>
+          <div class="font-light text-sm">
+            {{ discussion.department.name | uppercase }}
+          </div>
+        </div>
+        <div class="flex flex-row items-center p-2 bg-gray-200 rounded-lg">
+          <div class="rounded-full w-3 h-3 mr-1" [ngStyle]="{
+              'background-color': discussion.isClosed ? '#91dc5b' : '#ffd31a'
+            }"></div>
+          <div class="font-light text-sm">
+            {{ discussion.isClosed ? "Clôturée" : "En cours" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mail-content">
+    <div class="mt-6">
+      <div>
+        <div class="flex flex-row items-center justify-between">
+          <div class="flex flex-row items-center">
+            <div class="w-8 h-8 text-center pt-1.5 rounded-full bg-primary-200  mr-2">{{ discussion.name[0] }}</div>
+
+            <div>
+              <div class="font-bold">
+                {{ discussion.name | uppercase }}
+              </div>
+
+              <div class="to">
+                <div class="text-gray-600">{{ discussion.date | date:'dd/MM/yyyy' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More" (click)="$event.stopPropagation()"
+            *ngIf="!discussion.isClosed && habilitation.isAdmin()">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #moreMenu="matMenu">
+            <button mat-menu-item aria-label="close discussion" (click)="closeDiscussion()">
+              <mat-icon>check</mat-icon>
+              <span>Clôturer la discussion</span>
+            </button>
+          </mat-menu>
+        </div>
+
+        <a class="text-blue-500 cursor-pointer mt-1" (click)="showDetails = !showDetails">
+          <span *ngIf="!showDetails">Afficher les détails</span>
+          <span *ngIf="showDetails">Cacher les détails</span>
+        </a>
+
+        <div *ngIf="showDetails" class="mb-2">
+          <div>
+            <div>De : {{ discussion.email }}</div>
+            <div>A : contact@avs.fr</div>
+            <div>Le : {{ discussion.date | date:'dd/MM/yyyy hh:mm' }}</div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="border-b-2 border-gray-100 pb-6">
+      <div [innerHTML]="discussion.content" ></div>
+
+    </div>
+
+    <div *ngIf="discussion.attachment.fileName" class="my-2">
+      <div class="title">
+        <span>Document joint</span>
+      </div>
+      <div class="attachment-list">
+        <div class="attachment">
+          <a class="cursor-pointer text-primary-500 " (click)="downloadAttachment(discussion.attachment)"> {{
+            discussion.attachment.fileName }} </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div >
+    <div *ngIf="discussion.items.length !== 0">
+      <div *ngFor="let item of discussion.items">
+        <div  class="pb-4  border-b-2 border-gray-100">
+          <div class="bg-indigo-600 text-white p-3 rounded-md" [innerHTML]="item.content"> </div>
+          <div class="flex flex-col sm:flex-row sm:items-end items-end justify-between">
+            <div class="ml-auto">
+              <div class="pt-2"><span class="font-bold mb-2 px-2">{{item.from}}</span><span class="px-1">{{item.date
+                  |date:'dd/MM/yyyy hh:mm'}}</span>
+              </div>
+            </div>
+
+          </div>
+
+           
+          </div>
+          <div *ngIf="item.attachments.length !== 0" class="pt-4">
+            <div class="title">Documents joints</div>
+            <div class="attachment-list">
+              <div *ngFor="let attachment of item.attachments">
+                <a (click)="downloadAttachment(attachment)" class="text-primary-500 cursor-pointer"> {{ attachment.fileName }} </a>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- REPLY FORM -->
+      <div *ngIf="discussion.isClosed; else notClosed">
+        <div class="flex flex-row place-content-center pt-4">
+
+          <button mat-raised-button color="primary">
+            Cette discussion est clôturée
+          </button>
+        </div>
+      </div>
+      <ng-template #notClosed>
+        <div *ngIf="habilitation.canEdit()" class="pt-4">
+          <div class="w-full flex flex-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Votre message ici</mat-label>
+              <textarea class="m-8" [(ngModel)]="replyContent" matInput rows="6"></textarea>
+            </mat-form-field>
+            <div class="flex flex-row justify-between items-center">
+              <input hidden #file type="file" name="file" id="file" class="inputfile" multiple="multiple"
+                (change)="getAttachment(file.files)" />
+              <button mat-fab color="warn" type="button" (click)="file.click()">
+                <mat-icon>attachment</mat-icon>
+              </button>
+              <div *ngIf="attachedFileName != ''" class="flex flex-row items-center ">
+                <!-- (click)="downloadAttachment()" -->
+                <span>{{ attachedFileName }}</span>
+                <button mat-icon-button color="warn" (click)="removeAttachment()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <button mat-raised-button color="accent" (click)="addDiscussionItem()">
+                Répondre
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </ng-template>
+    </div>
+  </div>

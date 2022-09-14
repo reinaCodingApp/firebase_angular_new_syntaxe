@@ -1,0 +1,109 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { AccessRightsService } from './access-rights.service';
+import { takeUntil } from 'rxjs/operators';
+import { Module } from 'app/modules/access-rights/models/module';
+import { User } from 'app/modules/settings/models/user';
+import { fuseAnimations } from '@fuse/animations';
+import { EmbeddedDatabase } from 'app/data/embeddedDatabase';
+import { MatDialog } from '@angular/material/dialog';
+import { ClonePermissionsDialogComponent } from './dialogs/clone-permissions-dialog/clone-permissions-dialog.component';
+import { SharedNotificationService } from 'app/common/services/shared-notification.service';
+
+
+@Component({
+  selector: 'app-access-rights',
+  templateUrl: './access-rights.component.html',
+  animations: fuseAnimations
+})
+export class AccessRightsComponent implements OnInit, OnDestroy {
+
+  modules: Module[] = [];
+  filteredModules: Module[] = [];
+  displayColumns = [];
+  currentUser: User;
+  dialogRef: any;
+  private unsubscribeAll: Subject<any> = new Subject<any>();
+
+  constructor(
+    private accessRightsService: AccessRightsService,
+    private notificationsService: SharedNotificationService,
+    private matDialog: MatDialog
+  ) {
+    this.displayColumns = ['a', ...EmbeddedDatabase.basicAccessRights];
+    console.log(this.displayColumns);
+  }
+
+  ngOnInit(): void {
+    this.accessRightsService.onFilteredModuleschanged
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe((filteredModules) => {
+        if (filteredModules) {
+          this.filteredModules = filteredModules;
+          console.log('filtered modules', this.filteredModules);
+        }
+      });
+    this.accessRightsService.onUserChanged
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe((user) => {
+        if (user) {
+          this.currentUser = user;
+          console.log('currentuser', this.currentUser);
+        }
+      });
+  }
+
+  updategrantedAccess(m: Module, value: number): void {
+    if (value === 1 && m.grantedAccess === value) {
+      m.grantedAccess = 0;
+    } else {
+      m.grantedAccess = value;
+    }
+  }
+
+  updateUserClaims(): void {
+    this.filteredModules.forEach((m) => {
+      this.currentUser.customClaims[m.key] = m.grantedAccess;
+    });
+    console.log(this.currentUser);
+    this.accessRightsService.updateUserClaims(this.currentUser).subscribe((result) => {
+      console.log('update result', result);
+      this.notificationsService.showSuccess('Permissions sont modifiés avec succès');
+    }, (err) => {
+        this.notificationsService.showStandarError();
+    });
+  }
+
+  clonePermissions(): void {
+    this.dialogRef = this.matDialog.open(ClonePermissionsDialogComponent, {
+      panelClass: 'mail-compose-dialog',
+      data: {
+        currentUser: this.currentUser
+      }
+    });
+    this.dialogRef.afterClosed()
+      .subscribe((response) => {
+        if (!response) {
+          return;
+        }
+      });
+  }
+
+  selectPermissions(status: boolean): void {
+    if (status) {
+      this.filteredModules.forEach((m) => {
+        m.grantedAccess = 7;
+      });
+    } else {
+      this.filteredModules.forEach((m) => {
+        m.grantedAccess = 0;
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next(null);
+    this.unsubscribeAll.complete();
+  }
+
+}

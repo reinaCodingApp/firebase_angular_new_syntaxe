@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { User } from './main/settings/models/user';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
+import { User } from './modules/settings/models/user';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { firestoreCollections } from './data/firestoreCollections';
-import { Module } from './main/access-rights/models/module';
-import { FuseNavigationItem } from '@fuse/types';
-import { AccessRightsService } from './main/access-rights/access-rights.service';
-import { Habilitation } from './main/access-rights/models/habilitation';
-import { AppVersion } from './main/changelog/models/app-version';
+import { Module } from './modules/access-rights/models/module';
+import { Habilitation } from './modules/access-rights/models/habilitation';
+import { AppVersion } from './modules/changelog/models/app-version';
 import { first, mergeMap, take } from 'rxjs/operators';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { NewVersionSnackbarComponent } from './shared/new-version-snackbar/new-version-snackbar.component';
@@ -43,17 +41,17 @@ export class AppService {
     } else {
       this.angularFirestore.collection(firestoreCollections.modules, query => query.orderBy('index', 'asc'))
         .get()
-        .subscribe(data => {
+        .subscribe((data) => {
           if (data && data.size > 0) {
-            const modules = data.docs.map(d => ({ id: d.id, ...d.data() } as Module));
+            const modules = data.docs.map(d => ({ id: d.id, ...d.data() as object } as Module));
             const userModules: Module[] = [];
             const claims = user.customClaims;
-            modules.forEach(m => {
+            modules.forEach((m) => {
               if (m.type === 'collapsable' && m.children && m.children.length > 0) {
                 const parentMenu = { ...m };
                 parentMenu.children = [];
                 let includeParentMenu = false;
-                m.children.forEach(child => {
+                m.children.forEach((child) => {
                   if (claims[child.key] > 0 && child.displayInMenu) {
                     parentMenu.children.push(child);
                     includeParentMenu = true;
@@ -97,7 +95,7 @@ export class AppService {
   getHabilitation(user: User, moduleIdentifier: string): Promise<Habilitation> {
     return new Promise((resolve, reject) => {
       const claims = user.customClaims;
-      this.getKey(moduleIdentifier).then(moduleKey => {
+      this.getKey(moduleIdentifier).then((moduleKey) => {
         const habilitation = new Habilitation(claims[moduleKey]);
         resolve(habilitation);
       }, reject);
@@ -108,11 +106,11 @@ export class AppService {
       return Promise.resolve(this.currentUser);
     }
     return await this.angularFireAuth.authState.
-      pipe(first(), mergeMap(u => {
+      pipe(first(), mergeMap((u) => {
         if (!u) {
           return Promise.resolve(null);
         }
-        return u.getIdTokenResult().then(claims => {
+        return u.getIdTokenResult().then((claims) => {
           const user = { uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL } as User;
           if (claims) {
             user.customClaims = claims.claims;
@@ -132,12 +130,12 @@ export class AppService {
   getKey(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.angularFirestore.collection(firestoreCollections.moduleKeys).doc(id)
-        .get().subscribe(async data => {
+        .get().subscribe(async (data) => {
           if (data.exists) {
             const moduleKey = data.data() as any;
             resolve(moduleKey.key);
           }
-        }, err => {
+        }, (err) => {
           reject();
           console.log(err);
         });

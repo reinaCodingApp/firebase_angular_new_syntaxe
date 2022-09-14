@@ -1,0 +1,16 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+      <mat-drawer-container class="flex-auto h-full">
+            <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+                  [opened]="drawerOpened" #drawer>
+                  <sites-sidebar-left></sites-sidebar-left>
+            </mat-drawer>
+            <!-- Drawer content -->
+            <mat-drawer-content class="flex flex-col">
+                  <sites-content></sites-content>
+            </mat-drawer-content>
+            <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerRightOpened"
+                  [disableClose]="drawerRightOpened" [opened]="drawerRightOpened" position="end" #drawerRight>
+                  <sites-sidebar-right></sites-sidebar-right>
+            </mat-drawer>
+      </mat-drawer-container>
+</div>

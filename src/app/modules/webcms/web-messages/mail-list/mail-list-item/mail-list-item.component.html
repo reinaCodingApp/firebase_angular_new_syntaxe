@@ -1,0 +1,39 @@
+<div class="p-4  border-b-2 border-gray-100">
+  <mat-checkbox style="display: none;" [(ngModel)]="selected" (click)="$event.stopPropagation()"></mat-checkbox>
+
+  <div class="info">
+    <div class="flex flex-row items-center justify-between">
+      <div class="flex flex-row  items-center justify-between">
+
+        <div class="w-8 h-8 text-center pt-1.5 rounded-full bg-primary-200  mr-1 ">{{ mail.name[0] }}</div>
+
+        <span class="truncate">{{ mail.name | uppercase }}</span>
+      </div>
+      <div class="flex flex-row items-center justify-between">
+        <button class="text-xs mr-2" mat-icon-button *ngIf="mail.unreadCommentsCount > 0">
+          <span [matBadge]="mail.unreadCommentsCount" matBadgeOverlap="false" matBadgeColor="warn">
+          </span>
+        </button>
+        <div class="time">{{ mail.date | date:'dd/MM/yyy' }}</div>
+      </div>
+    </div>
+
+
+    <div class="mt-2">
+      <div [ngClass]="{
+          'unread-comments': !mail.read
+        }">
+        <div class="font-bold truncate">
+          {{ mail.subject }}
+        </div>
+        <div class="message truncate" *ngIf="mail?.content">
+          <!-- 
+            todo: import the htmlToPlaintext pipe
+            {{ mail.content | htmlToPlaintext | slice: 0:180 }} -->
+          {{ mail.content | slice: 0:180 }}
+          {{ mail.content.length > 180 ? "..." : "" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

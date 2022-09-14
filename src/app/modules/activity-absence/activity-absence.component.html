@@ -1,0 +1,30 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+  <mat-drawer-container class="flex-auto h-full">
+    <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+      [opened]="drawerOpened" #drawer>
+      <activity-absence-sidebar></activity-absence-sidebar>
+
+    </mat-drawer>
+    <!-- Drawer content -->
+    <mat-drawer-content class="flex flex-col">
+      <!-- HEADER -->
+      <div class="h-20 min-h-20 items-center bg-indigo-600 flex justify-between" color="primary">
+        <div class="flex justify-between w-full">
+          <div class="flex items-center ">
+            <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
+              <mat-icon class="text-white">reorder</mat-icon>
+            </button>
+            <span class="text-white text-2xl"> Congés et absences</span>
+          </div>
+          <div class="flex mr-4" *ngIf="habilitation.canCreate()">
+            <button mat-icon-button matTooltip="Ajouter" class=" bg-red-500" (click)="addActivityAbsence()">
+              <mat-icon class=" text-white">add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- / HEADER -->
+      <activity-absence-content></activity-absence-content>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

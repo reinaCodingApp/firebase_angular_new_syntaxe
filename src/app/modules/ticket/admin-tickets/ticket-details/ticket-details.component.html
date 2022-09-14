@@ -1,0 +1,164 @@
+<div class="p-3 pt-0 overflow-y-auto max-h-100 w-full">
+  <div *ngIf="!ticket" class="flex flex-col items-center justify-center h-100 text-xl">
+    <mat-icon class="mr-2 text-4xl"> email </mat-icon>
+    <span>Veuillez sélectionner un ticket dans la liste</span>
+  </div>
+  <div *ngIf="ticket">
+    <div class="py-4 border-b-2 border-gray-100">
+      <div class="flex flex-row justify-between items-center">
+        <div>
+          <div class="font-bold text-xl">{{ ticket.title }}</div>
+        </div>
+        <div>
+          <button [disabled]="ticket.isResolved" mat-icon-button (click)="updateTicketUrgent()" [matTooltip]="
+              ticket.urgent && !ticket.isResolved ? 'Classer non urgent' : 'Classer urgent'
+            ">
+            <mat-icon [color]="ticket.urgent ? 'warn' : true">
+              label_outline
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="mt-2 flex flex-row items-center">
+        <div class="bg-gray-100 rounded-md text-sm  p-1 flex flex-row items-center ">
+          <div class="rounded-full w-3 h-3 mr-1 bg-blue-300"></div>
+          <div class="label-title">
+            {{ ticket.serviceName | uppercase }}
+          </div>
+        </div>
+        <div class="bg-gray-100  rounded-md text-sm p-1  flex flex-row items-center ml-2">
+
+          <div class="rounded-full w-3 h-3 mr-1" [ngStyle]="{
+              'background-color': ticket.isResolved ? '#91dc5b' : '#ffd31a'
+            }"></div>
+          <div class="label-title">
+            {{ ticket.isResolved ? "Clôturée" : "En cours" }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col p-4 w-full">
+      <div>
+        <div class="flex flex-row items-center justify-between">
+          <div class="flex flex-row items-center justify-between">
+            <div class="w-8 h-8 text-center pt-1.5 rounded-full bg-primary-200 mr-1 ">{{ ticket.ownerLastName[0] }}
+            </div>
+            <div class="flex flex-col items-start">
+              <div class="name">
+                {{ ticket.ownerLastName }} {{ ticket.ownerFirstName }}
+              </div>
+
+              <div class="to">
+                <div class="to-text">{{ ticket.date }}</div>
+              </div>
+            </div>
+          </div>
+          <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More" (click)="$event.stopPropagation()"
+            *ngIf="habilitation && habilitation.isAdmin()">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+        </div>
+
+        <a class="text-blue-500 cursor-pointer mt-2" (click)="showDetails = !showDetails">
+          <span *ngIf="!showDetails">Afficher les détails</span>
+          <span *ngIf="showDetails">Cacher les détails</span>
+        </a>
+
+        <div *ngIf="showDetails" class="my-1">
+          <div>
+            <div>Émis par : {{ ticket.ownerLastName }} {{ ticket.ownerFirstName }}</div>
+            <div>Date d'émission : {{ ticket.date }} à {{ ticket.time }}</div>
+            <div>Deadline : {{ ticket.deadline }}</div>
+          </div>
+        </div>
+
+        <mat-menu #moreMenu="matMenu">
+          <button mat-menu-item aria-label="close ticket" *ngIf="!ticket.isResolved" (click)="closeTicket()">
+            <mat-icon>check</mat-icon>
+            <span>Clôturer</span>
+          </button>
+          <button mat-menu-item aria-label="close ticket" *ngIf="ticket.isResolved" (click)="reOpenTicket()">
+            <mat-icon>check</mat-icon>
+            <span>Ouvrir</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <!-- todo : importe the replaceLineBreaks pipe and use it here  -->
+      <div [innerHTML]="ticket.details   | replaceLineBreaks"></div>
+      <div *ngIf="ticket.hasAttachments" class="mail-attachments">
+        <div class="title">
+          <span>Document joint</span>
+        </div>
+        <div class="attachment-list">
+          <div *ngFor="let attachment of ticket.attachments" class="attachment">
+            <a (click)="downloadAttachment(attachment)" class="cursor-pointer text-blue-500 hover:underline">
+
+              {{ attachment.fileName }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div *ngIf="ticket.comments.length !== 0">
+        <div *ngFor="let item of ticket.comments">
+          <div>
+            <!-- todo : importe the replaceLineBreaks pipe and use it here  -->
+            <div class="comment-panel p-16" [innerHTML]="item.content | replaceLineBreaks"></div>
+            <div class="pt-4">
+              <span class="font-weight-700 mb-8 px-4">{{ item.owner }}</span>
+              <span class="px-4">{{ item.date }} {{ item.time }}</span>
+            </div>
+            <div *ngIf="item.attachments.length !== 0" class="mail-attachments">
+              <div class="title">Documents joints</div>
+              <div class="attachment-list">
+                <div *ngFor="let attachment of item.attachments">
+                  <a (click)="downloadAttachment(attachment)" class="cursor-pointer text-blue-500 hover:underline">
+                    {{ attachment.fileName }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPLY FORM -->
+      <div *ngIf="ticket.isResolved; else notClosed">
+        <button mat-raised-button color="primary">
+          Ce ticket est clôturée
+        </button>
+      </div>
+      <ng-template #notClosed>
+
+        <div *ngIf="habilitation && habilitation.canEdit()" class="w-full flex flex-col">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Votre message ici</mat-label>
+            <textarea [(ngModel)]="newComment" matInput rows="6"></textarea>
+          </mat-form-field>
+
+          <div class="flex flex-row justify-between items-center">
+            <input hidden #file type="file" name="file" id="file" class="inputfile" multiple="multiple"
+              (change)="preview(file.files)" />
+            <button mat-fab color="warn" type="button" (click)="file.click()">
+              <mat-icon>attachment</mat-icon>
+            </button>
+            <div *ngFor="let file of filesToUpload" class="flex flex-row items-center text-md">
+              <span>{{ file.name }}</span>
+              <button mat-icon-button (click)="removeFile(file)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <button mat-raised-button color="accent" (click)="addComment()">
+              Répondre
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
