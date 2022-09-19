@@ -30,7 +30,7 @@ export class AdvanceSalaryContentComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatSort , {static:false}) sort: MatSort;
-  @ViewChild(MatPaginator, {static:false}) paginator:MatPaginator;
+  @ViewChild(MatPaginator, {static:true}) paginator:MatPaginator;
 
   constructor(
     public advanceSalaryComponent: AdvanceSalaryComponent,
@@ -47,6 +47,8 @@ export class AdvanceSalaryContentComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.paginator._intl.itemsPerPageLabel="Nombre d'éléments par page";
+
     this._advanceSalaryService.onAdvanceSalariesChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(advanceSalaries => {
