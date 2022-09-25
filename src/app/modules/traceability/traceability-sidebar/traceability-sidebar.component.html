@@ -1,5 +1,5 @@
 <div class="p-2">
-  <div class="mat-card text-center p-3">
+  <div class="mat-card text-center p-3 py-5 my-2">
     <div>
       <h3 class="mb-0">Codes de la semaine</h3>
     </div>
@@ -7,7 +7,7 @@
       <div *ngFor="let code of traceabilityPlanification?.traceabilityWeekCodes">
         <h3 class="pr-12">{{code.code}} </h3>
       </div>
-      <h3 *ngIf="traceabilityPlanification?.traceabilityWeekCodes?.length == 0">Pas encore des codes</h3>
+      <h3 *ngIf="traceabilityPlanification?.traceabilityWeekCodes?.length == 0" class="py-2">Pas encore des codes</h3>
     </div>
     <div *ngIf="habilitation.canEdit()">
       <button [disabled]="!traceabilityPlanification" mat-fab color="primary" class="mt-1"
@@ -17,10 +17,10 @@
     </div>
 
   </div>
-  <form class="mat-card text-center p-3 my-3" name="form">
+  <form class="mat-card   text-center p-3 py-5 my-5 " name="form">
     <div>
       <h3 class="mb-0">Code MEL de la semaine</h3>
-      <h2  class="font-semibold text-xl">
+      <h2 class="font-semibold text-xl">
         {{
         traceabilityPlanification
         ? traceabilityPlanification.mel
@@ -28,22 +28,21 @@
         }}
       </h2>
     </div>
-    <div class="flex flex-row flex-wrap my-2">
+    <div class="flex flex-row flex-wrap my-4">
       <div class="mr-1" *ngFor="let color of colors">
-        <button mat-mini-fab class="mb-1"
-         *ngIf="color !== 'Non définie'" [ngStyle]="{ 'background-color': getColor(color) }"
-          (click)="changeSelectedColor(color)"></button>
+        <button mat-mini-fab class="mb-1" *ngIf="color !== 'Non définie'"
+          [ngStyle]="{ 'background-color': getColor(color) }" (click)="changeSelectedColor(color)"></button>
       </div>
     </div>
     <div>
-      <h2  class="font-semibold text-xl" *ngIf="traceabilityPlanification">
+      <h2 class="font-semibold text-xl" *ngIf="traceabilityPlanification">
         {{ traceabilityPlanification.color }}
       </h2>
       <h2 class="font-semibold text-xl" *ngIf="!traceabilityPlanification">
         {{ selectedColor }}
       </h2>
     </div>
-    <div class="w-full mt-2" *ngIf="habilitation.canEdit()">
+    <div class="w-full mt-3" *ngIf="habilitation.canEdit()">
       <button mat-raised-button color="primary" class="block w-full" (click)="updateOrAddPlanification()">
         Affecter la couleur
       </button>

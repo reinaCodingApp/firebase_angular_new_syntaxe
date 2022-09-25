@@ -1,7 +1,7 @@
 <form #f="ngForm" class="flex flex-col mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4 pb-1" name="form">
   <h3>Types de sites</h3>
 
-  <div class="my-8">
+  <div class="mb-8 mt-3">
     <mat-form-field appearance="outline" class="flex-auto w-full">
       <mat-label>Types de sites</mat-label>
       <mat-select [(ngModel)]="siteFilter.siteTypeId" name="siteType" (selectionChange)="getFiltredSites()">

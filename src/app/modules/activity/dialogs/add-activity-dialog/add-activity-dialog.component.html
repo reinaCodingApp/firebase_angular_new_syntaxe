@@ -16,7 +16,7 @@
     name="composeForm" class="flex flex-col flex-auto p-6 overflow-y-auto">
 
       <mat-form-field appearance="outline">
-        <mat-label>Séléection salarié</mat-label>
+        <mat-label>Sélection salarié</mat-label>
         <mat-select #employee="ngModel" name="employee" required [(ngModel)]="activity.employee.id"
           [disabled]="data.mode == 'edit'">
           <mat-option>
@@ -32,7 +32,7 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Séléection site</mat-label>
+        <mat-label>Sélection site</mat-label>
         <mat-select #site="ngModel" name="site" required [(ngModel)]="activity.site.id">
           <mat-option>
             <ngx-mat-select-search ngModel name="searchINput" (ngModelChange)="searchSite($event)"

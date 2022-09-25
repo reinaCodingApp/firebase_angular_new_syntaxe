@@ -1,6 +1,6 @@
 <div class="p-4 flex flex-col sm:flex-row items-center justify-between">
 
-  <mat-checkbox class="w-full pb-1 sm:pb-8" (change)="onHideRecoveryAbsences($event.checked)"
+  <mat-checkbox class="w-full p-4 flex flex-wrap" (change)="onHideRecoveryAbsences($event.checked)"
     [checked]="hideRecoveryAbsencesValue">Cacher les absences "Récupérations" et "Formations" ?
   </mat-checkbox>
 
@@ -16,29 +16,27 @@
 <!-- CONTENT -->
 <div class="p-4 w-full" [hidden]="!dataSource || dataSource.data.length === 0">
   <mat-table class="w-full" [dataSource]="dataSource" matSort>
-
-
     <ng-container matColumnDef="employee.fullName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-3/12 sm:w-2/12">Nom </th>
-      <td mat-cell *matCellDef="let element" class="w-3/12 sm:w-2/12 p-1 bg-amber-500 text-white">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-1/5 pt-5">Nom </th>
+      <td mat-cell *matCellDef="let element" class="w-1/5 px-3 py-2  bg-amber-500 text-white">
         {{element.employee.fullName}} </td>
     </ng-container>
     <ng-container matColumnDef="absenceType.title">
-      <th mat-header-cell class=" w-2/12 " *matHeaderCellDef mat-sort-header> Absence </th>
-      <td mat-cell *matCellDef="let element" class="p-1"> {{element.absenceType.title}} </td>
+      <th mat-header-cell class="w-1/5 pt-5" *matHeaderCellDef mat-sort-header> Absence </th>
+      <td mat-cell *matCellDef="let element" class="w-1/5 px-3"> {{element.absenceType.title}} </td>
     </ng-container>
     <ng-container matColumnDef="startDate">
-      <th mat-header-cell class=" w-3/12 pt-4" *matHeaderCellDef mat-sort-header> Début </th>
-      <td mat-cell *matCellDef="let element" class="p-1">
+      <th mat-header-cell class=" w-1/5 pt-5" *matHeaderCellDef mat-sort-header> Début </th>
+      <td mat-cell *matCellDef="let element" class=" w-1/5 px-3">
         {{element.startDate}} </td>
     </ng-container>
     <ng-container matColumnDef="endDate">
-      <th mat-header-cell class="hidden sm:table-cell pt-4 w-3/12" *matHeaderCellDef mat-sort-header> Fin </th>
-      <td mat-cell class="hidden sm:table-cell" *matCellDef="let element"> {{element.endDate}} </td>
+      <th mat-header-cell class="hidden sm:table-cell w-1/5 pt-5" *matHeaderCellDef mat-sort-header> Fin </th>
+      <td mat-cell class="hidden sm:table-cell px-3 w-1/5" *matCellDef="let element"> {{element.endDate}} </td>
     </ng-container>
     <ng-container matColumnDef="actions">
-      <th mat-header-cell class="w-3/12 sm:w-2/12" *matHeaderCellDef> Actions </th>
-      <td mat-cell class="w-3/12 sm:w-2/12" *matCellDef="let element">
+      <th mat-header-cell class="w-60 pt-5" *matHeaderCellDef> Actions </th>
+      <td mat-cell class="w-60" *matCellDef="let element">
         <button *ngIf="habilitation.isAdmin()" mat-icon-button matTooltip="Modifier" color="primary"
           class="mat-elevation-z1" (click)="updateActivityAbsence(element)">
           <mat-icon>edit</mat-icon>
@@ -55,5 +53,5 @@
   <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="sélectionner une page"></mat-paginator>
 </div>
 <div [hidden]="dataSource && dataSource.data.length > 0">
-  <p class="p-6 w-full text-center text-gray-600 text-lg">Aucun élément à afficher</p>
+  <p class="p-6 w-full text-center text-gray-600 text-lg"> Pas de résultats</p>
 </div>

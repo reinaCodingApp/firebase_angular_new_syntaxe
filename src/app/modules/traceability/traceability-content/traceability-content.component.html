@@ -1,6 +1,6 @@
 <!-- HEADER -->
 <div class="w-full">
-  <div class="h-20 items-center bg-indigo-600 flex justify-between" color="primary">
+  <div class="h-30 items-center bg-indigo-600 flex justify-between" color="primary">
     <div class="flex items-center">
       <button mat-icon-button (click)="traceabilityComponent.drawer.toggle()" class="ml-2">
         <mat-icon class="text-white">reorder</mat-icon>
@@ -8,7 +8,9 @@
       <span class="text-white text-2xl">Traçabilité descendante</span>
     </div>
     <div class="mr-4" *ngIf="habilitation.canCreate()">
-      <button mat-icon-button matTooltip="Créer un nouvel audit" [disabled]="!traceabilityPlanification"
+      <button mat-icon-button matTooltip="Créer un nouvel audit" 
+      [disabled]="!traceabilityPlanification"
+      
         class=" bg-red-500" (click)="addTraceability()">
         <mat-icon class="text-white">add</mat-icon>
       </button>
@@ -18,8 +20,8 @@
     <!-- / HEADER -->
 
     <!-- CONTENT -->
-    <div class="p-4">
-      <div class="p-8 mb-2 bg-white">
+    <div class="p-5">
+      <div class="p-3 mb-2 bg-white shadow-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <button type="button" mat-icon-button color="primary" (click)="changeWeekNumber(-1)"

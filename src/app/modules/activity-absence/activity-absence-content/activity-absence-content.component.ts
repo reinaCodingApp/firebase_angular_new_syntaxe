@@ -30,7 +30,7 @@ export class ActivityAbsenceContentComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = ['employee.fullName', 'absenceType.title' ,'startDate', 'endDate','actions' ]
   @ViewChild(MatSort , {static:false}) sort: MatSort;
-  @ViewChild(MatPaginator, {static:false}) paginator:MatPaginator;
+  @ViewChild(MatPaginator, {static:true}) paginator:MatPaginator;
   constructor(
     public _matDialog: MatDialog,
     private _activityAbsenceService: ActivityAbsenceService,
@@ -42,6 +42,8 @@ export class ActivityAbsenceContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.paginator._intl.itemsPerPageLabel="Nombre d'éléments par page";
+
     this._activityAbsenceService.onAbsencesChanged
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(absences => {

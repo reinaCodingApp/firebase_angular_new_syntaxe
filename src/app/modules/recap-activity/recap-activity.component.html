@@ -2,7 +2,7 @@
 style="print-color-adjust: exact;-webkit-print-color-adjust: exact;">
 
   <mat-drawer-container class="flex-auto h-full">
-    <mat-drawer class=" print:hidden w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+    <mat-drawer class=" print:hidden max-w-64 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
       [opened]="drawerOpened" #drawer>
       <recap-activity-sidebar></recap-activity-sidebar>
     </mat-drawer>
@@ -11,7 +11,7 @@ style="print-color-adjust: exact;-webkit-print-color-adjust: exact;">
 
       <!-- HEADER -->
       <div class="w-full print:hidden">
-        <div class="h-36 sm:h-20 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
+        <div class="h-36 sm:h-30 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
   " color="primary">
           <div class="flex justify-between w-full">
             <div class="flex items-center ">
