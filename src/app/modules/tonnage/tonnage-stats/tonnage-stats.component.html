@@ -1,6 +1,5 @@
 <mat-accordion>
-  <mat-expansion-panel [expanded]="true" class="m-3 overflow-x-auto">
-
+  <mat-expansion-panel [expanded]="true" class="mb-3 overflow-x-auto">
     <mat-expansion-panel-header>
       <mat-panel-title>
         Statistiques
@@ -15,42 +14,62 @@
           pour le tonnage sélectionné
         </mat-checkbox>
       </div>
-      <div class="flex flex-row ">
-        <div class="ml-8 py-8 w-60" *ngFor="let total of totalData">
-          <div class="flex flex-col p-2 shadow-lg rounded-3xl overflow-hidden border-2 border-gray-200 m-2 px-10">
-            <div class="text-lg border-b-2 font-medium tracking-tight leading-6 truncate text-center">{{ total.animalType }}</div>
+      <div class="flex flex-row">
+        <div class="mr-1 w-1/3" *ngFor="let total of totalData">
+          <div class="flex flex-col  shadow-lg rounded-3xl overflow-hidden border-2 border-gray-100 m-2 ">
+            <div class="text-lg border-b-2 border-gray-100 p-2 
+             marker:selection: font-medium tracking-tight leading-6
+             truncate text-center">{{
+              total.animalType }}</div>
 
-            <div class="flex flex-col items-center mt-2">
-              <div class="font-bold text-red-500"
+            <div class="flex flex-col items-center mt-2 p-2">
+              <div class="font-bold text-red-500" satPopoverAnchor #weightPercentageAnchor="satPopoverAnchor"
                 (mouseenter)="weightPercentagePopover.open()" (mouseleave)="weightPercentagePopover.close()">
                 <p class="text-center">{{ total.totalCarcassWeight }} Kg</p>
-                <div class="flex-col border p-2">
-                  <div class="font-weight-500">
-                    <span class="text-red-600">{{total.weightPercentage30}} Kg </span><span>&nbsp;(30%)</span>
-                  </div>
-                  <div class="font-weight-500">
-                    <span class="text-red-600">{{total.weightPercentage50}} Kg </span><span>&nbsp;(50%)</span>
-                  </div>
-                  <div class="font-weight-500">
-                    <span class="text-red-600">{{total.weightPercentage100}} Kg </span><span>&nbsp;(100%)</span>
-                  </div>
-                </div>
+
               </div>
-              <div class="text-md font-medium"
+              <div class="text-md font-medium" satPopoverAnchor #quantityPercentageAnchor="satPopoverAnchor"
                 (mouseenter)="quantityPercentagePopover.open()" (mouseleave)="quantityPercentagePopover.close()">
                 <p class="text-center">{{ total.totalCarcassQuantity }}</p>
-                <div class="flex-col border p-2">
-                  <div class="font-weight-500 h3">
-                    <span class="secondary-text">{{total.quantityPercentage30}}</span><span>&nbsp;(30%)</span>
-                  </div>
-                  <div class="font-weight-500 h3">
-                    <span class="secondary-text">{{total.quantityPercentage50}}</span><span>&nbsp;(50%)</span>
-                  </div>
-                  <div class="font-weight-500 h3">
-                    <span class="secondary-text">{{total.quantityPercentage100}}</span><span>&nbsp;(100%)</span>
+
+              </div>
+
+              <sat-popover #weightPercentagePopover [anchor]="weightPercentageAnchor" horizontalAlign="after">
+                <div class="bg-white rounded-md p-4 mat-elevation-z8 text-md">
+                  <div class="flex-col ">
+                    <div class="font-weight-500 mb-2">
+                      <span class="text-red-600">{{total.weightPercentage30}} Kg </span><span
+                        class="text-black">&nbsp;(30%)</span>
+                    </div>
+                    <div class="font-weight-500 mb-2">
+                      <span class="text-red-600">{{total.weightPercentage50}} Kg </span><span
+                        class="text-black">&nbsp;(50%)</span>
+                    </div>
+                    <div class="font-weight-500">
+                      <span class="text-red-600">{{total.weightPercentage100}} Kg </span><span
+                        class="text-black">&nbsp;(100%)</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </sat-popover>
+              <sat-popover #quantityPercentagePopover [anchor]="quantityPercentageAnchor" horizontalAlign="after">
+                <div class="bg-white rounded-md  p-4 mat-elevation-z8 text-md">
+                  <div class="flex-col">
+                    <div class="font-weight-500 mb-2">
+                      <span class="text-gray-600">{{total.quantityPercentage30}}</span><span
+                        class="text-black">&nbsp;(30%)</span>
+                    </div>
+                    <div class="font-weight-500 mb-2">
+                    </div>
+                    <span class="text-gray-600">{{total.quantityPercentage50}}</span>
+                    <span class="text-black">&nbsp;(50%)</span>
+                    <div class="font-weight-500 mb-2">
+                    </div>
+                    <span class="text-gray-600">{{total.quantityPercentage100}}</span><span
+                      class="text-black">&nbsp;(100%)</span>
+                  </div>
+                </div>
+              </sat-popover>
               <div [matTooltip]="'Abats'" class=" w-full mt-5 text-secondary text-center">
                 <div class="text-md font-medium truncate text-red-600">{{ total.totalGibletWeight }} Kg</div>
                 <div class="ml-1.5 text-lg font-semibold">

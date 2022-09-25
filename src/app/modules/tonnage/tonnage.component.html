@@ -1,7 +1,7 @@
 <div class="flex flex-col h-full w-full">
 
   <mat-drawer-container class="flex-auto h-full">
-    <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+    <mat-drawer class="max-w-64 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
       [opened]="drawerOpened" #drawer>
       <tonnage-sidebar></tonnage-sidebar>
 
@@ -9,7 +9,7 @@
     <!-- Drawer content -->
     <mat-drawer-content class="flex flex-col">
       <!-- HEADER -->
-      <div class="h-20 p-3 items-center bg-indigo-600 flex justify-between" color="primary">
+      <div class="h-30 p-3 items-center bg-indigo-600 flex justify-between" color="primary">
         <div class="flex items-center">
           <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
             <mat-icon class="text-white">reorder</mat-icon>
@@ -35,9 +35,9 @@
         </div> -->
         <!-- / CONTENT TOOLBAR -->
         <!-- CONTENT -->         
-        <div class="flex flex-col sm:flex-row w-full m-2 bg-white rounded-3xl">
-          <tonnage-list fusePerfectScrollbar class="mt-1 sm:w-1/3 border-r-2 border-gray-300"></tonnage-list>
-          <tonnage-details fusePerfectScrollbar class="sm:w-2/3"></tonnage-details>       
+        <div class="flex flex-col sm:flex-row m-4 bg-white rounded-md">
+          <tonnage-list class="sm:w-1/3 border-r-2 border-gray-300"></tonnage-list>
+          <tonnage-details class="sm:w-2/3"></tonnage-details>       
         </div>
         <!-- / CONTENT -->
       </div>

@@ -33,6 +33,7 @@ import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/cust
 import { AddTonnageDetailsDialogComponent } from './dialogs/add-tonnage-details-dialog/add-tonnage-details-dialog.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/sign-in']);
@@ -80,7 +81,8 @@ const routes: Routes = [
     NgxMatSelectSearchModule,
     MatTooltipModule,
     CustomConfirmDialogModule,
-    MatSidenavModule
+    MatSidenavModule,
+    SatPopoverModule
     
   ],
   entryComponents: [

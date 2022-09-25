@@ -5,7 +5,9 @@ import { TotalTonnageByType } from '../models/totalTonnageByType';
 
 @Component({
   selector: 'tonnage-stats',
-  templateUrl: './tonnage-stats.component.html'
+  templateUrl: './tonnage-stats.component.html',
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class TonnageStatsComponent implements OnInit {
   totalBySelectedPeriod: TotalTonnageByType[];

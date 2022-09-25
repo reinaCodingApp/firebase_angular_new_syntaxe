@@ -12,9 +12,9 @@
       <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
     </button>
   </div>
-  <div mat-dialog-content fusePerfectScrollbar>
+ 
     <form #f="ngForm" (ngSubmit)="addTonnageDetailByTotalWeight(f)" name="composeForm"
-      class="flex flex-col flex-auto py-4 mt-4 overflow-y-auto  max-h-screen ">
+      class="flex flex-col    px-6 mt-4  max-h-screen ">
       <mat-form-field appearance="outline">
         <mat-label>Type</mat-label>
         <mat-select required name="type" [(ngModel)]="newTonnageDetails.itemType">
@@ -53,5 +53,5 @@
         </div>
       </div>
     </form>
-  </div>
+ 
 </div>
