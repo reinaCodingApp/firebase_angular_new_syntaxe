@@ -19,20 +19,25 @@
                       <div class="cursor-pointer p-2 m-1 border-2 border-gray-200 hover:text-black hover:bg-gray-200"
                         [ngClass]="{'bg-indigo-400 text-white': selectedSector == sector.responsibleId }"
                         *ngFor="let sector of pole.sectors">
+                     
+
                         <a (click)="getSectionsForAdmin(sector.responsibleId)"
-                          [matTooltip]="sector.responsible.fullName">
+                        [matTooltip]="sector.responsible.fullName">
+                        <div>
                           <div>
-                            <div>
-                              {{ sector.name }}
-                            </div>
-                            <div>
-                              <mat-icon *ngIf="sector.submitted && sector.responsibleId"
-                                [ngStyle]="{ 'color': selectedSector == sector.responsibleId ? 'white': '#039be5' }">
-                                assignment
-                              </mat-icon>
-                            </div>
+                            {{ sector.name }}
                           </div>
-                        </a>
+                          <div>
+                            <mat-icon *ngIf="sector.submitted && sector.responsibleId"
+                              [ngStyle]="{ 'color': selectedSector == sector.responsibleId ? 'white': '#039be5' }"
+                              >
+                              assignment
+                            </mat-icon>
+                          </div>
+                        </div>
+                      </a>
+
+
                       </div>
                     </div>
                   </div>
@@ -51,28 +56,25 @@
       <div 
       [ngClass]="{ ' ': hierarchyLevel == 3  , 'p-10 ': hierarchyLevel != 3   }"  
       
-      class="px-4 h-25 sm:h-20 items-start sm:items-center bg-indigo-600 flex flex-col
-       sm:flex-row justify-evenly sm:justify-between " color="primary">
+      class="px-4 h-35 sm:h-30 items-start sm:items-center bg-indigo-600 flex flex-col  sm:flex-row justify-evenly sm:justify-between " 
+      >
         <div class="flex flex-row items-center">
           <button *ngIf="hierarchyLevel == 3" mat-icon-button (click)="drawer.toggle()">
             <mat-icon class="text-white">menu</mat-icon>
           </button>
-          <span class="text-white text-xl pl-1">
+          <span class="text-white text-2xl pl-1">
             Fiches de suivi
           </span>
         </div>
         <div>
-          <span class="text-white">{{ "SEMAINE " + sheet.weekNumber + " - " }}</span>
-          <span class="text-white">{{sheet.date}}</span>
+          <span class="text-white text-2xl">{{ "SEMAINE " + sheet.weekNumber + " - " }}</span>
+          <span class="text-white text-2xl">{{sheet.date}}</span>
         </div>
       </div>
-      <div 
-      [ngClass]="{ ' h-20 ': hierarchyLevel == 3  , 'h-40 sm:h-20': hierarchyLevel != 3   }"  
-      
-      class="px-4 pb-7 pt-4 sm:py-1  items-center bg-white
-      shadow-yellow-50 flex flex-col sm:flex-row justify-between" color="primary">
-        <mat-form-field *ngIf="hierarchyLevel != 3" class="w-full sm:w-50 text-md">
-          <mat-select name="service" [(ngModel)]="selectedSheetId" (selectionChange)="getFollowupSheet()">
+      <div  
+      class="h-18 px-4 pb-2 pt-4  items-center bg-white shadow-yellow-50 flex flex-col sm:flex-row justify-between" color="primary">
+        <mat-form-field *ngIf="hierarchyLevel != 3" class="w-full sm:w-50 text-md  mt-2">
+          <mat-select name="service"   [(ngModel)]="selectedSheetId" (selectionChange)="getFollowupSheet()">
             <mat-option *ngFor="let sheetHistory of sheetsHistory" [value]="sheetHistory.id">
               {{ "SEMAINE " + sheetHistory.weekNumber }}
             </mat-option>

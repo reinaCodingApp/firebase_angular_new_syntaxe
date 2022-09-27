@@ -1,7 +1,6 @@
 <div class="absolute inset-0 flex flex-col min-w-0">
   <mat-drawer-container class="flex-auto h-full">
-    <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" 
-    [mode]="drawerMode" [disableClose]="disableClose"
+    <mat-drawer class="w-1/2 max-w-72 bg-white sm:bg-transparent" [mode]="drawerMode" [disableClose]="disableClose"
       [opened]="drawerOpened" #drawer>
       <mail-main-sidebar></mail-main-sidebar>
 
@@ -9,14 +8,13 @@
     <!-- Drawer content -->
     <mat-drawer-content class="flex flex-col">
       <!-- CONTENT HEADER -->
-
       <div class="flex justify-between items-center bg-indigo-600">
-        <div class="flex justify-between w-full h-40" >
+        <div class="flex justify-between w-full h-30">
           <div class="flex items-center ">
             <button mat-icon-button (click)="drawer.toggle()" class="ml-2">
               <mat-icon class="text-white">reorder</mat-icon>
             </button>
-            <span class="text-white text-2xl">Boite de réception</span>
+            <span class="text-white text-2xl">Messagerie</span>
           </div>
         </div>
 
@@ -51,14 +49,15 @@
         </div>
         <!-- / CONTENT TOOLBAR -->
         <!-- CONTENT -->
-        <div class="flex flex-wrap m-4 bg-white rounded-lg border border-gray-200 shadow-md">    
-          <mail-list class="w-full mt-1 sm:w-1/3 h-100 border-r-2 border-gray-300 overflow-scroll" infiniteScroll
-            [infiniteScrollDistance]="3" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
-             [scrollWindow]="false"
-            fusePerfectScrollbar [isScrolling]="isScrolling"
+        <div class="flex flex-wrap m-4 bg-white rounded-lg border border-gray-200 shadow-md">
+          <mail-list class="w-full mt-1 
+          sm:w-1/2 h-100 border-r-2 border-gray-300 overflow-scroll" [ngClass]="{ 'hidden sm:flex': currentMail }"
+            infiniteScroll [infiniteScrollDistance]="3" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
+            [scrollWindow]="false" fusePerfectScrollbar [isScrolling]="isScrolling"
             [completed]="paginatedDiscussions.discussions.length >= paginatedDiscussions.total" (getMore)="onScroll()">
           </mail-list>
-          <mail-details fusePerfectScrollbar class="w-full sm:w-2/3"></mail-details>
+          <mail-details fusePerfectScrollbar class="w-full sm:w-1/2"
+            [ngClass]="{ 'hidden sm:flex': currentMail==null }"></mail-details>
         </div>
         <!-- / CONTENT -->
       </div>

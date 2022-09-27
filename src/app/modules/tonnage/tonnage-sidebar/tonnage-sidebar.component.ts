@@ -43,20 +43,11 @@ export class TonnageSidebarComponent implements OnInit {
     this._tonnageService.onHabilitationLoaded.subscribe(habilitationResult => {
       this.habilitation = habilitationResult;
     });
-    // load temporary data, reomve the rows bellow after debug
-    const params = {endDate: '2022-07-29', siteId: 341, partnerId: 0, startDate: '2022-02-01'} as TonnageFilterViewModel
-    this.tonnageFilterViewModel = params;
-    this._tonnageService.getTonnages(this.tonnageFilterViewModel)
-      .subscribe((tonnageMainViewModel) => {
-        this._tonnageService.onTonnagesChanged.next(tonnageMainViewModel.tonnages);
-        this._tonnageService.onTotalBySelectedPeriodChanged.next(tonnageMainViewModel.totalBySelectedPeriod);
-        this._tonnageService.onCurrentTonnageChanged.next(null);
-      }, (err) => {
-        console.log(err);
-      });
+    
   }
 
   getTonnages(form: NgForm): void {
+
     if (form.valid) {
       this.tonnageFilterViewModel.startDate = moment(this.tonnageFilterViewModel.startDate).format('YYYY-MM-DD');
       this.tonnageFilterViewModel.endDate = moment(this.tonnageFilterViewModel.endDate).format('YYYY-MM-DD');
@@ -65,6 +56,8 @@ export class TonnageSidebarComponent implements OnInit {
           this._tonnageService.onTonnagesChanged.next(tonnageMainViewModel.tonnages);
           this._tonnageService.onTotalBySelectedPeriodChanged.next(tonnageMainViewModel.totalBySelectedPeriod);
           this._tonnageService.onCurrentTonnageChanged.next(null);
+          this._tonnageService.onTonnageFilterViewModelChanged.next(this.tonnageFilterViewModel);
+          
         }, (err) => {
           console.log(err);
         });

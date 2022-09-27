@@ -1,12 +1,11 @@
-
-<div fusePerfectScrollbar class="mt-4">
-  <div class="flex py-2 w-full justify-end ">
+<div fusePerfectScrollbar>
+  <div class="flex flex-col items-center place-content-center py-2 mx-auto w-full">
     <button *ngIf="habilitation.canCreate()" mat-fab color="warn" title="Ajouter actualité"
       [queryParams]="{ mode: 'new', isNews: true }" [routerLink]="['posts']">
       <mat-icon>add</mat-icon>
     </button>
   </div>
-  <div class="content">
+  <div class="mt-5">
     <mat-table #table [dataSource]="news">
       <ng-container matColumnDef="date">
         <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>

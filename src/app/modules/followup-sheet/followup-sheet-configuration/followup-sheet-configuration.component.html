@@ -1,8 +1,6 @@
 <!-- HEADER -->
 <div class="w-full">
-  <div class="h-30 p-6 sm:px-4 sm:h-20 items-center bg-indigo-600 flex 
-  justify-between  " color="primary">
-
+  <div class="p-6 h-30 items-center bg-red-600 flex justify-between">
     <div class="flex items-center">
       <button mat-icon-button [routerLink]="'/followupSheet'" matTooltip="Retour à la liste des fiches de suivi">
         <mat-icon class="text-white">arrow_back</mat-icon>
@@ -10,7 +8,7 @@
       <span class="text-white text-lg sm:text-2xl"> Configuration des fiches de suivi</span>
 
     </div>
-    <button mat-fab color="accent" (click)="addEmployeeLevel()" *ngIf="habilitation.isSuperAdmin()">
+    <button mat-fab color="primary" (click)="addEmployeeLevel()" *ngIf="habilitation.isSuperAdmin()">
       <mat-icon>add</mat-icon>
     </button>
 
@@ -25,19 +23,21 @@
     </mat-checkbox>
 
     <div class="mt-4">
-      <table mat-table class="text-center w-full"  #table [dataSource]="employeesLevels" matSort (matSortChange)="sortEmployeeLevels($event)">
+      <table mat-table class="text-center w-full" #table [dataSource]="employeesLevels" matSort
+        (matSortChange)="sortEmployeeLevels($event)">
         <!-- fullName Column -->
         <ng-container matColumnDef="employee">
-          <mat-header-cell *matHeaderCellDef class="place-content-center"   mat-sort-header="employeeLevel">Employé</mat-header-cell>
-          <mat-cell *matCellDef="let employeeLevel" class="place-content-center" >
+          <mat-header-cell *matHeaderCellDef class="place-content-center" mat-sort-header="employeeLevel">Employé
+          </mat-header-cell>
+          <mat-cell *matCellDef="let employeeLevel" class="pr-1 place-content-center">
             {{ employeeLevel.employee.fullName }}
 
-            </mat-cell>
+          </mat-cell>
         </ng-container>
 
         <!-- responsible Column -->
         <ng-container matColumnDef="responsible">
-          <mat-header-cell *matHeaderCellDef class="place-content-center" >Responsable</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="place-content-center">Responsable</mat-header-cell>
           <mat-cell *matCellDef="let employeeLevel" class="place-content-center">
 
             {{ employeeLevel.responsible.fullName }}
@@ -46,10 +46,10 @@
 
         <!-- hierarchyLevel Column -->
         <ng-container matColumnDef="hierarchyLevel">
-          <mat-header-cell *matHeaderCellDef class="place-content-center" >Niveau hiérarchique</mat-header-cell>
-          <mat-cell  *matCellDef="let employeeLevel" class="place-content-center">
- 
-  {{ employeeLevel.hierarchyLevel }}
+          <mat-header-cell *matHeaderCellDef class="place-content-center">Niveau hiérarchique</mat-header-cell>
+          <mat-cell *matCellDef="let employeeLevel" class="place-content-center">
+
+            {{ employeeLevel.hierarchyLevel }}
 
 
           </mat-cell>
@@ -57,15 +57,15 @@
 
         <!-- SectionDefaultTitle Column -->
         <ng-container matColumnDef="sectionDefaultTitle">
-          <mat-header-cell *matHeaderCellDef class="place-content-center" >Intitulé de la fiche</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="place-content-center">Intitulé de la fiche</mat-header-cell>
           <mat-cell *matCellDef="let employeeLevel" class="place-content-center">
             {{ employeeLevel.sectionDefaultTitle }}
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="place-content-center" ></mat-header-cell>
-          <mat-cell   *matCellDef="let employeeLevel" class="text-center content-center">
+          <mat-header-cell *matHeaderCellDef class="place-content-center"></mat-header-cell>
+          <mat-cell *matCellDef="let employeeLevel" class="text-center content-center">
             <button mat-button [matMenuTriggerFor]="actionsMenu">
               <mat-icon>more_horiz</mat-icon>
             </button>

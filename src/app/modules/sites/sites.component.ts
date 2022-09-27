@@ -60,26 +60,10 @@ export class SitesComponent implements OnInit, OnDestroy {
           this.drawerMode = "side";
           this.drawerOpened = true;
           this.disableClose = true;
-
-          this.drawerRightMode = "side";
-          this.drawerRightOpened = true;
-          this.disableRightClose = true;
         } else {
-          this.drawerRightMode = "over";
-          this.drawerRightOpened = false;
-          this.disableRightClose = false;
           this.drawerMode = "over";
           this.drawerOpened = false;
           this.disableClose = false;
-        }
-        if (matchingAliases.includes("xl")) {
-          this.drawerRightMode = "side";
-          this.drawerRightOpened = true;
-          this.disableRightClose = true;
-        } else {
-          this.drawerRightMode = "over";
-          this.drawerRightOpened = false;
-          this.disableRightClose = false;
         }
       });
   }

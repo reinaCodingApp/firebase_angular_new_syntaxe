@@ -1,11 +1,11 @@
 <div class="absolute inset-0 flex flex-col min-w-0">
   <mat-drawer-container class="flex-auto h-full">
-    <mat-drawer class="w-1/2 max-w-72 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
+    <mat-drawer class="max-w-64 dark:bg-gray-900" [mode]="drawerMode" [disableClose]="disableClose"
       [opened]="drawerOpened" #drawer>
       <activity-statistics-sidebar></activity-statistics-sidebar>
     </mat-drawer>
     <!-- Drawer content -->
-    <mat-drawer-content class="flex flex-col">
+    <mat-drawer-content  >
       <activity-statistics-content></activity-statistics-content>
     </mat-drawer-content>
   </mat-drawer-container>

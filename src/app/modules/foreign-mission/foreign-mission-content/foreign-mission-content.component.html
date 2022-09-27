@@ -21,31 +21,28 @@
     <div class="p-6" [hidden]="!dataSource || dataSource.data.length === 0">
       <table mat-table class="w-full" [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="employee.fullName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-1/5"> Salarié </th>
-          <td mat-cell *matCellDef="let element" class="px-7 bg-rose-700 text-white">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-3/12"> Salarié </th>
+          <td mat-cell *matCellDef="let element" class="px-2 sm:px-7 bg-rose-700 text-white">
             {{element.employee.fullName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="site.name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="   w-1/5"> Site </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="   w-2/12"> Site </th>
           <td mat-cell *matCellDef="let element" class="px-4"> {{element.site.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="departingDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="  w-1/5"> Départ </th>
-          <td mat-cell *matCellDef="let element" class="px-4"> {{element.departingDate}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="  w-2/12"> Départ </th>
+          <td mat-cell *matCellDef="let element" class="px-1 sm:px-4"> {{element.departingDate}} </td>
         </ng-container>
 
         <ng-container matColumnDef="returningDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="hidden sm:table-cell w-1/5"> Arrivée </th>
-          <td mat-cell *matCellDef="let element" class="hidden sm:table-cell px-4"> {{element.returningDate}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-2/12"> Arrivée </th>
+          <td mat-cell *matCellDef="let element" class="px-1 sm:px-4"> {{element.returningDate}} </td>
         </ng-container>
-
-
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class=" w-2/5"> Actions </th>
-          <td mat-cell *matCellDef="let element">
-
+          <th mat-header-cell *matHeaderCellDef class="w-1/12 hidden sm:table-cell"> Actions </th>
+          <td mat-cell *matCellDef="let element" class="hidden sm:table-cell">
             <div class="flex flex-row items-center">
               <button *ngIf="habilitation.isAdmin()" mat-icon-button matTooltip="Modifier" color="primary"
                 class="mat-elevation-z1 " (click)="updateForeignMission(element)">

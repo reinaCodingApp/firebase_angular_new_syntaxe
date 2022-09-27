@@ -1,6 +1,6 @@
 <!-- HEADER -->
 <div class="w-full">
-  <div class="h-36 sm:h-20 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
+  <div class="h-30 sm:h-30 sm:p-0  p-4 items-center bg-indigo-600 flex flex-col sm:flex-row justify-between 
   " color="primary">
     <div class="flex justify-between w-full">
       <div class="flex items-center ">
@@ -14,7 +14,7 @@
     <!-- / HEADER -->
 
  
-    <div  *ngIf="stats != null" class="flex flex-row p-4 w-full">
+    <div  *ngIf="stats != null" class="flex  flex-col md:flex-row sm:flex-row p-2 w-full">
         <div class="p-3 mat-card mr-2">
           <h1 class=" text-xl text-red-700   mt-4  mb-4">{{ stats.employeeName }}</h1>
           <h2 class=" text-xl text-red-700  mt-4  mb-4">Statistiques sur période personnalisée</h2>
@@ -166,7 +166,7 @@
             </div>
           </div>
         </div>
-      <div class=" w-full flex flex-col ">
+      <div class=" w-full flex flex-col  ">
         <stats-overtime-details [statsOvertimeDetails]="stats.employeeOverTimeDetails"></stats-overtime-details>
         <stats-mission-abroad [statsMissionAbroad]="stats.employeeMissionAbroadViewModels">
         </stats-mission-abroad>

@@ -1,14 +1,18 @@
-<div class="p-4 text-lg font-bold border-b-2  border-gray-100"> CATÉGORIES </div>
-<div fusePerfectScrollbar class="mt-6">
-    <div class="p-3 mr-5 rounded-r-full" [ngClass]="{'text-white bg-indigo-600':filterBy === null}">
-        <a class="cursor-pointer" (click)="changeFilter(null)">
-            <span class="title">Toutes</span>
-        </a>
-    </div>
-    <div class="p-3 rounded-r-full mr-5" *ngFor="let c of categories"
+<div class="bg-white  rounded-xl  border-1  border-gray-200 mr-3">
+
+    <div class="pl-6 py-6 text-md border-b-2   border-gray-100"> CATÉGORIES </div>
+    <div fusePerfectScrollbar class="mt-6">
+        <div class="p-3 mr-5 rounded-r-full" [ngClass]="{'text-white bg-indigo-600':filterBy === null}">
+            <a class="cursor-pointer" (click)="changeFilter(null)">
+                <span class="title">Toutes</span>
+            </a>
+        </div>
+        <div class="p-3 rounded-r-full mr-5" *ngFor="let c of categories"
         [ngClass]="{' text-white bg-indigo-600':filterBy ===c.id}">
-        <a class="cursor-pointer" matRipple (click)="changeFilter(c.id)">
-            <span class="title" [innerHTML]="c.title"></span>
-        </a>
+            <a class="cursor-pointer" matRipple (click)="changeFilter(c.id)">
+                <span class="title" [innerHTML]="c.title"></span>
+            </a>
+        </div>
     </div>
 </div>
+

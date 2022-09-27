@@ -21,19 +21,21 @@
     <div class="p-6" [hidden]="!dataSource || dataSource.data.length === 0">
       <table mat-table class="w-full" [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="date">
-          <th mat-header-cell class="  hidden sm:table-cell sm:w-1/4 w-1/2" *matHeaderCellDef mat-sort-header> Date </th>
+          <th mat-header-cell class="  hidden sm:table-cell sm:w-1/4 w-1/2" *matHeaderCellDef mat-sort-header> Date
+          </th>
           <td mat-cell *matCellDef="let element" class="hidden  sm:table-cell ">
             {{element.date}} </td>
         </ng-container>
 
         <ng-container matColumnDef="code">
-          <th mat-header-cell class="   w-1/2 sm:w-1/4" *matHeaderCellDef mat-sort-header> Code </th>
-          <td mat-cell *matCellDef="let element" >
+          <th mat-header-cell class="w-1/2 sm:w-1/4 pl-4 sm:pl-4" *matHeaderCellDef mat-sort-header> Code </th>
+          <td mat-cell *matCellDef="let element" class="pl-4 sm:pl-4">
             {{element.code}} </td>
         </ng-container>
 
         <ng-container matColumnDef="isAnExceptionCode">
-          <th mat-header-cell class=" w-1/2 sm:w-1/4 hidden sm:table-cell"  *matHeaderCellDef mat-sort-header> Code exceptionnel ? </th>
+          <th mat-header-cell class=" w-1/2 sm:w-1/4 hidden sm:table-cell" *matHeaderCellDef mat-sort-header> Code
+            exceptionnel ? </th>
           <td mat-cell *matCellDef="let element" class="hidden sm:table-cell">
             {{ element.isAnExceptionCode ? "Oui" : "Non" }}
           </td>
@@ -49,13 +51,8 @@
         <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
 
       </table>
-      <mat-paginator  
-      (page)="pageChanged($event)"
-      [length]="totalElements"
-      [pageIndex]="pageNumber" 
-      [pageSize]="pageSize"
-      aria-label="sélectionner une page"></mat-paginator>
-
+      <mat-paginator (page)="pageChanged($event)" [length]="totalElements" [pageIndex]="pageNumber"
+        [pageSize]="pageSize" aria-label="sélectionner une page"></mat-paginator>
     </div>
     <div [hidden]="dataSource && dataSource.data.length > 0">
       <p class="p-6 w-full text-center text-gray-600 text-lg">Aucun élément à afficher</p>

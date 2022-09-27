@@ -6,26 +6,6 @@
     right: -13px !important;
     top: 6px !important;
 }
-
-// .mat-column-startTime,.mat-column-endTime,.mat-column-totalBreakTimeString ,.mat-column-totalWorkedTimeString{
-//     flex: 0 0 8%;
-// }
-// .mat-column-day {
-//     flex: 0 0 15%;
-// }
-
-// .mat-column-manuallyCreated,.mat-column-dayCounter {
-//     flex: 0 0 7%;
-// }
-//  .mat-column-actions  {
-//     flex: 0 0 6%;
-// }
-
-// .mat-column-site, .mat-column-title {
-//     flex: 0 0 10%;
-// }
-//  .mat-column-bonusString {
-//     flex: 0 0 11%;
-// }
-
- 
+.ck-editor__editable_inline {
+    min-height: 300px;
+}

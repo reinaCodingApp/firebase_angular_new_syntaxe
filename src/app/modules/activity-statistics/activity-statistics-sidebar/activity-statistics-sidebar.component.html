@@ -32,8 +32,8 @@ mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4">
 
 
   <h3 class="mb-1">Période d'affichage</h3>
-  <div class="flex flex-row justify-between text-sm  flex-wrap">  
-    <mat-form-field appearance="outline" class="w-full">
+  <div class="flex flex-row justify-between items-center">  
+    <mat-form-field appearance="outline" class="w-1/2">
       <mat-label>Mois</mat-label>
       <mat-select [(ngModel)]="startMonth" name="month">
         <mat-option *ngFor="let month of months" [value]="month.id">
@@ -41,7 +41,7 @@ mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4">
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" class="w-1/2 ml-1">
       <mat-label>Année</mat-label>
       <mat-select [(ngModel)]="startYear" name="year">
         <mat-option *ngFor="let year of years" [value]="year">
@@ -50,8 +50,8 @@ mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4">
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="flex flex-row justify-between flex-wrap">
-    <mat-form-field appearance="outline" class="w-full">
+  <div class="flex flex-row justify-between items-center ">
+    <mat-form-field appearance="outline" class="w-1/2">
       <mat-label>Mois</mat-label>
       <mat-select [(ngModel)]="endMonth" name="month">
         <mat-option *ngFor="let month of months" [value]="month.id">
@@ -59,7 +59,7 @@ mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4">
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" class="w-1/2 ml-1">
       <mat-label>Année</mat-label>
       <mat-select [(ngModel)]="endYear" name="year">
         <mat-option *ngFor="let year of years" [value]="year">
@@ -70,7 +70,7 @@ mat-card mat-elevation-z4 p-4 pt-6 mx-2 mt-4">
   </div>
 
 
-  <button type="submit" mat-raised-button color="accent">
+  <button type="submit" mat-raised-button color="primary">
     Afficher
     <mat-icon class="ml-1">filter_list</mat-icon>
   </button>

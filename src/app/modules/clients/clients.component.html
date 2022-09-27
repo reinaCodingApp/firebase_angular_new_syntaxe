@@ -20,23 +20,20 @@
         <!-- / CONTENT HEADER -->
         <!-- CONTENT CARD -->
         <!-- CONTENT TOOLBAR -->
-        <div class="hidden">
-          <div class="toolbar px-24 py-8 hidden sm:block">
-            <div *ngIf="currentClient" class="hidden sm:block">
-              <button mat-icon-button (click)="currentClient = null">
-                <mat-icon class="secondary-text">arrow_back</mat-icon>
-              </button>
-            </div>
+        <div class="toolbar pl-6 pt-3">
+          <div *ngIf="currentClient" class="block sm:hidden">
+            <button mat-icon-button (click)="currentClient = null">
+              <mat-icon class="secondary-text">arrow_back</mat-icon>
+            </button>
           </div>
         </div>
         <!-- / CONTENT TOOLBAR -->
         <!-- CONTENT -->
-
-        <div class="flex flex-wrap m-8 bg-white rounded-lg border border-gray-200 shadow-md">
-
-          <clients-list class="w-full mt-1 sm:w-1/4 h-100 border-r-2 border-gray-300"></clients-list>
-
-          <clients-details class="w-full sm:w-3/4"></clients-details>
+        <div class="flex flex-wrap m-8 mt-3 bg-white rounded-lg border border-gray-200 shadow-md">
+          <clients-list class="w-full mt-1 sm:w-1/4 h-100 border-r-2 border-gray-300"
+            [ngClass]="{ 'hidden sm:flex': currentClient }"></clients-list>
+          <clients-details class="w-full sm:w-3/4" [ngClass]="{ 'hidden sm:flex': currentClient==null }">
+          </clients-details>
         </div>
         <!-- / CONTENT -->
       </div>

@@ -3,7 +3,7 @@
     <button matTooltip="Gestion de contenu" mat-icon-button class="back" [routerLink]="'/website'">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2 class="pl-4 text-lg font-bold">{{mode == 'edit' ? "Modifier focus" : "Nouveau focus"}}</h2>
+    <h2 class="pl-4 text-2xl">{{mode == 'edit' ? "Modifier focus" : "Nouveau focus"}}</h2>
   </div>
 
   <div class="w-full flex  gap-1 flex-col-reverse sm:flex-row">
@@ -11,7 +11,7 @@
       <!-- Title,Subtitle,Date,Excerpt -->
       <div class="mat-card  p-4 mb-2">
         <div class="mb-4">
-          <div class="text-lg font-bold">Focus info</div>
+          <div class="text-xl">Focus info</div>
         </div>
         <form #f="ngForm" name="addFocusForm" class="flex flex-col">
           <mat-form-field appearance="outline">
@@ -51,12 +51,13 @@
       <!-- Descrptions Block -->
       <div class="mat-card p-4 mb-2">
         <div class="mb-4">
-          <div class="text-lg font-bold">Blocs de description</div>
+          <div class="text-2xl">Blocs de description</div>
         </div>
         <div>
-          <mat-accordion>
+          <mat-accordion class="mat-card">
             <mat-expansion-panel [expanded]="false"
-              *ngFor="let descriptionBlock of focus?.focusDetails?.descriptionsBlock">
+              *ngFor="let descriptionBlock of focus?.focusDetails?.descriptionsBlock"
+              class="mb-1 h-12">
               <mat-expansion-panel-header (keydown.Space)="$event.stopImmediatePropagation();">
                 <mat-panel-title>
                   <input [(ngModel)]="descriptionBlock.title" name="descriptionBlock" matInput />
@@ -76,12 +77,13 @@
       <!-- Illustractions -->
       <div class="mat-card p-4 mb-2">
         <div class="mb-4">
-          <div class="text-lg font-bold">Illustractions</div>
+          <div class="text-2xl">Illustractions</div>
         </div>
         <div>
           <mat-accordion>
             <mat-expansion-panel [expanded]="false"
-              *ngFor="let illustration of focus?.focusDetails?.illustrations; index as i">
+              *ngFor="let illustration of focus?.focusDetails?.illustrations; index as i" 
+              class="mb-1 h-12">
               <mat-expansion-panel-header (keydown.Space)="$event.stopImmediatePropagation();">
                 <mat-panel-title>
                   <input [(ngModel)]="illustration.title" name="illustration" matInput />
@@ -125,25 +127,25 @@
       <!-- Images -->
       <div class="mat-card p-4 mb-2">
         <div class="mb-4">
-          <div class="text-lg font-bold">Images</div>
+          <div class="text-2xl">Images</div>
         </div>
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center my-4">
           <button mat-fab color="warn" type="button" class="upload" (click)="file.click()">
             <mat-icon svgIcon="mat_outline:image"></mat-icon>
           </button>
           <input name="focusImages" (change)="uploadImageForFocus($event)" type="file" #file hidden accept="image/*" />
         </div>
         <div>
-     
-          
-          
+
+
+
           <div *ngFor="let image of focus?.images; index as i">
-            <div  *ngIf="focus?.images.length > 0" class="mb-4"> 
+            <div *ngIf="focus?.images.length > 0" class="mb-4">
               <div class="w-full flex">
                 <div class="h-48 w-58 relative z-0">
-                  <img class="h-48 w-58" [src]="image">            
+                  <img class="h-48 w-58" [src]="image">
                   <div class="absolute inset-0 flex justify-end items-start z-10">
-                    <button class ="bg-white m-3" mat-icon-button color="warn" (click)="removeImage(i)">
+                    <button class="bg-white m-3" mat-icon-button color="warn" (click)="removeImage(i)">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </div>
@@ -155,10 +157,10 @@
       </div>
       <!-- Info -->
       <mat-accordion class="  p-4 mb-2  ">
-        <mat-expansion-panel [expanded]="false"  >
+        <mat-expansion-panel [expanded]="false">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <h2>Info complémentaires</h2>
+              <h2 class="text-2xl">Info complémentaires</h2>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <form class="flex flex-col ">
@@ -205,7 +207,7 @@
                 <mat-label>Email</mat-label>
                 <input [(ngModel)]="focus.focusDetails.email" name="email" matInput />
               </mat-form-field>
-              <mat-form-field appearance="outline"class="w-full ml-0 sm:ml-2">
+              <mat-form-field appearance="outline" class="w-full ml-0 sm:ml-2">
                 <mat-label>Site Web</mat-label>
                 <input [(ngModel)]="focus.focusDetails.webSite" name="webSite" matInput />
               </mat-form-field>
@@ -234,38 +236,37 @@
         </mat-expansion-panel>
       </mat-accordion>
       <!-- Videos -->
-      <div class="mat-card p-4 mb-2">
+      <div class="max-h-max mat-card p-4 mb-2">
         <div class="mb-4">
-          <div class="text-lg font-bold">Videos</div>
+          <div class="text-2xl">Videos</div>
         </div>
-        <ckeditor [editor]="editor" [config]="config" [(ngModel)]="focus.focusDetails.videos" name="editor"
+        <ckeditor [editor]="editor" [config]="config" [(ngModel)]="focus.focusDetails.videos"
+         name="editor"
           (ready)="onEditorReady($event)">
         </ckeditor>
       </div>
     </div>
     <div class="w-full sm:w-1/4">
-      <div class="flex flex-col items-center">
+      <div class="flex flex-col items-center pt-4">
         <button mat-raised-button (click)="onSubmit(f)" color="primary" aria-label="SAVE" type="submit">
           {{ mode === "new" ? "Créer" : "Modifier" }}
         </button>
-        <mat-checkbox class="mt-4" [(ngModel)]="focus.published">Publié?</mat-checkbox>
+        <mat-checkbox class="my-4 " [(ngModel)]="focus.published">Publié?</mat-checkbox>
       </div>
 
-      <div class="mat-card p-4 mb-2 m-4 max-w-full sm:max-w-60">
-        <div class="pb-2">Interlocuteur</div>
+      <div class="mat-card p-4 mb-2 mt-2">
+        <div class="pb-2 text-2xl">Interlocuteur</div>
         <img *ngIf="focus.focusDetails.interlocutor.image && focus.focusDetails.interlocutor.image.length > 0"
           [src]="focus.focusDetails.interlocutor.image" class="huge m-0" />
         <div class="my-4 flex items-center place-content-center">
           <button mat-fab color="warn" type="button" class="upload" (click)="interLocutorImage.click()">
-            <!-- <mat-icon>{{
-              focus.focusDetails.interlocutor.image 
-              && focus.focusDetails.interlocutor.image.length > 0 ? "edit" :
-              "add_photo_alternatet"
-              }}</mat-icon> -->
 
-            <mat-icon *ngIf="!focus.focusDetails.interlocutor.image || focus.focusDetails.interlocutor.image.length < 0" svgIcon="mat_outline:image"></mat-icon>
+            <mat-icon *ngIf="!focus.focusDetails.interlocutor.image || focus.focusDetails.interlocutor.image.length < 0"
+              svgIcon="mat_outline:image"></mat-icon>
 
-            <mat-icon *ngIf="focus.focusDetails.interlocutor.image  && focus.focusDetails.interlocutor.image.length > 0">edit</mat-icon>
+            <mat-icon
+              *ngIf="focus.focusDetails.interlocutor.image  && focus.focusDetails.interlocutor.image.length > 0">edit
+            </mat-icon>
 
           </button>
           <input name="interlocutorImage" (change)="uploadImageForInterlocutor($event)" type="file" #interLocutorImage

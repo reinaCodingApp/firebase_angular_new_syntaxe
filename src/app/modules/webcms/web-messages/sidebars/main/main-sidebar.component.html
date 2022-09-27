@@ -1,50 +1,50 @@
-<div class="p-6 mat-card">
-  <div class="mt-10 mb-8 mx-6 text-4xl font-extrabold tracking-tight leading-none">Messagerie
+<div class="mt-22 p-4 pl-0 pt-20">
+  <!-- <div class="mt-10 mb-8 mx-6 text-4xl font-extrabold tracking-tight leading-none">Messagerie
+  </div> -->
+  <div class=" mb-4 font-semibold pl-4">EN COURS</div>
+  <div>
+    <a class="flex flex-row items-center p-3 rounded-r-full mr-5"
+      [ngClass]="{ 'text-white bg-indigo-600': currentUrl == 'discussions'}" [routerLink]="'/webcms/discussions'">
+      <mat-icon class="mr-2 text-lg" [ngClass]="{ 'text-white': currentUrl == 'discussions'}">email</mat-icon>
+      <p class="flex flex-row justify-between w-full">
+        <span> Courriers </span>
+        <span *ngIf="counters.count1 > 0" class="text-md"> {{'(' + counters.count1 + ')'}}</span>
+      </p>
+    </a>
   </div>
-  <div class="my-4 text-indigo-500">EN COURS</div>
-<div  >
+  <div>
 
-  <a class="flex flex-row items-center p-2" [ngClass]="{ 'bg-gray-100': currentUrl == 'discussions'}"
-    [routerLink]="'/webcms/discussions'">
-    <mat-icon class="mr-2">email</mat-icon>
-    <p class="flex flex-row justify-between w-full">
-      <span> Courriers </span>
-      <span *ngIf="counters.count1 > 0"> {{'(' + counters.count1 + ')'}}</span>
-    </p>
-  </a>
-</div>
-<div  >
+    <a class="flex flex-row items-center p-3 rounded-r-full mr-5"
+      [ngClass]="{ 'text-white bg-indigo-600': currentUrl == 'frauds'}" [routerLink]="'/webcms/frauds'">
+      <mat-icon class="mr-2 text-lg text-warn-600" [ngClass]="{ 'text-white  ': currentUrl == 'frauds'}">warning</mat-icon>
+      <p class="flex flex-row justify-between w-full">
 
-  <a class="flex flex-row items-center p-2" [ngClass]="{ 'bg-gray-100': currentUrl == 'frauds'}"
-    [routerLink]="'/webcms/frauds'">
-    <mat-icon class="mr-2 text-warn-600">warning</mat-icon>
-    <p class="flex flex-row justify-between w-full">
+        <span> Fraudes </span>
+        <span *ngIf="counters.count2 > 0"> {{' (' + counters.count2 + ')'}}</span>
+      </p>
+    </a>
+  </div>
 
-      <span> Fraudes </span>
-      <span *ngIf="counters.count2 > 0"> {{' (' + counters.count2 + ')'}}</span>
-    </p>
-  </a>
-</div>
-
-  <div class="my-4 text-indigo-500">SERVICES </div>
+  <div class="my-4 font-semibold pl-4">SERVICES </div>
   <div *ngFor="let d of departments">
-    <a class="flex flex-row items-center p-2" [ngClass]="{ 'bg-gray-100': currentUrl == 'filter/' + d.id}"
-      [routerLink]="'/webcms/filter/' + d.id">
-      <mat-icon class="mr-2">folder</mat-icon>
+    <a class="flex flex-row items-center p-3 rounded-r-full mr-5"
+      [ngClass]="{ 'text-white bg-indigo-600': currentUrl == 'filter/' + d.id}" [routerLink]="'/webcms/filter/' + d.id">
+      <mat-icon class="mr-2 text-lg" [ngClass]="{ 'text-white': currentUrl == 'filter/' + d.id}">folder</mat-icon>
       <span class="text-capitalized">{{d.name}}</span>
     </a>
   </div>
-  <div class="my-4 text-indigo-500">HISTORIQUE</div>
-  <div >
-    <a class="flex flex-row items-center p-2" [ngClass]="{ 'bg-gray-100': currentUrl == 'closed'}"
-      [routerLink]="'/webcms/closed'">
-      <mat-icon class="text-green-600 mr-2">playlist_add_check</mat-icon>
+  <div class="my-4 font-semibold pl-4">HISTORIQUE</div>
+  <div>
+    <a class="flex flex-row items-center  p-3 rounded-r-full mr-5"
+      [ngClass]="{ 'text-white bg-indigo-500': currentUrl == 'closed'}" [routerLink]="'/webcms/closed'">
+      <mat-icon class="text-green-600 mr-2 text-lg" [ngClass]="{ 'text-white': currentUrl == 'closed'}">
+        playlist_add_check</mat-icon>
       <span>Clôturées</span>
     </a>
   </div>
   <div *ngIf="inSearchMode === true">
-    <a class="flex flex-row items-center p-2 bg-gray-100">
-      <mat-icon class="text-green-600 mr-2">search</mat-icon>
+    <a class="flex flex-row items-center p-3 rounded-r-full mr-5 text-white bg-indigo-600">
+      <mat-icon class="text-green-600 mr-2 text-lg">search</mat-icon>
       <span>Rechercher</span>
     </a>
   </div>

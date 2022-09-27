@@ -3,8 +3,8 @@
     <button matTooltip="Gestion de contenu" mat-icon-button class="back" [routerLink]="'/website'">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2 *ngIf="mode == 'new'" class="pl-4 text-lg font-bold">{{ isNews ? "Nouvelle actualité" : "Nouveau article"}}</h2>
-    <h2 *ngIf="mode == 'edit'" class="pl-4 text-lg font-bold">{{ isNews ? "Modifier actualité" : "Modifier article"}}
+    <h2 *ngIf="mode == 'new'" class="pl-4 text-2xl">{{ isNews ? "Nouvelle actualité" : "Nouveau article"}}</h2>
+    <h2 *ngIf="mode == 'edit'" class="pl-4 text-2xl">{{ isNews ? "Modifier actualité" : "Modifier article"}}
     </h2>
   </div>
   <div class="w-full flex gap-1 flex-col-reverse sm:flex-row p-4">
@@ -25,14 +25,16 @@
 
 
     <div class="w-full sm:w-1/4">
-      <div class="flex flex-row items-center place-content-center">
-        <button mat-raised-button (click)="onSubmit(f)" color="accent" aria-label="SAVE" type="submit">
+      <div class="flex flex-row items-center place-content-center ">
+        <button mat-raised-button (click)="onSubmit(f)" color="primary" aria-label="SAVE" type="submit">
           {{ mode === "new" ? "Créer" : "Modifier" }}
         </button>
       </div>
 
-      <div *ngIf="!isNews" class="p-4 mb-2 m-4 mat-card flex flex-col items-center place-content-center">
-        <div class="font-semibold text-left text-lg  mb-2 ">Catégories</div>
+      <div *ngIf="!isNews" class="p-4 mb-2 m-4 mat-card flex flex-col  ">
+        <div class=" flex flex-col">
+          <div class=" text-2xl  mb-4">Catégories</div>
+        </div>
         <mat-form-field class="w-full">
           <mat-select name="catégories" [(ngModel)]="post.categoryId">
             <mat-option *ngFor="let category of categories" [value]="category.id">
@@ -41,13 +43,13 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="mat-card p-4 mb-2 m-4 flex flex-col items-center place-content-center ">
-        <div class="font-semibold text-left text-lg">Image</div>
+      <div class="mat-card p-4 mb-2 m-4 flex flex-col">
+        <div class=" text-left text-2xl">Image</div>
         <div>
           <!-- <div class="message-box mb-12" >
               Ajouter une image avec cette résolution : 320x380
             </div> -->
-          <div class="mt-2">
+          <div class="mt-2 flex  items-center place-content-center ">
             <img *ngIf="post.src" [src]="post.src?.medium" />
           </div>
           <div class="mt-4 flex flex-row items-center place-content-center">
