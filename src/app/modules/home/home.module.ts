@@ -29,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/custom-confirm-dialog.module';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AddCardTaskDialogComponent } from './board-tasks/dialogs/add-card-task-dialog/add-card-task-dialog.component';
  
 const redirectUnauthorizedToSignin = () => redirectUnauthorizedTo(['/sign-in']);
 
@@ -54,7 +55,8 @@ const homeRoutes: Route[] = [
 @NgModule({
   declarations: [
     HomeComponent,
-    BoardTasksComponent
+    BoardTasksComponent,
+    AddCardTaskDialogComponent
   ],
   imports: [
     SharedModule,

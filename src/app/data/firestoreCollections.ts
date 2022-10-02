@@ -37,4 +37,6 @@ export class firestoreCollections {
   public static readonly webProducts: string = 'web.products';
   public static readonly webFocus: string = 'web.focus';
   public static readonly webFocusDetails: string = 'web.focusDetails';
+  public static readonly boardTasks: string = 'boardTasks';
+
 }
