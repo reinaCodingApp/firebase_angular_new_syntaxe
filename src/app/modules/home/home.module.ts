@@ -30,6 +30,7 @@ import { CustomConfirmDialogModule } from 'app/shared/custom-confirm-dialog/cust
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AddCardTaskDialogComponent } from './board-tasks/dialogs/add-card-task-dialog/add-card-task-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
  
 const redirectUnauthorizedToSignin = () => redirectUnauthorizedTo(['/sign-in']);
 
@@ -84,7 +85,8 @@ const homeRoutes: Route[] = [
     MatMenuModule,
     MatMomentDateModule,
     MatProgressBarModule,
-    DragDropModule
+    DragDropModule,
+    MatCheckboxModule
   
   ],
  
