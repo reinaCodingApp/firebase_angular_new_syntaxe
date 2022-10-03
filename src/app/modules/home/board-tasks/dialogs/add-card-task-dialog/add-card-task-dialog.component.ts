@@ -26,11 +26,7 @@ export class AddCardTaskDialogComponent implements OnInit {
     private _notificationService: SharedNotificationService
   ) {
     if (data.mode === "edit") {
-      this.boardTask = data.BoardTask;
-      console.log("data pop" );
-      console.log(data);
-    
-
+      this.boardTask = data.broadTask;    
     } else {
       this.boardTask = new BoardTask();
       this.boardTask.labels=[];

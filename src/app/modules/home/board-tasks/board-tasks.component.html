@@ -110,7 +110,31 @@
                                        
                                         <!-- Title -->
                                         <div class="text-lg font-medium leading-5">{{task.title}}</div>
-                                      
+                                          <!-- Labels -->
+                                          <ng-container *ngIf="task.labels.length">
+                                            <div>
+                                                <div class="flex flex-wrap -mx-1 -mb-2">
+                                                    <ng-container *ngFor="let label of task.labels; trackBy: trackByFn">
+                                                        <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                            {{label.title}}
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        <!-- Due date -->
+                                        <ng-container *ngIf="task.deadline">
+                                            <div
+                                                class="flex items-center rounded text-sm font-medium leading-5 text-secondary"
+                                                [ngClass]="{'text-red-600': isOverdue(task.deadline)}">
+                                                <mat-icon
+                                                    class="icon-size-4 text-current"
+                                                    [svgIcon]="'heroicons_outline:clock'"></mat-icon>
+                                                <div class="ml-1">
+                                                    {{task.deadline | date: 'longDate'}}
+                                                </div>
+                                            </div>
+                                        </ng-container>
                                     </a>
                                 </ng-container>
                             </div>

@@ -10,6 +10,7 @@
   </div>
 
   <div class="p-6">
+    {{ boardTask.title }}
     <form #f="ngForm" (ngSubmit)="onSubmit(f)" name="composeForm" class="compose-form">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Titre </mat-label>

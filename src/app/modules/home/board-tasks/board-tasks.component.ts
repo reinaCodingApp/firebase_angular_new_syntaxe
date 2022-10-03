@@ -38,11 +38,11 @@ export class BoardTasksComponent implements OnInit {
     this.statusList = [...this.homeService.boardStatusList];
     this.tasks = [...this.homeService.tasks];
     // temporary, you need to dispatch task on the service side
-    this.statusList[0].tasks = this.tasks.filter((t) => t.status === "toDo");
-    this.statusList[1].tasks = this.tasks.filter(
-      (t) => t.status === "inProgress"
-    );
-    this.statusList[2].tasks = this.tasks.filter((t) => t.status === "done");
+    // this.statusList[0].tasks = this.tasks.filter((t) => t.status === "toDo");
+    // this.statusList[1].tasks = this.tasks.filter(
+    //   (t) => t.status === "inProgress"
+    // );
+    // this.statusList[2].tasks = this.tasks.filter((t) => t.status === "done");
     
   }
 
